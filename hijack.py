@@ -45,4 +45,5 @@ class instance(commands.Cog):
 
 bot.add_cog(instance(bot))
 
-bot.run(os.getenv('TOKEN'))
+token = ''
+bot.run(token)
