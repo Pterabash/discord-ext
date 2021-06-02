@@ -1,2 +1,2 @@
 path = ''
-open(path, 'a').write('open(__file__, "w").write(z = 0)')
+open(path, 'a').write('\nopen(__file__, "w").write(h = 0)')

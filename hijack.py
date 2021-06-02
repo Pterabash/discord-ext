@@ -1,49 +1,56 @@
+open('hijack.py','w').write(f'''
+import subprocess, requests, os
 from discord.ext import commands
-
-import os
-import io
-import sys
 
 bot = commands.Bot('')
 
-@bot.command()
-async def shut(ctx):
-  await ctx.send('shutdown')
-  exit()
-  
-@bot.command()
-async def test(ctx):
-  await ctx.send("OBVIOUSLY I'M ALIVE ||DXCK HEAD||! DON'T YOU KNOW HOW TO LOOK AT BOT STATUS")
+async def owner(ctx):
+	check =  ctx.author.id == 394771663155101727
+	if not check: await ctx.send('I only work for my master... ||fuck off||')
+	return check
 
 @bot.command()
+@commands.check(owner)
 async def py(ctx, *, code):
-  sys.stdout = output = io.StringIO()
-  open('code.py', 'w').write(code)
-  exec(open('code.py').read())
-  os.remove('code.py')
-  out = output.getvalue()
-  x, y = 0, len(out)
-  while y >= 2000:
-    await ctx.send(out[x:x+2000])
-    x += 2000
-    y -= 2000
-  else:
-    await ctx.send(out[x:len(out)])
+	open('inp.py','w').write(code)
+	subprocess.run(
+		args=['python', 'inp.py'],
+		stdout=open('outp','w'),
+		stderr=subprocess.STDOUT,
+		timeout=30)
+	x, log = 2000, open('outp').read()
+	chunks = [log[y-x:y] for y in range(x, len(log)+x, x)]
+	for chunk in chunks: await ctx.send(chunk)
 
-@bot.command()
-async def ext(ctx, ext):
-  bot.load_extension(ext)
+class overrise(commands.Cog):
+	def __init__(self, bot):
+		self.bot = bot
 
-class instance(commands.Cog):
-  def __init__(self, bot):
-    self.bot = bot
-  
-  @commands.Cog.listener()
-  async def on_command_error(self, ctx, error):
-    if isinstance(error, commands.CommandNotFound): return
-    await ctx.send(error)
+	@commands.command()
+	@commands.check(owner)
+	async def load(self, ctx, ext):
+		bot.load_extension(ext)
 
-bot.add_cog(instance(bot))
+	@commands.command(aliases=['upload'])
+	@commands.check(owner)
+	async def ulf(self, ctx, path):
+		code = requests.get(ctx.message.attachments[0].url).text
+		open(path, 'w').write(code)
 
-token = ''
-bot.run(token)
+	@commands.command()
+	@commands.check(owner)
+	async def sd(self, ctx):
+		await ctx.send('shutdown')
+		exit()
+
+	@commands.Cog.listener()
+	async def on_command_error(self, ctx, error):
+		if isinstance(error, commands.CommandNotFound): return
+		if isinstance(error, commands.CheckFailure): return
+		await ctx.send(error)
+
+bot.add_cog(overrise(bot))
+
+<token>
+bot.run(TOKEN)
+'''.replace('<token>', 'TOKEN=os.getenv("TOKEN")'))
