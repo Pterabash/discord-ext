@@ -6,7 +6,7 @@ bot = commands.Bot('')
 
 async def owner(ctx):
 	check =  ctx.author.id == 394771663155101727
-	if not check: await ctx.send('I only work for my master... ||fuck off||')
+	if not check: await ctx.send('I only work for my master so... ||fuck off||')
 	return check
 
 @bot.command()
@@ -21,25 +21,29 @@ async def py(ctx, *, code):
 	x, log = 2000, open('outp').read()
 	chunks = [log[y-x:y] for y in range(x, len(log)+x, x)]
 	for chunk in chunks: await ctx.send(chunk)
+	subprocess.run(['rm','inp.py','outp'])
 
-class overrise(commands.Cog):
+class Authorize(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
 	@commands.command()
-	@commands.check(owner)
 	async def load(self, ctx, ext):
 		bot.load_extension(ext)
 
+	@commands.command()
+	async def unload(self, ctx, ext):
+		bot.unload_extension(ext)
+
 	@commands.command(aliases=['upload'])
 	@commands.check(owner)
-	async def ulf(self, ctx, path):
+	async def uploadfile(self, ctx, path):
 		code = requests.get(ctx.message.attachments[0].url).text
 		open(path, 'w').write(code)
 
 	@commands.command()
 	@commands.check(owner)
-	async def sd(self, ctx):
+	async def shutdown(self, ctx):
 		await ctx.send('shutdown')
 		exit()
 
@@ -49,8 +53,7 @@ class overrise(commands.Cog):
 		if isinstance(error, commands.CheckFailure): return
 		await ctx.send(error)
 
-bot.add_cog(overrise(bot))
+bot.add_cog(Authorize(bot))
 
-<token>
-bot.run(TOKEN)
-'''.replace('<token>', 'TOKEN=os.getenv("TOKEN")'))
+bot.run(os.getenv('TOKEN'))
+''')
