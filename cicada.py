@@ -6,10 +6,10 @@ from discord.ext import commands
 x = 2000
 o = 'out.txt'
 bot = commands.Bot('')
+TOKEN = <token>
 
 @bot.check
-async def owner(ctx):
-	return ctx.author.id == 394771663155101727
+async def owner(ctx): return ctx.author.id == 394771663155101727
 
 @bot.command()
 async def shutdown(ctx): exit()
@@ -24,9 +24,7 @@ async def unload(ctx, e): bot.unload_extension(e)
 async def reload(ctx, e): bot.reload_extension(e)
 
 @bot.command()
-async def upload(ctx, p):
-	c = requests.get(ctx.message.attachments[0].url).text
-	open(p, 'w').write(c)
+async def upload(ctx, l, p): open(p, 'w').write(requests.get(l).text)
 
 @bot.command()
 async def py(ctx, *, code):
@@ -52,4 +50,4 @@ class oce(commands.Cog):
 
 
 bot.add_cog(oce(bot))
-bot.run(os.getenv('TOKEN'))
+bot.run(TOKEN)

