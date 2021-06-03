@@ -6,6 +6,6 @@ client = discord.Client()
 async def on_ready():
 	me = discord.Guild.get_member(394771663155101727)
 	await me.send('Test')
-	await client.logout()
+	exit()
 
-await client.login(os.environ['TOKEN'])
+client.run(os.environ['TOKEN'])
