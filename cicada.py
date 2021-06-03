@@ -33,8 +33,8 @@ async def py(ctx, *, code):
 		args=['python code'],
 		stdout=open(o,'w'),
 		stderr=subprocess.STDOUT,
-		shell=True,
-		timeout=10)
+		shell=True) #,
+		#timeout=10)
 	l =  open(o).read()
 	c = [l[y-x:y] for y in range(x,len(l)+x,x)]
 	for d in c: await ctx.send(d)
