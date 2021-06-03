@@ -9,7 +9,6 @@ bot = commands.Bot('')
 
 @bot.check
 async def owner(ctx):
-	await ctx.send('know your place')
 	return ctx.author.id == 394771663155101727
 
 @bot.command()
