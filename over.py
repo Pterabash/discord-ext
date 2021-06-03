@@ -1,6 +1,6 @@
 import os
-open('over.py','w').write(f'''
-import subprocess, requests, os
+import requests
+import subprocess
 from discord.ext import commands
 
 x = 2000
@@ -54,5 +54,3 @@ class oce(commands.Cog):
 
 bot.add_cog(oce(bot))
 bot.run(os.getenv('TOKEN'))
-''')
-os.system('python over.py')
