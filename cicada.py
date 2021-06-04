@@ -6,7 +6,7 @@ from discord.ext import commands
 x = 2000
 o = 'out.txt'
 bot = commands.Bot('')
-TOKEN = <token>
+TOKEN = <t>
 
 @bot.check
 async def owner(ctx): return ctx.author.id == 394771663155101727
