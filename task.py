@@ -2,7 +2,7 @@ from discord.ext import commands, tasks
 import os
 
 
-class Task(commands.Cog):
+class Test(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.test.start()
@@ -13,4 +13,4 @@ class Task(commands.Cog):
 
 
 def setup(bot):
-	bot.add_cog(Task(bot))
+	bot.add_cog(Test(bot))
