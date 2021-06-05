@@ -9,7 +9,7 @@ class Test(commands.Cog):
 
 	@tasks.loop(seconds=5.0)
 	async def test(self):
-		self.bot.login(os.environ['CTT'])
+		await self.bot.login(os.environ['CTT'])
 
 
 def setup(bot):
