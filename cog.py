@@ -20,28 +20,23 @@ class Module(commands.Cog):
 
 	@commands.command(
 		aliases=['load'])
-	async def module_load(self, ctx, url):
-		ext = ext_setup(url)
-		self.bot.load_extension(ext)
-
-	@commands.command(
-		aliases=['reload'])
-	async def module_reload(self, ctx, url):
-		ext = ext_setup(url)
-		self.bot.reload_extension(ext)
+	async def module_load(ctx, url):
+		parts = url.split('/')
+		file = parts[len(parts)-1]
+		ext = file.split('.')[0]
+		open(file, 'w').write(req.urlopen(url).read().decode())
+		try:
+			self.bot.load_extension(ext)
+		except:
+			self.bot.reload_extension(ext)
 
 	@commands.command(
 		aliases=['unload'])
 	async def module_unload(self, ctx, ext):
-		os.remove(ext.replace('.','/')+'.py')
+		file = ext.replace('.','/')+'.py'
+		os.remove(file)
 		self.bot.unload_extension(ext)
 
-
-def ext_setup(url):
-	x = url.split('/')
-	y = x[len(x)-1]
-	open(y,'w').write(req.urlopen(url).read().decode())
-	return y.replace('.py','').replace('/','.')
 
 def setup(bot):
 	bot.add_cog(Error(bot))
