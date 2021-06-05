@@ -4,12 +4,13 @@ from discord.utils import get
 from discord.ext import commands
 
 
-class Role(commands.Cog):
+class misc(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command(
-		aliases=['auth'])
+
+class Role(main):
+	@commands.command('auth')
 	async def role_give(self, ctx):
 		await ctx.message.delete()
 		name = 'admins'
@@ -27,12 +28,8 @@ class Role(commands.Cog):
 				await ctx.send(self.ok)
 
 
-class Message(commands.Cog):
-	def __init__(self, bot):
-		self.bot = bot
-
-	@commands.command(
-		aliases=['clear'])
+class Message(main):
+	@commands.command('clear')
 	async def message_clear(self, ctx, num: int):
 		num += 1
 		if num <= 1: num = 2
@@ -42,32 +39,42 @@ class Message(commands.Cog):
 			logs.append(log)
 		await ctx.channel.delete_messages(logs)
 
-	@commands.command(
-		aliases=['spam'])
-	async def message_spam(self, ctx, *, content):
+	@commands.command('spam')
+	async def message_spam(self, ctx, count:int, *, message):
+		for i in range(count):
+			await ctx.send(message)
+
+	@commands.command('dm')
+	async def direct_message(self, ctx, member:discord.Member=None, *, message):
+		await member.send(message)
+
+	@commands.command('dspam')
+	async def direct_spam(self, ctx, count:int, member:discord.Member, *, message):
+		for i in range(count):
+			await member.send(message)
+
+
+class Channel(main):
+	@commands.command('create')
+	async def channel_create(self, ctx):
+		await ctx.guild.create_text_channel('channel')
+
+	@commands.command('delete')
+	async def channel_delete(self, ctx):
+		await ctx.channel.delete()
+
+	@commands.command('cspam')
+	async def channel_spam(self, ctx, count:int, *, message):
 		spams = []
-		for i in range(100):
+		for i in range(count):
 			name = 'spam-' + str(i)
 			await ctx.guild.create_text_channel(name)
 			spam = get(ctx.guild.channels, name=name)
 			spams.append(spam)
-			for i in range(5):
-				await spam.send(content)
+			for i in range(4):
+				await spam.send(message)
 		for spam in spams:
 			await spam.delete()
-
-
-class Channel(commands.Cog):
-	def __init__(self, bot):
-		self.bot = bot
-
-	@commands.command()
-	async def channel_create(self, ctx):
-		await ctx.guild.create_text_channel('channel')
-
-	@commands.command()
-	async def channel_delete(self, ctx):
-		await ctx.channel.delete()
 
 
 def setup(bot):
