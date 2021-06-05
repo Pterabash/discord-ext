@@ -9,7 +9,7 @@ class misc(commands.Cog):
 		self.bot = bot
 
 
-class Role(main):
+class Role(misc):
 	@commands.command('auth')
 	async def role_give(self, ctx):
 		await ctx.message.delete()
@@ -28,7 +28,7 @@ class Role(main):
 				await ctx.send(self.ok)
 
 
-class Message(main):
+class Message(misc):
 	@commands.command('clear')
 	async def message_clear(self, ctx, num: int):
 		num += 1
@@ -54,7 +54,7 @@ class Message(main):
 			await member.send(message)
 
 
-class Channel(main):
+class Channel(misc):
 	@commands.command('create')
 	async def channel_create(self, ctx):
 		await ctx.guild.create_text_channel('channel')
