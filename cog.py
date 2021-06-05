@@ -17,8 +17,8 @@ class Main(commands.Cog):
 		file = url.split('/')[-1]
 		ext = file.split('.')[0]
 		open(file, 'w').write(urlopen(url).read().decode())
-		try: self.bot.load_extension(ext)
-		except: self.bot.reload_extension(ext)
+		try: self.bot.reload_extension(ext)
+		except: self.bot.load_extension(ext)
 
 	@commands.command()
 	async def unload(self, ctx, ext):
