@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-class morph(commands.Cog):
+class User(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -14,5 +14,5 @@ class morph(commands.Cog):
                 username=member.name,
                 avatar=open('pfp','rb').read())
 
-def setup(bot): bot.add_cog(morph(bot))
+def setup(bot): bot.add_cog(User(bot))
 
