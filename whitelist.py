@@ -11,7 +11,7 @@ class Whitelist(commands.Cog):
     async def add(self, ctx, member:discord.Member):
         member_name, member_id = member.name, str(member.id)
         if str(member.id) not in whitelist():
-            open('whitelist', 'a').write('\n' + member_name + ' - ' + member_id)
+            open('whitelist', 'a').write('\n' + member_id)
 
     @commands.command()
     async def whitelist(self, ctx): await ctx.send(whitelist())
