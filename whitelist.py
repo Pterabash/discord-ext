@@ -3,16 +3,6 @@ from discord.ext import commands
 
 def whitelist(): return open('whitelist').read()
 
-@commands.check
-async def whitelist_check(ctx):
-    author_id = str(ctx.author.id)
-    try: 
-        whitelist = open('whitelist').read()
-        return author_id in whitelist
-    except: 
-        open('whitelist', 'w').write(ctx.author.name + ' - ' + author_id)
-        return True
-
 
 class Whitelist(commands.Cog):
     def __init__(self, bot): self.bot = bot
@@ -27,6 +17,4 @@ class Whitelist(commands.Cog):
     async def whitelist(self, ctx): await ctx.send(whitelist())
 
 
-def setup(bot):
-    bot.add_check(whitelist_check())
-    bot.add_cog(Whitelist(bot))
+def setup(bot): bot.add_cog(Whitelist(bot))
