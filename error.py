@@ -7,6 +7,7 @@ class Error(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, err):
         if isinstance(err, commands.CommandNotFound): return
+        if isinstance(err, commands.CommandError): return
         await ctx.send(err)
 
 def setup(bot): bot.add_cog(Error(bot))

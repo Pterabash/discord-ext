@@ -22,7 +22,7 @@ class Channel(commands.Cog):
             chn = get(ctx.guild.channels, name=name)
             chns.append(chn)
             for i in range(msg_c): await spam.send(message)
-	    for chn in chns: await chn.delete()
+            for chn in chns: await chn.delete()
 
 
 def setup(bot): bot.add_cog(Channel(bot))
