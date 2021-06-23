@@ -3,6 +3,16 @@ from discord.ext import commands
 
 def whitelist(): return open('whitelist').read()
 
+#@bot.check
+#async def check(ctx):
+#    author_id = str(ctx.author.id)
+#    try: 
+#        whitelist = open('whitelist').read()
+#        return author_id in whitelist
+#    except: 
+#        open('whitelist', 'w').write(author_id)
+#        return True
+
 
 class Whitelist(commands.Cog):
     def __init__(self, bot): self.bot = bot
