@@ -3,9 +3,9 @@ import sqlite3
 import discord
 from discord.ext import commands
 
-def wl_exec(sql, *val):
+def wl_exec(sql):
 	con = sqlite3.connect('wl.db')
-	con.execute(sql,tuple(val))
+	con.execute(sql)
 	con.commit()
 	con.close()
 
@@ -32,16 +32,15 @@ async def wl_list(ctx, member:discord.Member):
 
 @commands.command('add', brief='Add member to whitelist')
 async def wl_add(ctx, member:discord.Member):
-	sql = 'INSERT OR IGNORE INTO whitelist VALUES(?)'
+	sql = f'INSERT OR IGNORE INTO whitelist VALUES({member.id})'
 	wl_exec(sql, member.id)
 
 @commands.command('rmv', brief='Remove member from whitelist')
 async def wl_rmv(ctx, member:discord.Member):
-	sql = 'DELETE FROM whitelist WHERE id=?'
 	if ctx.author.id not member.id:
+		sql = f'DELETE FROM whitelist WHERE id={member.id}'
 		wl_exec(sql, member.id)
-	else:
-		await ctx.send('Why remove yourself?')
+	else: await ctx.send('Why remove yourself?')
 
 def setup(bot):
 	bot.add_command(wl_list)
