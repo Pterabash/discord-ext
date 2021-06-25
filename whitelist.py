@@ -1,7 +1,10 @@
+import main
 import discord
+import sqlite3
 from discord.ext import commands
 
-def whitelist(): return open('whitelist').read()
+def whitelist():
+        return open('whitelist').read()
 
 #@bot.check
 #async def check(ctx):
@@ -15,7 +18,8 @@ def whitelist(): return open('whitelist').read()
 
 
 class Whitelist(commands.Cog):
-    def __init__(self, bot): self.bot = bot
+    def __init__(self, bot): 
+        self.bot = bot
 
     @commands.command()
     async def add(self, ctx, member:discord.Member):
@@ -24,7 +28,9 @@ class Whitelist(commands.Cog):
             open('whitelist', 'a').write('\n' + member_id)
 
     @commands.command()
-    async def whitelist(self, ctx): await ctx.send(whitelist())
+    async def whitelist(self, ctx):
+        await ctx.send(whitelist())
 
 
-def setup(bot): bot.add_cog(Whitelist(bot))
+def setup(bot):
+    bot.add_cog(Whitelist(bot))
