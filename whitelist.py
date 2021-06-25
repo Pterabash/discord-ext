@@ -9,6 +9,9 @@ def wl_exec(sql, *val):
 	con.commit()
 	con.close()
 
+sql = 'CREATE TABLE IF NOT EXISTS whitelist (id INTEGER PRIMARY KEY)'
+wl_exec(sql)
+
 #@bot.check
 #async def check(ctx):
 #    author_id = str(ctx.author.id)
@@ -40,6 +43,4 @@ async def wl_rmv(self, ctx, member:discord.Member):
 	else: await ctx.send('Why remove yourself?')
 
 def setup(bot):
-	sql = 'CREATE TABLE IF NOT EXISTS whitelist (id INTEGER PRIMARY KEY)'
-	wl_exec(sql)
 	bot.add_cog(Whitelist(bot))
