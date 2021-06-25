@@ -9,8 +9,6 @@ def wl_exec(sql):
 	con.commit()
 	con.close()
 
-wl_exec('CREATE TABLE IF NOT EXISTS whitelist (id INTEGER PRIMARY KEY)')
-
 #@bot.check
 #async def check(ctx):
 #    author_id = str(ctx.author.id)
