@@ -43,6 +43,7 @@ async def wl_rmv(ctx, member:discord.Member):
 	else: await ctx.send('Why remove yourself?')
 
 def setup(bot):
+	wl_exec('CREATE TABLE IF NOT EXISTS whitelist (id INTEGER PRIMARY KEY)')
 	bot.add_command(wl_list)
 	bot.add_command(wl_add)
 	bot.add_command(wl_rmv)
