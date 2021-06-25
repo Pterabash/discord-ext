@@ -43,4 +43,6 @@ async def wl_rmv(self, ctx, member:discord.Member):
 	else: await ctx.send('Why remove yourself?')
 
 def setup(bot):
-	bot.add_cog(Whitelist(bot))
+	bot.add_command(wl_list)
+	bot.add_command(wl_add)
+	bot.add_command(wl_rmv)
