@@ -37,7 +37,7 @@ async def wl_add(ctx, member:discord.Member):
 
 @commands.command('rmv', brief='Remove member from whitelist')
 async def wl_rmv(ctx, member:discord.Member):
-	if ctx.author.id not member.id:
+	if ctx.author.id != member.id:
 		sql = f'DELETE FROM whitelist WHERE id={member.id}'
 		wl_exec(sql, member.id)
 	else: await ctx.send('Why remove yourself?')
