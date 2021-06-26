@@ -15,7 +15,7 @@ def idRead():
 		return [wls[key] for key in wls.keys()]
 
 async def wlCheck(ctx):
-	if not wls.keys(): idAdd(ctx.author.id)
+	if not idRead(): idAdd(ctx.author.id)
 	await ctx.send(ctx.author.id in idRead())
 	return True #ctx.author.id in idRead()
 
