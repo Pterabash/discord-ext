@@ -40,4 +40,5 @@ class Whitelist(commands.Cog):
 
 
 def setup(bot):
+	bot.add_check(wlCheck)
 	bot.add_cog(Whitelist(bot))
