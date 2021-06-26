@@ -8,7 +8,7 @@ def idAdd(id):
 
 def idRmv(id):
 	with shelve.open('whitelists', 'c') as wls:
-		rm wls[str(id)]
+		del wls[str(id)]
 
 def idRead():
 	with shelve.open('whitelists', 'c') as wls:
