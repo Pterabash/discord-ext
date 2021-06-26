@@ -1,3 +1,7 @@
+import discord
+from discord.utils import get
+from discord.ext import commands
+
 admin = discord.Permissions(administrator=True)
 
 def role_get(ctx, name):
