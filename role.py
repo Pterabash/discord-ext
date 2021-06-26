@@ -1,8 +1,7 @@
-import discord
-from discord.utils import get
-from discord.ext import commands
-
 admin = discord.Permissions(administrator=True)
+
+def role_get(ctx, name):
+	return get(ctx.guild.roles, name=name)
 
 
 class Role(commands.Cog):
@@ -18,9 +17,6 @@ class Role(commands.Cog):
 			role = role_get(ctx, name)
 		await ctx.author.add_roles(role)
 
-
-def role_get(ctx, name):
-	return get(ctx.guild.roles, name=name)
 
 def setup(bot):
 	bot.add_cog(Role(bot))
