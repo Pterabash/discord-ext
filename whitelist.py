@@ -16,24 +16,23 @@ def idRead():
 
 async def wlCheck(ctx):
 	if not idRead(): idAdd(ctx.author.id)
-	await ctx.send(ctx.author.id in idRead())
-	return True #ctx.author.id in idRead()
+	return ctx.author.id in idRead()
 
 
 class Whitelist(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command('wl', brief='Get whitelist')
+	@commands.command('wlget', brief='Get whitelist')
 	async def wlGet(self, ctx):
 		for id in idRead(): await ctx.send(id)
 
-	@commands.command('add', brief='Add member to whitelist')
+	@commands.command('wladd', brief='Add member to whitelist')
 	async def wlAdd(self, ctx, member:discord.Member):
 		idAdd(member.id)
 
-	@commands.command('rmv', brief='Remove member from whitelist')
-	async def wl_rmv(self, ctx, member:discord.Member):
+	@commands.command('wlrmv', brief='Remove member from whitelist')
+	async def wlRmv(self, ctx, member:discord.Member):
 		if ctx.author.id != member.id:
 			idRmv(member.id)
 		else: await ctx.send('Why remove yourself?')
