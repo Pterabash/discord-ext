@@ -1,54 +1,41 @@
-import sqlite3
+import shelve
 import discord
 from discord.ext import commands
 
-def wl_exec(sql, *val):
-	con = sqlite3.connect('wl.db')
-	con.execute(sql, tuple(val))
-	con.commit()
-	con.close()
+def idAdd(id):
+	with shelve.open('whitelists', 'c') as wls:
+		wls[str(id)] = id
 
-#@bot.check
-#async def check(ctx):
-#    author_id = str(ctx.author.id)
-#    try: 
-#        whitelist = open('whitelist').read()
-#        return author_id in whitelist
-#    except: 
-#        open('whitelist', 'w').write(author_id)
-#        return True
+def idRmv(id):
+	with shelve.open('whitelists', 'c') as wls:
+		rm wls[str(id)]
+
+def idRead():
+	with shelve.open('whitelists', 'c') as wls:
+		return [wls[key] for key in wls.keys()]
+
+async def wlCheck(ctx):
+	if not wls.keys(): idAdd(ctx.author.id)
+	await ctx.send(ctx.author.id in idRead())
+	return True #ctx.author.id in idRead()
 
 
 class Whitelist(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command('init', brief='Activate whitelist')
-	async def wl_init(self, ctx):
-		sql = 'CREATE TABLE IF NOT EXISTS whitelist (id INTEGER PRIMARY KEY)'
-		wl_exec(sql)
-		sql = 'INSERT OR IGNORE INTO whitelist VALUES(?)'
-		wl_exec(sql, ctx.author.id)
-
-	@commands.command('wl', brief="List whitelisted members' ID")
-	async def wl_list(self, ctx, member:discord.Member):
-		con = sqlite3.connect('wl.db')
-		sql = 'SELECT id FROM whitelist'
-		data = con.execute(sql)
-		urls = [rows[0] for rows in data]
-		con.close()
-		await ctx.send('\n'.join(urls))
+	@commands.command('wl', brief='Get whitelist')
+	async def wlGet(self, ctx):
+		for id in idRead(): await ctx.send(id)
 
 	@commands.command('add', brief='Add member to whitelist')
-	async def wl_add(self, ctx, member:discord.Member):
-		sql = 'INSERT OR IGNORE INTO whitelist VALUES(?)'
-		wl_exec(sql, member.id)
+	async def wlAdd(self, ctx, member:discord.Member):
+		idAdd(member.id)
 
 	@commands.command('rmv', brief='Remove member from whitelist')
 	async def wl_rmv(self, ctx, member:discord.Member):
 		if ctx.author.id != member.id:
-			sql = 'DELETE FROM whitelist WHERE id=?'
-			wl_exec(sql, member.id)
+			idRmv(member.id)
 		else: await ctx.send('Why remove yourself?')
 
 
