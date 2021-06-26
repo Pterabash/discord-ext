@@ -2,6 +2,10 @@ import shelve
 import discord
 from discord.ext import commands
 
+def idRead():
+	with shelve.open('whitelists', 'c') as wls:
+		return [wls[key] for key in wls.keys()]
+
 def idAdd(id):
 	with shelve.open('whitelists', 'c') as wls:
 		wls[str(id)] = id
@@ -9,10 +13,6 @@ def idAdd(id):
 def idRmv(id):
 	with shelve.open('whitelists', 'c') as wls:
 		del wls[str(id)]
-
-def idRead():
-	with shelve.open('whitelists', 'c') as wls:
-		return [wls[key] for key in wls.keys()]
 
 async def wlCheck(ctx):
 	if not idRead(): idAdd(ctx.author.id)
@@ -33,8 +33,7 @@ class Whitelist(commands.Cog):
 
 	@commands.command('wlrmv', brief='Remove member from whitelist')
 	async def wlRmv(self, ctx, member:discord.Member):
-		if ctx.author.id != member.id:
-			idRmv(member.id)
+		if ctx.author.id != member.id: idRmv(member.id)
 		else: await ctx.send('Why remove yourself?')
 
 
