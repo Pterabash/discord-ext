@@ -22,14 +22,14 @@ class Package(commands.Cog):
 		aliases=['pkgadd'],
 		brief='Install Python package')
 	async def pkgInstall(self, ctx, package: str):
-		pipRun(ctx, 'install', package)
+		await pipRun(ctx, 'install', package)
 
 	@commands.command(
 		'pkgunst',
 		aliases=['pkgrmv'],
 		brief='Uninstall Python package')
 	async def pkgUninstall(self, ctx, package: str):
-		pipRun(ctx, 'uninstall', package)
+		await pipRun(ctx, 'uninstall', package)
 
 
 def setup(bot):
