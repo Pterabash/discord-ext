@@ -30,7 +30,7 @@ class Package(commands.Cog):
 		aliases=['pkgrmv'],
 		brief='Uninstall Python package')
 	async def pkgUninstall(self, ctx, package: str):
-		await ctx.send(pipRun('uninstall', package, 'y'))
+		await ctx.send(pipRun('uninstall', package, b'y'))
 
 
 def setup(bot):
