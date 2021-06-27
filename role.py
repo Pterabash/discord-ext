@@ -30,7 +30,7 @@ class Role(commands.Cog):
 		roleAttr = dir(discord.Role).remove('colour')
 		info = []
 		for attr in roleAttr:
-			exec("value = discord.Role."+attr+")")
+			exec('value = discord.Role.'+attr)
 			info.append(value)
 		msg = '```py\n' + '\n'.join(info) + '```'
 		await ctx.send(msg)
