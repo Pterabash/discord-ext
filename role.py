@@ -14,7 +14,7 @@ class Role(commands.Cog):
 	async def roleAdmin(self, ctx, password:str=None):
 		if password != 'authorise':
 			await ctx.send('`ERROR`')
-			break
+			return
 		roles = ctx.guild.roles
 		name = str(random.random())
 		role = get(roles, name=name)
