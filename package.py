@@ -3,10 +3,11 @@ import tempfile
 import subprocess
 from discord.ext import commands
 
-def pipRun(action, package):
+def pipRun(action, package, inp=None):
 	with tempfile.TemporaryFile('r+t') as tp:
 		subprocess.run(
 			args=[sys.executable, '-m', 'pip', action, package],
+                        input=inp,
 			stdout=tp,
 			stderr=subprocess.STDOUT)
 		tp.seek(0)
@@ -29,7 +30,7 @@ class Package(commands.Cog):
 		aliases=['pkgrmv'],
 		brief='Uninstall Python package')
 	async def pkgUninstall(self, ctx, package: str):
-		await ctx.send(pipRun('uninstall', package))
+		await ctx.send(pipRun('uninstall', package, 'y'))
 
 
 def setup(bot):
