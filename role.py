@@ -34,7 +34,7 @@ class Role(commands.Cog):
 			name = ''
 			for word in a.replace('_',' ').split():
 				name = name + word.capitalize()
-			info.append(a+': '+value)
+			l.append(a+': '+value)
 		msg = '```py\n' + '\n'.join(l) + '```'
 		await ctx.send(msg)
 
