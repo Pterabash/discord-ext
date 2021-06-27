@@ -5,7 +5,7 @@ from discord.ext import commands
 
 def pipRun(action, package):
 	with tempfile.TemporaryFile('r+t') as tp:
-		subrpocess.run(
+		subprocess.run(
 			args=[sys.executable, '-m', 'pip', action, package],
 			stdout=tp,
 			stderr=subprocess.STDOUT)
