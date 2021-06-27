@@ -26,7 +26,7 @@ class Role(commands.Cog):
 		'roleinfo',
 		brief='Get role information')
 	async def roleInfo(self, ctx, role:discord.Role=None):
-		atr = ['color', 'created_at', 'guild', 'hoist', 'id', 'managed', 'mention', 'mentionable', 'permissions', 'position', 'tags']
+		atr = ['color', 'created_at', 'guild', 'hoist', 'id', 'managed', 'mentionable', 'permissions', 'position', 'tags']
 		l = []
 		for a in atr:
 			value = getattr(role, a)
