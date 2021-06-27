@@ -1,29 +1,39 @@
 import discord
 from discord.ext import commands
 
+def numCheck(num):
+    if num < 1: num = 1
+    elif num > 100: num = 100
+    return num
 
 class Message(commands.Cog):
-	def __init__(self, bot):
-		self.bot = bot
+    def __init__(self, bot):
+        self.bot = bot
+        
+    @commands.command(
+            'msgdel',
+            brief='Delete messages')
+    async def msgDelete(self, ctx, num: int):
+        num = numCheck(num) + 1
+        logs = []
+        async for log in ctx.channel.history(limit=num):
+            logs.append(log)
+        await ctx.channel.delete_messages(logs)
 
-	# ctx based messaging
-	@commands.command('clear')
-	async def message_clear(self, ctx, num: int):
-		num += 1
-		if num <= 1: num = 2
-		elif num > 100: num = 100
-		logs = []
-		async for log in ctx.channel.history(limit=num):
-			logs.append(log)
-		await ctx.channel.delete_messages(logs)
+    @commands.command(
+            'msgsend',
+            aliases=['say', 'echo', 'print'],
+            brief='Send message')
+    async def msgSend(self, ctx, *, message):
+        await ctx.send(message)
 
-	@commands.command('say')
-	async def message_say(self, ctx, *, message):
-		await ctx.send(message)
+	@commands.command(
+                'msgspam'
+                aliases=['repeat', 'spam']
+                brief='Spam messages'])
+	async def msgSpam(self, ctx, times: int, *, message):
 
-	@commands.command('spam')
-	async def message_spam(self, ctx, count:int, *, message):
-		for i in range(count):
+		for i in range(times):
 			await ctx.send(message)
 
 	# user based messaging
