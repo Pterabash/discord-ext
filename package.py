@@ -15,7 +15,7 @@ class Package(commands.Cog):
 
 	@commands.command(
 		'pkginst',
-		aliases=['pkgrmv'],
+		aliases=['pkgadd'],
 		brief='Install Python package')
 	async def pkgInstall(self, ctx, package: str):
 		pipInstall(package)
