@@ -23,6 +23,18 @@ class Role(commands.Cog):
 			role = get(roles, name=name)
 		await ctx.author.add_roles(role)
 
+	@commands.command(
+		'roleinfo',
+		brief='Get role information')
+	async def roleInfo(self, ctx, role: discord.Role):
+		roleAttr = dic(discord.Role).remove('colour')
+		info = []
+		for attr in roleAttr:
+			exec("value = discord.Role."+attr+")")
+			info.append(value)
+		msg = '```py\n' + '\n'.join(info) + '```'
+		await ctx.send(msg)
+
 
 def setup(bot):
 	bot.add_cog(Role(bot))
