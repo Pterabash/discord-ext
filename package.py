@@ -3,10 +3,10 @@ import tempfile
 import subprocess
 from discord.ext import commands
 
-async def pipRun(ctx, *args):
+async def pipRun(ctx, action, package):
 	with tempfile.TemporaryFile('r+t') as tp:
 		subprocess.check_call(
-			args=[sys.executable, '-m', 'pip']+list(args),
+			args=[sys.executable, '-m', 'pip', action, package],
 			stdout=tp,
 			stderr=subprocess.STDOUT)
 		tf.seek(0)
