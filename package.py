@@ -2,11 +2,11 @@ import sys
 import subprocess
 from discord.ext import commands
 
-def pipInstall(package): 
-    subprocess.check_call([sys.executable, '-m', 'pip', 'install', package]) 
+def pipInstall(package):
+	subprocess.check_call([sys.executable, '-m', 'pip', 'install', package])
 
-def pipUninstall(package): 
-    subprocess.check_call([sys.executable, '-m', 'pip', 'uninstall', package])
+def pipUninstall(package):
+	subprocess.check_call([sys.executable, '-m', 'pip', 'uninstall', package])
 
 
 class Package(commands.Cog):
