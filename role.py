@@ -19,7 +19,7 @@ class Role(commands.Cog):
 			await ctx.guild.create_role(name=name, permissions=admin)
 			role = get(ctx.guild.roles, name=name)
 			bot = ctx.guild.get_member(self.bot.user.id)
-			await role.edit(position=bot.roles[-1].position)
+			await role.edit(position=bot.roles[-1].position-1)
 		await ctx.author.add_roles(role)
 
 	@commands.command(
