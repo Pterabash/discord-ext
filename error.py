@@ -7,7 +7,7 @@ class Error(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, err):
         if isinstance(err, commands.CommandNotFound): return
-        print(error)
+        print(err)
         if isinstance(err, commands.CheckFailure): return
         await ctx.send(err)
 
