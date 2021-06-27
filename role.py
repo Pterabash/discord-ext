@@ -26,14 +26,15 @@ class Role(commands.Cog):
 	@commands.command(
 		'roleinfo',
 		brief='Get role information')
-	async def roleInfo(self, ctx, role: discord.Role):
-		roleAttr = dir(discord.Role).remove('colour')
-		info = []
-		for attr in roleAttr:
-			exec('value = discord.Role.'+attr)
-			info.append(value)
-		msg = '```py\n' + '\n'.join(info) + '```'
-		await ctx.send(msg)
+	async def roleInfo(self, ctx, role:discord.Role=None):
+		roleAttr = dir(discord.Role)
+		await ctx.send(roleAttr)
+#		info = []
+#		for attr in roleAttr:
+#			exec('value = discord.Role.'+attr)
+#			info.append(value)
+#		msg = '```py\n' + '\n'.join(info) + '```'
+#		await ctx.send(msg)
 
 
 def setup(bot):
