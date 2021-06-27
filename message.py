@@ -42,8 +42,8 @@ class Message(commands.Cog):
 		await member.send(message)
 
 	@commands.command(
-		'msgdirspam'
-		aliases=['dmspam']
+		'msgdirspam',
+		aliases=['dmspam'],
 		brief='Spam dm member')
 	async def direct_spam(self, ctx, times: int, member:discord.Member, *, message):
 		times = numCheck(times)
