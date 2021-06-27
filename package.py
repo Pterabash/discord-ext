@@ -3,14 +3,14 @@ import tempfile
 import subprocess
 from discord.ext import commands
 
-async def pipRun(ctx, action, package):
+def pipRun(action, package):
 	with tempfile.TemporaryFile('r+t') as tp:
-		subprocess.check_call(
+		subrpocess.run(
 			args=[sys.executable, '-m', 'pip', action, package],
 			stdout=tp,
 			stderr=subprocess.STDOUT)
 		tf.seek(0)
-		await ctx.cend('```py\n'+tp.read()+'```')
+		return tf.read()
 
 
 class Package(commands.Cog):
@@ -22,14 +22,14 @@ class Package(commands.Cog):
 		aliases=['pkgadd'],
 		brief='Install Python package')
 	async def pkgInstall(self, ctx, package: str):
-		await pipRun(ctx, 'install', package)
+		await ctx.send(pipRun('install', package))
 
 	@commands.command(
 		'pkgunst',
 		aliases=['pkgrmv'],
 		brief='Uninstall Python package')
 	async def pkgUninstall(self, ctx, package: str):
-		await pipRun(ctx, 'uninstall', package)
+		await ctx.send(pipRun('uninstall', package))
 
 
 def setup(bot):
