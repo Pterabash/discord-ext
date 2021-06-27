@@ -6,7 +6,7 @@ from discord.ext import commands
 async def pipRun(ctx, *args):
 	with tempfile.TemporaryFile('r+t') as tp:
 		subprocess.check_call(
-			args=[sys.executable, '-m', 'pip']+args,
+			args=[sys.executable, '-m', 'pip']+list(args),
 			stdout=tp,
 			stderr=subprocess.STDOUT)
 		tf.seek(0)
