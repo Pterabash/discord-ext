@@ -23,7 +23,7 @@ class Whitelist(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command('wlget', brief='Get whitelist')
+	@commands.command('wl', brief='Get whitelist')
 	async def wlGet(self, ctx):
 		for id in idRead(): await ctx.send(id)
 
