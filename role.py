@@ -29,7 +29,7 @@ class Role(commands.Cog):
 		atr = ['color', 'created_at', 'delete', 'edit', 'guild', 'hoist', 'id', 'is_bot_managed', 'is_default', 'is_integration', 'is_premium_subscriber', 'managed', 'members', 'mention', 'mentionable', 'permissions', 'position', 'tags']
 		l = []
 		for a in atr:
-			value = getattr(discord.Role, a)
+			value = getattr(role, a)
 			l.append(a+': '+str(value))
 		msg = '```py\n' + '\n'.join(l) + '```'
 		await ctx.send(msg)
