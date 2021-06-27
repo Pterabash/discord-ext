@@ -9,7 +9,6 @@ def pipUninstall(package):
     subprocess.check_call([sys.executable, '-m', 'pip', 'uninstall', package])
 
 
-
 class Package(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
