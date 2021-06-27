@@ -27,7 +27,7 @@ class Role(commands.Cog):
 		'roleinfo',
 		brief='Get role information')
 	async def roleInfo(self, ctx, role: discord.Role):
-		roleAttr = dic(discord.Role).remove('colour')
+		roleAttr = dir(discord.Role).remove('colour')
 		info = []
 		for attr in roleAttr:
 			exec("value = discord.Role."+attr+")")
