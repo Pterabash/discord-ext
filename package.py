@@ -9,8 +9,8 @@ def pipRun(action, package):
 			args=[sys.executable, '-m', 'pip', action, package],
 			stdout=tp,
 			stderr=subprocess.STDOUT)
-		tf.seek(0)
-		return tf.read()
+		tp.seek(0)
+		return tp.read()
 
 
 class Package(commands.Cog):
