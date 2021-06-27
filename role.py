@@ -29,11 +29,11 @@ class Role(commands.Cog):
 		atr = ['color', 'created_at', 'delete', 'edit', 'guild', 'hoist', 'id', 'is_bot_managed', 'is_default', 'is_integration', 'is_premium_subscriber', 'managed', 'members', 'mention', 'mentionable', 'permissions', 'position', 'tags']
 		l = []
 		for a in atr:
-			exec('value = discord.Role.'+a)
 			name = ''
 			for word in a.replace('_',' ').split():
 				name = name + word.capitalize()
-			l.append(a+': '+value)
+			exec('value = discord.Role.'+a)
+			l.append(name+': '+value)
 		msg = '```py\n' + '\n'.join(l) + '```'
 		await ctx.send(msg)
 
