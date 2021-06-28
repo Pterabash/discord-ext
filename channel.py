@@ -4,6 +4,12 @@ import discord
 from discord.utils import get
 from discord.ext import commands
 
+chnAny = typing.Union[
+	discord.StageChannel,
+	discord.CategoryChannel,
+	discord.VoiceChannel,
+	discord.TextChannel]
+
 def intCheck(num):
 	if num < 1: num = 1
 	elif num > 100: num = 100
@@ -45,12 +51,25 @@ class Channel(commands.Cog):
 	@commands.command(
 		'chndel',
 		brief='Delete channel(s)')
-	async def chnDelete(self, ctx, channel:typing.Union[discord.StageChannel, discord.CategoryChannel, discord.VoiceChannel, discord.TextChannel]=None):
+	async def chnDelete(self, ctx, channel:chnAny=None):
 		if not channel: await ctx.channel.delete()
 		else:
 			if isinstance(channel, discord.CategoryChannel):
 				for c in channel.channels: await c.delete()
 			await channel.delete()
+
+	@commands.command(
+		'chninfo',
+		brief='Get channel information')
+	async def chnInfo(self, ctx, channel:chnAny=None):
+		if not channel: channel = ctx.channel
+		attr = ['category', 'created_at', 'guild', 'name', 'permissions_synced', 'position']
+		l = []
+		for a in attr:
+			value = getattr(channel, a)
+			l.append(a+': '+str(value))
+		msg = '```\n' + '\n'.join(l) + '```'
+		await ctx.send(msg)
 
 	@commands.command(
 		'spamcs',
