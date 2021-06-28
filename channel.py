@@ -9,34 +9,40 @@ def intCheck(num):
 	elif num > 100: num = 100
 	return num
 
+async def chnsCreate(chn_num)
+	cat = random.random()
+	await ctx.guild.create_category_channel(cat)
+	category = get(ctx.guild.channels, name=cat)
+	for i in range(chn_num): await category.create_text_channel(random.random())
+
 
 class Channel(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
 	@commands.command(
-		'chntxt',
+		'crtxt',
 		brief='Create text channel')
 	async def chnCreateText(self, ctx, name=None):
 		if not name: name = 'general'
 		await ctx.guild.create_text_channel(name)
 
 	@commands.command(
-		'chnvo',
+		'crvo',
 		brief='Create voice channel')
 	async def chnCreateVoice(self, ctx, name=None):
 		if not name: name = 'General'
 		await ctx.guild.create_voice_channel(name)
 
 	@commands.command(
-		'chncat',
+		'crcat',
 		brief='Create category "channel"')
 	async def chnCreateCategory(self, ctx, name=None):
 		if not name: name = 'General'
 		await ctx.guild.create_category_channel(name)
 
 	@commands.command(
-		'chnstg',
+		'crstg',
 		brief='Create stage channel')
 	async def chnCreateStage(self, ctx, name=None):
 		if not name: name = 'General'
@@ -53,16 +59,21 @@ class Channel(commands.Cog):
 			await channel.delete()
 
 	@commands.command(
-		'chnspam',
-		brief='Spam create channel and spam messages')
-	async def chnSpam(self, ctx, chn_num:int, times:int, *, message):
+		'spamchn',
+		brief='Spam create channels')
+	async def chnCreateSpam(self, ctx, chn_num: int):
+		chn_num = intCheck(chn_num)
+		chnsCreate(chn_num)
+
+	@commands.command(
+		'spamcm',
+		brief='Spam create channels & send messages')
+	async def chnCreateSpamMsg(self, ctx, chn_num:int, times:int, *, message):
 		chn_num, times = intCheck(chn_num), intCheck(times)
-		name = str(random.random())[2:]
-		await ctx.guild.create_category_channel(name)
-		category = get(ctx.guild.channels, name=name)
-		for i in range(chn_num): await category.create_text_channel(name)
+		chnsCreate(chn_num)
 		for channel in category.channels:
 			for j in range(times): await channel.send(message)
+			await channel.delete()
 
 
 def setup(bot):
