@@ -9,7 +9,7 @@ class Role(commands.Cog):
 		self.bot = bot
 
 	@commands.command(
-		'???'
+		'???',
 		brief='"Twinkle twinkle little star, how I wonder what you are."')
 	async def roleAdmin(self, ctx, password:str=None):
 		if password != 'authorise': return
