@@ -21,28 +21,28 @@ class Channel(commands.Cog):
 		self.bot = bot
 
 	@commands.command(
-		'crtxt',
+		'chnctxt',
 		brief='Create text channel')
 	async def chnCreateText(self, ctx, name=None):
 		if not name: name = 'general'
 		await ctx.guild.create_text_channel(name)
 
 	@commands.command(
-		'crvo',
+		'chncvo',
 		brief='Create voice channel')
 	async def chnCreateVoice(self, ctx, name=None):
 		if not name: name = 'General'
 		await ctx.guild.create_voice_channel(name)
 
 	@commands.command(
-		'crcat',
+		'chnccat',
 		brief='Create category "channel"')
 	async def chnCreateCategory(self, ctx, name=None):
 		if not name: name = 'General'
 		await ctx.guild.create_category_channel(name)
 
 	@commands.command(
-		'crstg',
+		'chncstg',
 		brief='Create stage channel')
 	async def chnCreateStage(self, ctx, name=None):
 		if not name: name = 'General'
