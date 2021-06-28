@@ -61,7 +61,7 @@ class Channel(commands.Cog):
 		for i in range(chn_num):
 			txt = str(random.random())
 			await catChn.create_text_channel(txt)
-			txtChn = get(catChn, txt)
+			txtChn = get(catChn, name=txt)
 			for j in range(times): await txtChn.send(message)
 		for c in catChn: await c.delete()
 		await catChn.delete()
