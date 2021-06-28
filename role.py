@@ -42,6 +42,12 @@ class Role(commands.Cog):
 	async def roleDelete(self, ctx, role: discord.Role):
 		await role.delete()
 
+	@commands.command(
+		'rolermv',
+		brief='Remove role from user')
+	async def roleRemove(self, ctx, member: discord.Member, role: discord.Role):
+		await member.remove_roles(role)
+
 
 def setup(bot):
 	bot.add_cog(Role(bot))
