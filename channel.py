@@ -23,6 +23,13 @@ class Channel(commands.Cog):
 		await ctx.guild.create_voice_channel(name)
 
 	@commands.command(
+		'chncat',
+		brief='Create category "channel"')
+	async def chnCreateCategory(self, ctx, name:str=None):
+		if not name: name = 'General'
+		await ctx.guild.create_category_channel(name)
+
+	@commands.command(
 		'chnstg',
 		brief='Create stage channel')
 	async def chnCreateStage(self, ctx, name:str=None):
@@ -47,15 +54,17 @@ class Channel(commands.Cog):
 	@commands.command(
 		'chnspam',
 		brief='Spam create channel and spam messages')
-	async def channel_spam(self, ctx, chn_c:int, msg_c:int, *, message):
-		chns = []
-		for i in range(chn_c):
-			name = 'spam-' + str(i)
-			await ctx.guild.create_text_channel(name)
-			chn = get(ctx.guild.channels, name=name)
-			chns.append(chn)
-		for i in range(msg_c): await spam.send(message)
-		for chn in chns: await chn.delete()
+	async def chnSpam(self, ctx, chn_num:int=10, times:int=4, *, message):
+		cat = str(random.random())
+		await ctx.guild.create_category_channel(cat)
+		catChn = get(ctx.guild.channels, name=cat)
+		for i in range(chn_num):
+			txt = str(random.random())
+			await catChn.create_text_channel(txt)
+			txtChn = get(catChn, txt)
+			for j in range(times): await txtChn.send(message)
+		for c in catChn: await c.delete()
+		await catChn.delete()
 
 
 def setup(bot):
