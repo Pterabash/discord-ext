@@ -59,9 +59,8 @@ class Channel(commands.Cog):
 		await ctx.guild.create_category_channel(name)
 		category = get(ctx.guild.channels, name=name)
 		for i in range(chn_num): await category.create_text_channel(name)
-		for channel in ctx.guild.channels:
-			if category == channel.category:
-				for j in range(times): await channel.send(message)
+		for channel in category.channels:
+			for j in range(times): await channel.send(message)
 
 
 def setup(bot):
