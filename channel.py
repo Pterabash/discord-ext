@@ -1,4 +1,5 @@
 import random
+import typing
 import discord
 from discord.utils import get
 from discord.ext import commands
@@ -31,9 +32,17 @@ class Channel(commands.Cog):
 	@commands.command(
 		'chndel',
 		brief='Delete a channel')
-	async def chnDelete(self, ctx, channel:discord.abc.GuildChannel=None):
+	async def chnDelete(self, ctx, 
+		channel:typing.Union[
+			discord.StageChannel, 
+			discord.CategoryChannel,
+			discord.VoiceChannel,
+			discord.TextChannel]=None):
 		if not channel: await ctx.channel.delete()
-		else: await channel.delete()
+		else:
+			if isinstance(channel, discord.CategoryChannel):
+				for c in channel.channels: await c.delete()
+			await channel.delete()
 
 	@commands.command(
 		'chnspam',
