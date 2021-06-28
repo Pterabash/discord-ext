@@ -19,7 +19,7 @@ class Message(commands.Cog):
 	@commands.command(
 		'spamsend',
 		brief='Spam messages')
-	async def msgSpam(self, ctx, times: int, *, message):
+	async def msgSendSpam(self, ctx, times: int, *, message):
 		times = intCheck(times)
 		for i in range(times): await ctx.send(message)
 
