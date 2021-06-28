@@ -60,7 +60,7 @@ class Channel(commands.Cog):
 		category = get(ctx.guild.channels, name=name)
 		for i in range(chn_num): await category.create_text_channel(name)
 		for channel in ctx.guild.channels:
-			if isinstance(category, channel.category):
+			if category == channel.category:
 				for j in range(times): await channel.send(message)
 
 
