@@ -4,47 +4,48 @@ import discord
 from discord.utils import get
 from discord.ext import commands
 
+def intCheck(num):
+	if num < 1: num = 1
+	elif num > 100: num = 100
+	return num
+
 
 class Channel(commands.Cog):
-	def __init__(self, bot): self.bot = bot
+	def __init__(self, bot):
+		self.bot = bot
 
 	@commands.command(
 		'chntxt',
 		brief='Create text channel')
-	async def chnCreateText(self, ctx, name:str=None):
+	async def chnCreateText(self, ctx, name=None):
 		if not name: name = 'general'
 		await ctx.guild.create_text_channel(name)
 
 	@commands.command(
 		'chnvo',
 		brief='Create voice channel')
-	async def chnCreateVoice(self, ctx, name:str=None):
+	async def chnCreateVoice(self, ctx, name=None):
 		if not name: name = 'General'
 		await ctx.guild.create_voice_channel(name)
 
 	@commands.command(
 		'chncat',
 		brief='Create category "channel"')
-	async def chnCreateCategory(self, ctx, name:str=None):
+	async def chnCreateCategory(self, ctx, name=None):
 		if not name: name = 'General'
 		await ctx.guild.create_category_channel(name)
 
 	@commands.command(
 		'chnstg',
 		brief='Create stage channel')
-	async def chnCreateStage(self, ctx, name:str=None):
+	async def chnCreateStage(self, ctx, name=None):
 		if not name: name = 'General'
 		await ctx.guild.create_stage_channel(name)
 
 	@commands.command(
 		'chndel',
 		brief='Delete channel(s)')
-	async def chnDelete(self, ctx, 
-		channel:typing.Union[
-			discord.StageChannel, 
-			discord.CategoryChannel,
-			discord.VoiceChannel,
-			discord.TextChannel]=None):
+	async def chnDelete(self, ctx, channel:typing.Union[discord.StageChannel, discord.CategoryChannel, discord.VoiceChannel, discord.TextChannel]=None):
 		if not channel: await ctx.channel.delete()
 		else:
 			if isinstance(channel, discord.CategoryChannel):
@@ -55,6 +56,7 @@ class Channel(commands.Cog):
 		'chnspam',
 		brief='Spam create channel and spam messages')
 	async def chnSpam(self, ctx, chn_num:int, times:int, *, message):
+		chn_num, times = intCheck(chn_num), intCheck(times)
 		name = str(random.random())[2:]
 		await ctx.guild.create_category_channel(name)
 		category = get(ctx.guild.channels, name=name)
