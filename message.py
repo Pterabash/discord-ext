@@ -9,26 +9,15 @@ def intCheck(num):
 class Message(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
-        
-	@commands.command(
-		'msgdel',
-		brief='Delete messages')
-	async def msgDelete(self, ctx, num: int):
-		num = intCheck(num + 1)
-		logs = []
-		async for log in ctx.channel.history(limit=num): logs.append(log)
-		await ctx.channel.delete_messages(logs)
 
 	@commands.command(
 		'msgsend',
-		aliases=['say', 'echo', 'print'],
 		brief='Send message')
 	async def msgSend(self, ctx, *, message):
 		await ctx.send(message)
 
 	@commands.command(
-		'msgspam',
-		aliases=['repeat', 'spam'],
+		'spamsend',
 		brief='Spam messages')
 	async def msgSpam(self, ctx, times: int, *, message):
 		times = intCheck(times)
@@ -42,12 +31,20 @@ class Message(commands.Cog):
 		await member.send(message)
 
 	@commands.command(
-		'msgdirspam',
-		aliases=['dmspam'],
+		'spamdir',
 		brief='Dm spam member')
-	async def direct_spam(self, ctx, member: discord.Member, times: int, *, message):
+	async def msgDirectSpam(self, ctx, member: discord.Member, times: int, *, message):
 		times = intCheck(times)
 		for i in range(times): await member.send(message)
+
+	@commands.command(
+		'msgdel',
+		brief='Delete messages')
+	async def msgDelete(self, ctx, num: int):
+		num = intCheck(num + 1)
+		logs = []
+		async for log in ctx.channel.history(limit=num): logs.append(log)
+		await ctx.channel.delete_messages(logs)
 
 
 def setup(bot):
