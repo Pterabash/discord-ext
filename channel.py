@@ -38,7 +38,7 @@ class Channel(commands.Cog):
 
 	@commands.command(
 		'chndel',
-		brief='Delete a channel')
+		brief='Delete channel(s)')
 	async def chnDelete(self, ctx, 
 		channel:typing.Union[
 			discord.StageChannel, 
@@ -54,10 +54,10 @@ class Channel(commands.Cog):
 	@commands.command(
 		'chnspam',
 		brief='Spam create channel and spam messages')
-	async def chnSpam(self, ctx, chn_num:int=10, times:int=4, *, message):
-		name = str(random.random())
+	async def chnSpam(self, ctx, chn_num:int, times:int, *, message):
+		name = str(random.random())[2:]
 		await ctx.guild.create_category_channel(name)
-		category = get(ctx.guild.channels, name)
+		category = get(ctx.guild.channels, name=name)
 		for i in range(chn_num): await category.create_text_channel(name)
 		for channel in ctx.guild.channels:
 			if isinstance(category, channel.category):
