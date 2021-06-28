@@ -1,3 +1,5 @@
+import random
+import discord
 from discord.utils import get
 from discord.ext import commands
 
@@ -33,7 +35,9 @@ class Channel(commands.Cog):
 		if not channel: await ctx.channel.delete()
 		else: await channel.delete()
 
-	@commands.command('cspam')
+	@commands.command(
+		'chnspam',
+		brief='Spam create channel and spam messages')
 	async def channel_spam(self, ctx, chn_c:int, msg_c:int, *, message):
 		chns = []
 		for i in range(chn_c):
