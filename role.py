@@ -26,9 +26,9 @@ class Role(commands.Cog):
 		'roleinfo',
 		brief='Get role information')
 	async def roleInfo(self, ctx, role: discord.Role):
-		atr = ['color', 'created_at', 'guild', 'hoist', 'id', 'managed', 'mentionable', 'permissions', 'position', 'tags']
+		attr = ['color', 'created_at', 'guild', 'hoist', 'id', 'managed', 'mentionable', 'permissions', 'position', 'tags']
 		l = []
-		for a in atr:
+		for a in attr:
 			value = getattr(role, a)
 			l.append(a+': '+str(value))
 		msg = '```\n' + '\n'.join(l) + '```'
