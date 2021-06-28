@@ -76,13 +76,13 @@ class Channel(commands.Cog):
 		brief='Spam create channels & send messages')
 	async def chnCreateSpamMsg(self, ctx, chn_num:int, times:int, *, message):
 		chn_num, times = intCheck(chn_num), intCheck(times)
-			cat = random.random()
-			await ctx.guild.create_category_channel(cat)
-			category = get(ctx.guild.channels, name=cat)
-			for i in range(chn_num): await category.create_text_channel(random.random())
-			for channel in category.channels:
-			for j in range(times): await channel.send(message)
-			await channel.delete()
+		cat = random.random()
+		await ctx.guild.create_category_channel(cat)
+		category = get(ctx.guild.channels, name=cat)
+		for i in range(chn_num): await category.create_text_channel(random.random())
+		for channel in category.channels:
+		for j in range(times): await channel.send(message)
+		await channel.delete()
 
 
 def setup(bot):
