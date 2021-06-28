@@ -9,7 +9,7 @@ def intCheck(num):
 	elif num > 100: num = 100
 	return num
 
-async def chnsCreate(chn_num)
+async def chnsCreate(chn_num):
 	cat = random.random()
 	await ctx.guild.create_category_channel(cat)
 	category = get(ctx.guild.channels, name=cat)
