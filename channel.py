@@ -81,8 +81,8 @@ class Channel(commands.Cog):
 		category = get(ctx.guild.channels, name=cat)
 		for i in range(chn_num): await category.create_text_channel(random.random())
 		for channel in category.channels:
-		for j in range(times): await channel.send(message)
-		await channel.delete()
+			for j in range(times): await channel.send(message)
+			await channel.delete()
 
 
 def setup(bot):
