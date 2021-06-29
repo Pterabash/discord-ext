@@ -1,10 +1,13 @@
 # Discord Ext
-Discord.py bot extension modules
+
+Discord.py bot extension examples... Ok, ran out of idea about what to say.
 
 # How to use
+
 Load the extensions file while running a Discord bot.
 
 ## Quick hacks
+
 To prevent having to restart bot everytime trying to load extension, one could do something like:
 
 	@bot.commands()
