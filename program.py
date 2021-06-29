@@ -51,7 +51,7 @@ class Program(commands.Cog):
 		'bashrun',
 		brief='Run bash commands snippet')
 	async def prgmBashRun(self, ctx, name):
-		bashRun(name)
+		for chunk in bashRun(name): await ctx.send(chunk)
 
 
 def setup(bot):
