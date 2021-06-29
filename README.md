@@ -1,5 +1,5 @@
-# ext
-Discord.py bot extensions
+# Discord Ext
+Discord.py bot extension modules
 
 # How to use
 Load the extensions file while running a Discord bot.
