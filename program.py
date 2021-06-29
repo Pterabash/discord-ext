@@ -51,7 +51,7 @@ class Program(commands.Cog):
 		'bashrun',
 		brief='Run bash commands snippet')
 	async def prgmBashRun(self, ctx, name):
-		bashAdd(name)
+		bashRun(name)
 
 
 def setup(bot):
