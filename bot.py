@@ -12,7 +12,7 @@ class Bot(commands.Cog):
 	async def botMorph(self, ctx, member:discord.Member=None):
 		if not member: await self.bot.user.edit(username='Bot User', avatar=None)
 		else:
-			await av = member.avatar_url.read()
+			av = await member.avatar_url.read()
 			await self.bot.user.edit(username=member.name, avatar=av)
 
 
