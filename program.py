@@ -5,7 +5,7 @@ from discord.ext import commands
 
 def bashList():
 	with shelve.open('bash', 'c') as sh:
-		return sh.keys()
+		return [key for key in sh.keys()]
 
 def bashAdd(name, cmds):
 	with shelve.open('bash', 'c') as sh:
@@ -33,7 +33,7 @@ class Program(commands.Cog):
 		'bashlist',
 		brief='List bash command snippets')
 	async def prgmBashList(self, ctx):
-		await ctx.send(bashList())
+		await ctx.send('```\n'+'\n'.join(pathList())+'```')
 
 	@commands.command(
 		'bashadd',
