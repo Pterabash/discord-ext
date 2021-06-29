@@ -53,6 +53,12 @@ class Program(commands.Cog):
 	async def prgmBashRun(self, ctx, name):
 		for chunk in bashRun(name): await ctx.send(chunk)
 
+	@commands.command(
+		'prgmrun',
+		brief='Run code by language (based on snippet)')
+	async def prgmRun(self, lang, *, code):
+		pass # later 
+
 
 def setup(bot):
 	bot.add_cog(Program(bot))
