@@ -4,7 +4,11 @@ from discord.ext import commands
 
 def prgmRun(args):
 	with tempfile.TemporaryFile('r+t') as tp:
-		subprocess.run(args=args, stdout=tp, stderr=subprocess.STDOUT, timeout=10, shell=True)
+		subprocess.run(
+			args=args,
+			stdout=tp,
+			stderr=subprocess.STDOUT,
+			timeout=10)
 		tp.seek(0)
 		log = tp.read()
 		x = 2000
