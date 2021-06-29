@@ -53,5 +53,6 @@ class Program(commands.Cog):
 	async def prgmBashRun(self, ctx, name):
 		cmdAdd(name)
 
+
 def setup(bot):
 	bot.add_cog(Program(bot))
