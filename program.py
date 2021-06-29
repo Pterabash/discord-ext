@@ -33,7 +33,7 @@ class Program(commands.Cog):
 		'bashlist',
 		brief='List bash command snippets')
 	async def prgmBashList(self, ctx):
-		await ctx.send('```\n'+'\n'.join(pathList())+'```')
+		await ctx.send('```\n'+'\n'.join(bashList())+'```')
 
 	@commands.command(
 		'bashadd',
