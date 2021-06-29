@@ -1,50 +1,57 @@
-import os, subprocess
+import shelve
+import tempfile
+import subprocess
 from discord.ext import commands
 
+def bashList():
+	with shelve.open('bash', 'c') as sh:
+		return [sh[key] for key in sh.keys()]
 
-class code:
-    @staticmethod
-    def open(ext, code): open(f'code/input.{ext}', 'w').write(code)
+def bashAdd(name, cmds):
+	with shelve.open('bash', 'c') as sh:
+		sh[name] = cmds
 
-    @staticmethod
-    def run(*args):
-        subprocess.run(args=args,
-                stdout=open('code/output.txt', 'w'),
-                stderr=subprocess.STDOUT,
-                timeout=10)
+def bashRmv(name):
+	with shelve.open('bash', 'c') as sh:
+		del sh[name]
 
-    @staticmethod
-    def log():
-        stdout = open('code/ouput.txt').read()
-        x = 2000
-        return [stdout[y-x:y] for y in range(x, len(stdout)+x, x)]
-
-
-class Programming(commands.Cog):
-    def __init__(self, bot): self.bot = bot
-    
-    @commands.command(brief='code() run() log() inp path')
-    async def add(self, ctx, ext, *args):
-        task = '\n	'.join(args)
-        code = f'''import subprocess
-from ext.programming import code
-from discord.ext import commands
-
-@commands.command()
-async def {ext}(ctx, *, code):
-    ext = '{ext}'
-    {task}
-    for log in code.log(): await ctx.send(log)
-
-def setup(bot): bot.add_command({ext})'''
-        code = code.replace('code.open()', 'code.open(ext, code)')
-	open('code/'+ext+'.py', 'w').write(code)
-	try: self.bot.unload_extension('code.'+ext)
-    	except: pass
-	self.bot.load_extension('code.'+ext)
+def bashRun(name):
+	with shelve.open('bash', 'c') as sh:
+		with tempfile.TemporaryFile('r+t') as tp:
+			subprocess.run(args=sh[name], stdout=tp, stderr=subprocess.STDOUT, timeout=10)
+			tp.seek(0)
+			log = tp.read()
+			x = 2000
+			return [log[y-x:y] for y in range(x,len(log)+x,x)]
 
 
-def setup(bot): 
-    try: os.mkdir('code')
-    except: print('code directory exists')
-    bot.add_cog(Programming(bot))
+class Program(commands.Cog):
+	def __init__(self, bot):
+		self.bot = bot
+
+	@commands.command(
+		'bashlist',
+		brief='List bash command snippets')
+	async def prgmBashList(self, ctx):
+		await ctx.send('```\n'+'\n'.join(bashList())+'```')
+
+	@commands.command(
+		'bashadd',
+		brief='Add bash commands snippet')
+	async def prgmBashAdd(self, ctx, name, *cmds):
+		bashAdd(name, cmds)
+
+	@commands.command(
+		'bashadd',
+		brief='Remove bash commands snippet')
+	async def prgmBashRemove(self, ctx, name):
+		cmdRmv(name)
+
+	@commands.command(
+		'bashrun',
+		brief='Run bash commands snippet')
+	async def prgmBashRun(self, ctx, name):
+		cmdAdd(name)
+
+def setup(bot):
+	bot.add_cog(Program(bot))
