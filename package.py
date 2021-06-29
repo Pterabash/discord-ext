@@ -13,7 +13,7 @@ def pipRun(action, package, inp=None):
 		tp.seek(0)
 		log = tp.read()
 		x = 2000
-		return [log[y-x:y] for y in range(x,len(stdout)+x,x)]
+		return [log[y-x:y] for y in range(x,len(log)+x,x)]
 
 
 class Package(commands.Cog):
