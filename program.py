@@ -42,7 +42,7 @@ class Program(commands.Cog):
 		bashAdd(name, cmds)
 
 	@commands.command(
-		'bashadd',
+		'bashrmv',
 		brief='Remove bash commands snippet')
 	async def prgmBashRemove(self, ctx, name):
 		cmdRmv(name)
