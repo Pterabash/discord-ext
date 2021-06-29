@@ -5,7 +5,7 @@ from discord.ext import commands
 
 def bashList():
 	with shelve.open('bash', 'c') as sh:
-		return [sh[key] for key in sh.keys()]
+		return list(sh.keys())
 
 def bashAdd(name, cmds):
 	with shelve.open('bash', 'c') as sh:
