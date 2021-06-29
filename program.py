@@ -19,7 +19,7 @@ class Program(commands.Cog):
 		'bashrun',
 		brief='Run subprocess')
 	async def prgmBashRun(self, ctx, *cmds):
-		for chunk in bashRun(cmds): await ctx.send(chunk)
+		for chunk in prgmRun(cmds): await ctx.send(chunk)
 
 
 def setup(bot):
