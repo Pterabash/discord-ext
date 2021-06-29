@@ -45,13 +45,13 @@ class Program(commands.Cog):
 		'bashrmv',
 		brief='Remove bash commands snippet')
 	async def prgmBashRemove(self, ctx, name):
-		cmdRmv(name)
+		bashRmv(name)
 
 	@commands.command(
 		'bashrun',
 		brief='Run bash commands snippet')
 	async def prgmBashRun(self, ctx, name):
-		cmdAdd(name)
+		bashAdd(name)
 
 
 def setup(bot):
