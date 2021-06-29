@@ -10,6 +10,14 @@ chnAny = typing.Union[
 	discord.VoiceChannel,
 	discord.TextChannel]
 
+chnAttr = [
+	'category',
+	'created_at',
+	'guild',
+	'name',
+	'permissions_synced',
+	'position']
+
 def intCheck(num):
 	if num < 1: num = 1
 	elif num > 100: num = 100
@@ -63,9 +71,8 @@ class Channel(commands.Cog):
 		brief='Get channel information')
 	async def chnInfo(self, ctx, channel:chnAny=None):
 		if not channel: channel = ctx.channel
-		attr = ['category', 'created_at', 'guild', 'name', 'permissions_synced', 'position']
 		l = []
-		for a in attr:
+		for a in chnAttr:
 			value = getattr(channel, a)
 			l.append(a+': '+str(value))
 		msg = '```\n' + '\n'.join(l) + '```'
