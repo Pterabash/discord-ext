@@ -11,7 +11,9 @@ def pipRun(action, package, inp=None):
 			stdout=tp,
 			stderr=subprocess.STDOUT)
 		tp.seek(0)
-		return tp.read()
+		log = tp.read()
+		x = 2000
+		return [log[y-x:y] for y in range(x,len(stdout)+x,x)]
 
 
 class Package(commands.Cog):
@@ -23,14 +25,15 @@ class Package(commands.Cog):
 		aliases=['pkgadd'],
 		brief='Install Python package')
 	async def pkgInstall(self, ctx, package: str):
-		await ctx.send(pipRun('install', package))
+		for chunk in pipRun('install', package): await ctx.send(chunk)
+		
 
 	@commands.command(
 		'pkgunst',
 		aliases=['pkgrmv'],
 		brief='Uninstall Python package')
 	async def pkgUninstall(self, ctx, package: str):
-		await ctx.send(pipRun('uninstall', package, b'y'))
+		for chunk in pipRun('uninstall', package, b'y'): await ctx.send(chunk)
 
 
 def setup(bot):
