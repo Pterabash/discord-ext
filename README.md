@@ -1,14 +1,19 @@
 # discord-ext
+
 Discord.py bot extensions
 
 # How to use
-Load the extensions file while running a Discord bot.
+For example, you have `ext.py` located at the same directory with `main.py`. You can load the extension file by doing:
+
+	from discord.ext import commands
+	bot = commands.Bot(',')
+	bot.load_extension(ext)
 
 ## Quick hacks
-To prevent having to restart the bot for **n** times everytime trying to load an extension, one could do something like:
+
+To prevent having to restart the bot everytime just to load an extension, one could do something like:
 
 	@bot.commands()
 	async def load(ctx, ext):
 		bot.load_extension(ext)
 
-Also, feel free to checkout [this thing](https://github.com/cicadoves/bot)
