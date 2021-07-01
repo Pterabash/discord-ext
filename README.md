@@ -1,4 +1,4 @@
-# ext
+# discord-ext
 Discord.py bot extensions
 
 # How to use
