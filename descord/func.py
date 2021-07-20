@@ -11,8 +11,7 @@ def rnd_str():
     return str(random.random())[2:]
 
 def code_wrap(txt, wd=1950):
-    ls = textwrap.wrap(txt, wd,
-            break_long_words=False, replace_whitespace=False)
+    ls = textwrap.wrap(txt, wd, replace_whitespace=False)
     return ['```\n'+x+' \n```' for x in ls]
 
 def ls_attr(dic, attrs=None):
