@@ -1,6 +1,6 @@
-import ext
 import importlib
-from func import code_wrap
+import descord.ext
+from descord.func import code_wrap
 from discord.ext import commands
 
 client = commands.Bot(',')
