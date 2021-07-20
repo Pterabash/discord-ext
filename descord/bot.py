@@ -7,7 +7,7 @@ client = commands.Bot(',')
 
 @client.command('exthelp')
 async def exthelp_command(ctx):
-    for x in code_wrap(help(ext)): await ctx.send(x)
+    for x in code_wrap(help(descord.ext): await ctx.send(x)
 
 @client.command('load')
 async def load_command(ctx, mdl):
