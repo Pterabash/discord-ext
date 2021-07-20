@@ -1,13 +1,14 @@
 import discord
-from descord.func import Db, code_wrap
 from discord.ext import commands
+from descord.func import Db, code_wrap
 
 wl = Db('whitelist')
 
 async def wlCheck(ctx):
     if not wl.readval(): wl.write(ctx.author.id)
-    return ctx.author.id in wl.readval()
-
+    in_list =  ctx.author.id in wl.readval()
+    if not in_list: await ctx.send('`Your opinion has been rejected.`')
+    return in_list
 
 class Whitelist(commands.Cog):
     def __init__(self, bot):
