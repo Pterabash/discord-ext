@@ -7,5 +7,4 @@ def test_bot():
     p = Process(target=start_bot, name='Start Bot')
     p.start()
     p.join(timeout=10)
-    assert True
 

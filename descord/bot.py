@@ -21,4 +21,4 @@ def load(mdl, lib='descord.ext'):
     module.setup(client)
 
 def run(token):
-    client.run(token)
+    client.run('x')
