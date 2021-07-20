@@ -10,4 +10,4 @@ def test_code_wrap():
     assert len(func.code_wrap('x'*3900)) == 2
 
 def test_log_proc():
-    assert len(func.log_proc(['echo', 'Hello Bash!']) == 'Hello Bash!'
+    assert func.log_proc(['echo', 'Hello Bash!']) == 'Hello Bash!'
