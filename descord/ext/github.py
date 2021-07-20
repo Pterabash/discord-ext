@@ -3,7 +3,7 @@ from descord.func import Db
 from discord.ext import commands
 from urllib.request import urlretrieve
 
-paths = Db('path.db')
+paths = Db('path')
 gh = 'https://raw.githubusercontent.com/'
 
 def pathToExt(path):
@@ -28,7 +28,7 @@ class GhExt(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.Cog.listener
+    @commands.Cog.listener()
     async def on_ready(self):
         extLoadAll()
 
