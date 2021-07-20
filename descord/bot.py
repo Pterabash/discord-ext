@@ -9,7 +9,7 @@ client = commands.Bot(',')
 @client.command('exthelp')
 async def exthelp_command(ctx):
     ext_doc = pydoc.render_doc(descord.ext, 'Help on %s', renderer=pydoc.plaintext)
-    for x in code_wrap(help_doc): await ctx.send(x)
+    for x in code_wrap(ext_doc): await ctx.send(x)
 
 @client.command('load')
 async def load_command(ctx, mdl):
