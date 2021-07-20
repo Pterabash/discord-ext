@@ -31,8 +31,8 @@ class Db:
     def __init__(self, file):
         self.file = file
 
-    def write(self, key, value=None):
-        if not value: value = key
+    def write(self, value, key=None):
+        if not key: key = str(value)
         with shelve.open(self.file) as db:
             db[key] = value
 
