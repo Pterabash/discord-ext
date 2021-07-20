@@ -2,7 +2,7 @@ import discord
 from descord.func import Db
 from discord.ext import commands
 
-wl = Db('whitelist.db')
+wl = Db('whitelist')
 
 async def wlCheck(ctx):
     if not wl.readval(): wl.write(ctx.author.id)
