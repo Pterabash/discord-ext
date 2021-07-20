@@ -1,13 +1,15 @@
+import pydoc
 import importlib
 import descord.ext
-from descord.func import code_wrap
 from discord.ext import commands
+from descord.func import code_wrap
 
 client = commands.Bot(',')
 
 @client.command('exthelp')
 async def exthelp_command(ctx):
-    for x in code_wrap(help(descord.ext)): await ctx.send(x)
+    help_doc = pydoc.render_doc(descord.ext, 'Help on %s')
+    for x in code_wrap(help_doc): print(x)
 
 @client.command('load')
 async def load_command(ctx, mdl):
