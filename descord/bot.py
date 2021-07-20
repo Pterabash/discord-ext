@@ -1,7 +1,13 @@
+import ext
 import importlib
+from func import code_wrap
 from discord.ext import commands
 
 client = commands.Bot(',')
+
+@client.command('exthelp')
+async def exthelp_command(ctx):
+    for x in code_wrap(help(ext)): await ctx.send(x)
 
 @client.command('load')
 async def load_command(ctx, mdl):
