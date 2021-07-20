@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 setup(
         name='Descord',
         packages=find_packages(include=['descord', 'descord.ext']),
-        version='1.0-25-gbe8c4c0',
+        version='1.0-26-g039fab5',
         description='Discord.py related library.',
         author='thisgary',
         license='MIT',
