@@ -1,5 +1,5 @@
 import discord
-from descord.func import Db
+from descord.func import Db, code_wrap
 from discord.ext import commands
 
 wl = Db('whitelist')
@@ -15,7 +15,7 @@ class Whitelist(commands.Cog):
 
     @commands.command('wl', brief='Get whitelist')
     async def wlGet(self, ctx):
-        await ctx.send(code_wrap('\n'.join(wl.readkey())))
+        for x in code_wrap('\n'.join(wl.readkey())): await ctx.send(x)
 
     @commands.command('wladd', brief='Add member to whitelist')
     async def wlAdd(self, ctx, member:discord.Member):
