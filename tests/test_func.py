@@ -1,4 +1,4 @@
-from descord import func
+from dscord import func
 
 def test_clamp():
     assert func.clamp(50) == 50

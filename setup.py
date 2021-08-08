@@ -1,14 +1,24 @@
-from setuptools import find_packages, setup
+import setuptools
 
-setup(
-        name='Descord',
-        packages=find_packages(include=['descord', 'descord.ext']),
-        version='1.0-27-g4948621',
-        description='Discord.py related library.',
+setuptools.setup(
+        name='Dscord',
+        version='1.0',
         author='thisgary',
+        author_email='gary.github@gmail.com',
+        description='Discord API wrapper\'s wrapper.',
+        long_description=open('README.md').read(),
+        long_description_content_type='text/markdown',
+        packages=setuptools.find_packages(),
+        classifiers=[
+            'Programming Language :: Python :: 3',
+            'License :: OSI Approved :: MIT Lisence',
+            'Operating System :: OS Independent',
+        ],
         license='MIT',
+        python_requires='>=3.7',
         install_requires=['discord.py'],
         setup_requires=['pytest_runner'],
-        test_require=['pytest'],
-        test_suite='tests',)
+        tests_require=['pytest'],
+        test_suite='tests',
+)
 

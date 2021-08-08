@@ -1,7 +1,8 @@
-import typing
 import discord
 from discord.ext import commands
-from descord.func import clamp, rnd_str
+
+import typing
+from dscord.func import clamp, rnd_str
 
 chnAny = typing.Union[
         discord.StageChannel,

@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
-from descord.func import clamp, rnd_str
+
+from dscord.func import clamp, rnd_str
 
 
 class Spam(commands.Cog):

@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
-from descord.func import Db, code_wrap
+
+from dscord.func import Db, code_wrap
 
 wl = Db('whitelist')
 

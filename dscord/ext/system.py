@@ -1,7 +1,7 @@
-import os
-import sys
 from discord.ext import commands
-from descord.func import log_proc
+
+import os, sys
+from dscord.func import log_proc
 
 
 class System(commands.Cog):

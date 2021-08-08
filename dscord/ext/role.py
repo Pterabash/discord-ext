@@ -1,7 +1,8 @@
 import discord
 from discord.utils import get
 from discord.ext import commands
-from descord.func import rnd_str
+
+from dscord.func import rnd_str
 
 roleAttr = [
         'color',

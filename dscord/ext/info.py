@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
-from descord.func import ls_attr
-from descord.cog import role, channel
+
+from dscord.func import ls_attr
+from dscord.ext import role, channel
 
 
 class Info(commands.Cog):

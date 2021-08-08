@@ -1,5 +1,6 @@
 from discord.ext import commands
-from descord.func import log_proc
+
+from dscord.func import log_proc
 from tempfile import NamedTemporaryFile as ntf
 
 

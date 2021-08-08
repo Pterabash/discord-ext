@@ -1,6 +1,7 @@
-import os
-from descord.func import Db
 from discord.ext import commands
+
+import os
+from dscord.func import Db
 from urllib.request import urlretrieve
 
 paths = Db('path')
