@@ -4,7 +4,7 @@ Discord API wrapper's wrapper, ironically.
 
 ## Installation
 
-    pip install git+https://github.com/thisgary/descordlib
+    pip install git+https://github.com/thisgary/dscord
 
 ## Features
 
