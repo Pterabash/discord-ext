@@ -10,7 +10,7 @@ client = commands.Bot(',')
 @client.command('exthelp')
 async def exthelp_command(ctx):
     ext_doc = render_doc(ext, 'Help on %s', renderer=plaintext)
-    for x in func.code_wrap(ext_doc): await ctx.send(x)
+    for x in code_wrap(ext_doc): await ctx.send(x)
 
 @client.command('load')
 async def load_command(ctx, mdl):
