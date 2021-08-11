@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
         name='Dscord',
-        version='1.1.7',
+        version='1.1.8',
         author='thisgary',
         author_email='gary.github@gmail.com',
         description='Discord API wrapper\'s wrapper.',
@@ -16,7 +16,7 @@ setuptools.setup(
         ],
         license='MIT',
         python_requires='>=3.7',
-        install_requires=['discord.py', 'replit', 'requests'],
+        install_requires=['discord.py'],
         setup_requires=['pytest_runner'],
         tests_require=['pytest'],
         test_suite='tests',
