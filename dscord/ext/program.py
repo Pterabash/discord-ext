@@ -10,7 +10,7 @@ class Program(commands.Cog):
         self.bot = bot
 
     @commands.command('sh')
-    async def prgmBash(self, ctx, * code):
+    async def prgmBash(self, ctx, *, code):
         with ntf('r+t',suffix='.sh') as tp:
             tp.write('#!/bin/bash\n')
             tp.write(code)
