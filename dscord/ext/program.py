@@ -28,14 +28,14 @@ class Program(commands.Cog):
             for x in log_proc(['node', tp.name]): await ctx.send(x)
 
     @commands.command('java')
-    async def prgmJava(self, ctx, * code):
+    async def prgmJava(self, ctx, *, code):
         with ntf('r+t',suffix='.java') as tp:
             tp.write(code)
             tp.seek(0)
             for x in log_proc(['java', tp.name]): await ctx.send(x)
 
     @commands.command('r')
-    async def prgmR(self, ctx, * code):
+    async def prgmR(self, ctx, *, code):
         with ntf('r+t',suffix='.r') as tp:
             tp.write(code)
             tp.seek(0)
