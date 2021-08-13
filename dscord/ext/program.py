@@ -15,7 +15,7 @@ class Program(commands.Cog):
             tp.write('#!/bin/bash\n')
             tp.write(code)
             tp.seek(0)
-            os.chmod(tp.name, 0777)
+            os.chmod(tp.name, 0o777)
             for x in log_proc(['./'+tp.name]): await ctx.send(x)
 
     @commands.command('py')
