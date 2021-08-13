@@ -16,7 +16,7 @@ class Program(commands.Cog):
             tp.write(code)
             tp.seek(0)
             os.chmod(tp.name, 0o777)
-            for x in log_proc(['./'+tp.name]): await ctx.send(x)
+            for x in log_proc([tp.name]): await ctx.send(x)
 
     @commands.command('py')
     async def prgmPython(self, ctx, *, code):
