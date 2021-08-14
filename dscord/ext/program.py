@@ -19,9 +19,9 @@ class Program(commands.Cog):
             self.file.write(code)
             if self.footer: self.file.write(self.footer+'\n')
             self.file.close()
-            if x: os.system('chmod +x '+self.file)
+            if x: os.system('chmod +x '+self.path)
             logs = log_proc(self.commands)
-            os.remove(self.file)
+            os.remove(self.path)
             return logs
 
 
