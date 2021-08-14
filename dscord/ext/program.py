@@ -1,4 +1,5 @@
 import os
+from tempfile import NamedTemporaryFile
 
 from discord.ext import commands
 
@@ -7,27 +8,26 @@ from dscord.func import log_proc
 
 class Program(commands.Cog):
     class Execute:
-        def __init__(self, suffix: str, commands: list, *, header=None, footer=None):
-            self.path = f'./script.{suffix}'
-            self.file = open(self.path, 'w')
-            self.commands = commands + [self.path]
+        def __init__(self, suffix: str, commands: list, 
+                *, header=None, footer=None):
+            self.suffix = '.' + suffix
+            self.commands = commands
             self.header = header
             self.footer = footer
 
-        def output(self, code: str, *, x=False):
-            if self.header: self.file.write(self.header+'\n')
-            self.file.write(code)
-            if self.footer: self.file.write(self.footer+'\n')
-            self.file.close()
-            if x: os.system('chmod +x '+self.path)
-            logs = log_proc(self.commands)
-            os.remove(self.path)
-            return logs
+        def output(self, code: str):
+            with NamedTemporaryFile('r+t', suffix=self.suffix) as fp:
+                if self.header: fp.write(self.header+'\n')
+                fp.write(code)
+                if self.footer: fp.write(self.footer+'\n')
+                fp.seek(0)
+                return log_proc(self.commands+[fp.name])
 
 
     @commands.command('groovy')
     async def prgmGroovy(self, ctx, *, code):
-        groovy = Program.Execute('groovy', ['groovy'], header='#!/usr/bin/env groovy')
+        groovy = Program.Execute('groovy', ['groovy'], 
+                header='#!/usr/bin/env groovy')
         for log in groovy.output(code): await ctx.send(log)
 
     @commands.command('js')
@@ -42,7 +42,8 @@ class Program(commands.Cog):
 
     @commands.command('php')
     async def prgmPhp(self, ctx, *, code):
-        php = Program.Execute('php', ['php'], header='<?php', footer='?>')
+        php = Program.Execute('php', ['php'], 
+                header='<?php', footer='?>')
         for log in php.output(code): await ctx.send(log)
 
     @commands.command('py')
@@ -62,8 +63,12 @@ class Program(commands.Cog):
 
     @commands.command('sh')
     async def prgmBash(self, ctx, *, code):
-        bash = Program.Execute('sh', [], header='#!/bin/bash')
-        for log in bash.output(code, x=True): await ctx.send(log)
+        with open('script.sh', 'w') as f:
+            f.write('#!/bin/bash\n')
+            f.write(code)
+        os.system('chmod +x ./script.sh')
+        for l in log_proc(['./script.sh']): await ctx.send(l)
+        os.system('rm script.sh')
 
     @commands.command('swift')
     async def prgmSwift(self, ctx, *, code):
