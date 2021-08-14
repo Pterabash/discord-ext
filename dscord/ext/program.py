@@ -23,7 +23,7 @@ class Program(commands.Cog):
         self.bot = bot
 
     @commands.command('sh')
-    async def prgmBash(self, ctx, *cmds):
+    async def prgmBash(self, ctx, *, code):
         bash = Program.Execute('sh')
         for log in bash.output(code): await ctx.send(log)
 
