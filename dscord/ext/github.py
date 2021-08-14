@@ -1,28 +1,37 @@
+import os
+from urllib.request import urlretrieve
+
 from discord.ext import commands
 
-import os
 from dscord.func import Db
-from urllib.request import urlretrieve
 
 paths = Db('path')
 gh = 'https://raw.githubusercontent.com/'
+
 
 def pathToExt(path):
     f = path.split('/')[-1]
     ext = f.split('.')[0]
     return f, ext
 
+
 def extLoad(path):
     f, ext = pathToExt(path)
-    urlretrieve(gh+path, f)
-    try: bot.load_extension(ext)
-    except commands.ExtensionAlreadyLoaded: bot.reload_extension(ext)
-    finally: os.remove(f)
+    urlretrieve(gh + path, f)
+    try:
+        bot.load_extension(ext)
+    except commands.ExtensionAlreadyLoaded:
+        bot.reload_extension(ext)
+    finally:
+        os.remove(f)
+
 
 def extLoadAll():
     for path in paths.readkey():
-        try: extLoad(path)
-        except Exception as e: print(e)
+        try:
+            extLoad(path)
+        except Exception as e:
+            print(e)
 
 
 class GhExt(commands.Cog):
@@ -34,15 +43,15 @@ class GhExt(commands.Cog):
         extLoadAll()
 
     @commands.command(
-            'rfsh',
-            brief='Reload all extensions')
+        'rfsh',
+        brief='Reload all extensions')
     async def ghRefresh(self, ctx):
         extLoadAll()
         await ctx.send('Reloaded')
 
     @commands.command(
-            'load',
-            brief='owner/repo/branch/file.py')
+        'load',
+        brief='owner/repo/branch/file.py')
     async def ghLoad(self, ctx, *paths):
         for path in paths:
             extLoad(path)

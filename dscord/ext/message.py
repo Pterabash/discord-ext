@@ -9,21 +9,21 @@ class Message(commands.Cog):
         self.bot = bot
 
     @commands.command(
-            'msgsend',
-            brief='Send message')
+        'msgsend',
+        brief='Send message')
     async def msgSend(self, ctx, *, message):
         await ctx.send(message)
 
     @commands.command(
-            'msgdir',
-            aliases=['dm'],
-            brief='Dm member')
+        'msgdir',
+        aliases=['dm'],
+        brief='Dm member')
     async def msgDirect(self, ctx, user: discord.User, *, message):
         await user.send(message)
 
     @commands.command(
-            'msgdel',
-            brief='Delete messages')
+        'msgdel',
+        brief='Delete messages')
     async def msgDelete(self, ctx, num: int):
         num = clamp(num + 1)
         logs = []
@@ -33,4 +33,3 @@ class Message(commands.Cog):
 
 def setup(bot):
     bot.add_cog(Message(bot))
-

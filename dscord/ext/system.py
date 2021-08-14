@@ -1,6 +1,8 @@
+import os
+import sys
+
 from discord.ext import commands
 
-import os, sys
 from dscord.func import log_proc
 
 
@@ -16,22 +18,22 @@ class System(commands.Cog):
         await ctx.send(err)
 
     @commands.command(
-            'restart',
-            aliases=['respawn', 'retard'])
+        'restart',
+        aliases=['respawn', 'retard'])
     async def sysRestart(self, ctx):
         await ctx.send('Restarting')
         os.execl(sys.executable, sys.executable, *sys.argv)
 
     @commands.command(
-            'pipinst',
-            aliases=['pipadd'])
+        'pipinst',
+        aliases=['pipadd'])
     async def sysPipInstall(self, ctx, package):
         log = log_proc([sys.executable, '-m', 'pip', 'install', package])
         for x in log: await ctx.send(x)
 
     @commands.command(
-            'pipunst',
-            aliases=['piprmv'])
+        'pipunst',
+        aliases=['piprmv'])
     async def sysPipUninstall(self, ctx, package):
         log = log_proc([sys.executable, '-m', 'pip', 'uninstall', package], b'y')
         for x in log: await ctx.send(x)
@@ -39,4 +41,3 @@ class System(commands.Cog):
 
 def setup(bot):
     bot.add_cog(System(bot))
-

@@ -16,7 +16,7 @@ setuptools.setup(
         ],
         license='MIT',
         python_requires='>=3.7',
-        install_requires=['discord.py'],
+        install_requires=['discord.py', 'flask'],
         setup_requires=['pytest_runner'],
         tests_require=['pytest'],
         test_suite='tests',
