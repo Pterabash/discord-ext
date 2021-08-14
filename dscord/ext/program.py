@@ -1,5 +1,4 @@
 import os
-from tempfile import NamedTemporaryFile
 
 from discord.ext import commands
 
@@ -8,24 +7,27 @@ from dscord.func import log_proc
 
 class Program(commands.Cog):
     class Execute:
-        def __init__(self, suffix: str, command=[]):
-            self.suffix = f'.{suffix}'
+        def __init__(self, suffix: str, command: list, *, header=None):
+            self.file = f'file.{suffix}'
             self.command = command
+            self.header = header
 
-        def output(self, code: str):
-            with NamedTemporaryFile('r+t', suffix=self.suffix) as tp:
-                tp.write(code)
-                tp.seek(0)
-                os.system(f'chmod +x {tp.name}')
-                return log_proc(self.command+[tp.name])
+        def output(self, code: str, *, x=False):
+            with open(self.file, 'w') as f:
+                if self.header: f.write(f'{self.header}\n')
+                f.write(code)
+            if x: os.chmod(self.file, 0o777)
+            logs = log_proc(self.command+[self.file])
+            os.remove(self.file)
+            return logs
 
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command('sh')
     async def prgmBash(self, ctx, *, code):
-        bash = Program.Execute('sh')
-        for log in bash.output(code): await ctx.send(log)
+        bash = Program.Execute('sh', [])
+        for log in bash.output(code, x=True): await ctx.send(log)
 
     @commands.command('py')
     async def prgmPython(self, ctx, *, code):
