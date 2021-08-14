@@ -1,6 +1,7 @@
-from dscord import bot
 import os
+import dscord
 
 if __name__ == '__main__':
-    bot.load('system')  # load ext from module
-    bot.run(os.getenv("DISCORD_TOKEN"))  # start bot with token
+    dscord.load('system')
+    dscord.run(os.environ['TOKEN'])
+
