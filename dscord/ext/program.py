@@ -19,8 +19,9 @@ class Program(commands.Cog):
             if x:
                 f = f'./{self.file}'
                 os.system(f'chmod +x {f}')
-                log_proc([f])
-            else: log_proc(self.commands)
+                logs = log_proc([f])
+            else:
+                logs = log_proc(self.commands)
             os.remove(self.file)
             return logs
 
