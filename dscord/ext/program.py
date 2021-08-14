@@ -1,6 +1,5 @@
 import os
 from tempfile import NamedTemporaryFile
-from typing import List
 
 from discord.ext import commands
 
@@ -9,7 +8,7 @@ from dscord.func import log_proc
 
 class Program(commands.Cog):
     class Execute:
-        def __init__(self, suffix:str, command: List[str]) -> List[str]:
+        def __init__(self, suffix: str, command=[]):
             self.suffix = f'.{suffix}'
             self.command = command
 
@@ -25,7 +24,8 @@ class Program(commands.Cog):
 
     @commands.command('sh')
     async def prgmBash(self, ctx, *cmds):
-        for log in log_proc(cmds): await ctx.send(log)
+        bash = Program.Execute('sh')
+        for log in bash.output(code): await ctx.send(log)
 
     @commands.command('py')
     async def prgmPython(self, ctx, *, code):
