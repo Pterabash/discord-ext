@@ -27,10 +27,8 @@ class Whitelist(commands.Cog):
 
     @commands.command('wlrmv', brief='Remove member from whitelist')
     async def wlRmv(self, ctx, member: discord.Member):
-        if ctx.author.id != member.id:
-            wl.erase(member.id)
-        else:
-            await ctx.send('Why remove yourself?')
+        if ctx.author.id == member.id: ctx.send('Why remove yourself?')
+        else: wl.erase(str(member.id))
 
 
 def setup(bot):
