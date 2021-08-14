@@ -3,6 +3,7 @@ import shelve
 import subprocess
 import tempfile
 import textwrap
+from typing import List
 
 
 def clamp(val, min_val=1, max_val=100):
@@ -13,7 +14,7 @@ def rnd_str():
     return str(random.random())[2:]
 
 
-def code_wrap(txt, wd=1950):
+def code_wrap(txt: str, wd: int = 1950) -> List[str]:
     ls = textwrap.wrap(txt, wd, replace_whitespace=False)
     return ['```\n' + x + ' \n```' for x in ls]
 
@@ -24,7 +25,7 @@ def ls_attr(dic, attrs=None):
     return code_wrap('\n'.join(ls))
 
 
-def log_proc(arg, inp=None):
+def log_proc(arg: List[str], inp=None) -> List[str]:
     with tempfile.TemporaryFile('r+t') as tp:
         subprocess.run(args=arg, input=inp, stdout=tp, stderr=subprocess.STDOUT)
         tp.seek(0)

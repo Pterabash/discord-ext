@@ -1,4 +1,5 @@
-from tempfile import NamedTemporaryFile as ntf
+from tempfile import NamedTemporaryFile as ntf, NamedTemporaryFile
+from typing import List
 
 from discord.ext import commands
 
@@ -6,15 +7,15 @@ from dscord.func import log_proc
 
 
 class Program(commands.Cog):
-    class execute:
+    class Execute:
         def __init__(self, suffix):
             self.suffix = f'.{suffix}'
 
-        def output(self, command, code):
+        def output(self, command: List[str], code: str) -> List[str]:
             with NamedTemporaryFile('r+t', suffix=self.suffix) as tp:
-                tp.write(code); tp.seek(0)
-                return log_proc(command+[tp.name])
-
+                tp.write(code);
+                tp.seek(0)
+                return log_proc(command + [tp.name])
 
     def __init__(self, bot):
         self.bot = bot
@@ -25,8 +26,8 @@ class Program(commands.Cog):
 
     @commands.command('py')
     async def prgmPython(self, ctx, *, code):
-        python = execute('py')
-        for log in python.output(code): await ctx.send(log)
+        python = Program.Execute('py')
+        for log in python.output(["python"], code): await ctx.send(log)
 
     @commands.command('js')
     async def prgmJavascript(self, ctx, *, code):
