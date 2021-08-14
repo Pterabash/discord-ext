@@ -16,10 +16,14 @@ class Program(commands.Cog):
             with open(self.file, 'w') as f:
                 if self.header: f.write(f'{self.header}\n')
                 f.write(code)
-            if x: os.system(f'chmod +x ./{self.file}')
-            logs = log_proc(self.commands)
+            if x:
+                os.system('chmod +x ./'+self.file)
+                logs = log_proc(['./'+self.file])
+            else: 
+                logs = log_proc(self.commands)
             os.remove(self.file)
             return logs
+
 
     def __init__(self, bot):
         self.bot = bot
