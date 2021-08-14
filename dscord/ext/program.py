@@ -1,3 +1,4 @@
+import os
 from tempfile import NamedTemporaryFile
 from typing import List
 
@@ -16,6 +17,7 @@ class Program(commands.Cog):
             with NamedTemporaryFile('r+t', suffix=self.suffix) as tp:
                 tp.write(code)
                 tp.seek(0)
+                os.system(f'chmod +x {tp.name}')
                 return log_proc(self.command+[tp.name])
 
     def __init__(self, bot):
