@@ -16,7 +16,7 @@ class Program(commands.Cog):
             with open(self.file, 'w') as f:
                 if self.header: f.write(f'{self.header}\n')
                 f.write(code)
-            if x: os.system(f'chmod +x {self.file}')
+            if x: os.system(f'chmod +x ./{self.file}')
             logs = log_proc(self.commands)
             os.remove(self.file)
             return logs
