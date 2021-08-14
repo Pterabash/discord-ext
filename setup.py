@@ -1,14 +1,15 @@
 import setuptools
 
+readme = open('README.md').read() 
 requirements = open('requirements.txt').read().splitlines()
 
 setuptools.setup(
         name='Dscord',
-        version='1.1.27',
+        version='1.1.28',
         author='thisgary',
         author_email='gary.github@gmail.com',
         description='Discord API wrapper\'s wrapper.',
-        long_description=open('README.md').read(),
+        long_description=readme,
         long_description_content_type='text/markdown',
         packages=setuptools.find_packages(),
         classifiers=[
