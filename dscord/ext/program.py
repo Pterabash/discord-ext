@@ -25,9 +25,6 @@ class Program(commands.Cog):
             return logs
 
 
-    def __init__(self, bot):
-        self.bot = bot
-
     @commands.command('sh')
     async def prgmBash(self, ctx, *, code):
         bash = Program.Execute('sh', [], header='#!/bin/bash')
@@ -55,4 +52,4 @@ class Program(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Program(bot))
+    bot.add_cog(Program())
