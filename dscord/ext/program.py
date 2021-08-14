@@ -23,7 +23,7 @@ class Program(commands.Cog):
 
     @commands.command('sh')
     async def prgmBash(self, ctx, *cmds):
-        for x in log_proc(cmds): await ctx.send(x)
+        for log in log_proc(cmds): await ctx.send(log)
 
     @commands.command('py')
     async def prgmPython(self, ctx, *, code):
@@ -33,7 +33,7 @@ class Program(commands.Cog):
     @commands.command('js')
     async def prgmJavascript(self, ctx, *, code):
         javascript = Program.Execute('js', ['node'])
-        for log in python.output(code): await ctx.send(log)
+        for log in javascript.output(code): await ctx.send(log)
 
     @commands.command('java')
     async def prgmJava(self, ctx, *, code):
