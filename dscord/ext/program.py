@@ -7,17 +7,20 @@ from dscord.func import log_proc
 
 class Program(commands.Cog):
     class Execute:
-        def __init__(self, suffix: str, command: list, *, header=None):
+        def __init__(self, suffix: str, commands: list, *, header=None):
             self.file = f'file.{suffix}'
-            self.command = command
+            self.commands = commands+[self.file]
             self.header = header
 
         def output(self, code: str, *, x=False):
             with open(self.file, 'w') as f:
-                if self.header: f.write(f'{self.header}\n')
+                if self.header: f.write(self.header)
                 f.write(code)
-            if x: os.chmod(self.file, 0o777)
-            logs = log_proc(self.command+[self.file])
+            if x:
+                f = f'./{self.file}'
+                os.chmod(f, 0o777)
+                log_proc([f])
+            else: log_proc(self.commands)
             os.remove(self.file)
             return logs
 
@@ -26,7 +29,7 @@ class Program(commands.Cog):
 
     @commands.command('sh')
     async def prgmBash(self, ctx, *, code):
-        bash = Program.Execute('sh', [])
+        bash = Program.Execute('sh', [], header='#!/bin/bash')
         for log in bash.output(code, x=True): await ctx.send(log)
 
     @commands.command('py')
