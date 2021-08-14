@@ -14,11 +14,11 @@ class Program(commands.Cog):
 
         def output(self, code: str, *, x=False):
             with open(self.file, 'w') as f:
-                if self.header: f.write(self.header)
+                if self.header: f.write(f'{self.header}\n')
                 f.write(code)
             if x:
                 f = f'./{self.file}'
-                os.chmod(f, 0o777)
+                os.system(f'chmod +x {f}')
                 log_proc([f])
             else: log_proc(self.commands)
             os.remove(self.file)
