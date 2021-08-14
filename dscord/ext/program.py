@@ -1,4 +1,4 @@
-from tempfile import NamedTemporaryFile as ntf, NamedTemporaryFile
+from tempfile import NamedTemporaryFile
 from typing import List
 
 from discord.ext import commands
@@ -8,14 +8,15 @@ from dscord.func import log_proc
 
 class Program(commands.Cog):
     class Execute:
-        def __init__(self, suffix):
+        def __init__(self, suffix:str, command: List[str]) -> List[str]:
             self.suffix = f'.{suffix}'
+            self.command = command
 
-        def output(self, command: List[str], code: str) -> List[str]:
+        def output(self, code: str):
             with NamedTemporaryFile('r+t', suffix=self.suffix) as tp:
-                tp.write(code);
+                tp.write(code)
                 tp.seek(0)
-                return log_proc(command + [tp.name])
+                return log_proc(self.command+[tp.name])
 
     def __init__(self, bot):
         self.bot = bot
@@ -26,29 +27,23 @@ class Program(commands.Cog):
 
     @commands.command('py')
     async def prgmPython(self, ctx, *, code):
-        python = Program.Execute('py')
-        for log in python.output(["python"], code): await ctx.send(log)
+        python = Program.Execute('py', ['python'])
+        for log in python.output(code): await ctx.send(log)
 
     @commands.command('js')
     async def prgmJavascript(self, ctx, *, code):
-        with ntf('r+t', suffix='.js') as tp:
-            tp.write(code)
-            tp.seek(0)
-            for x in log_proc(['node', tp.name]): await ctx.send(x)
+        javascript = Program.Execute('js', ['node'])
+        for log in python.output(code): await ctx.send(log)
 
     @commands.command('java')
     async def prgmJava(self, ctx, *, code):
-        with ntf('r+t', suffix='.java') as tp:
-            tp.write(code)
-            tp.seek(0)
-            for x in log_proc(['java', tp.name]): await ctx.send(x)
+        java = Program.Execute('java', ['java'])
+        for log in java.output(code): await ctx.send(log)
 
     @commands.command('r')
     async def prgmR(self, ctx, *, code):
-        with ntf('r+t', suffix='.r') as tp:
-            tp.write(code)
-            tp.seek(0)
-            for x in log_proc(['Rscript', tp.name]): await ctx.send(x)
+        r = Program.Execute('r', ['Rscript'])
+        for log in r.output(code): await ctx.send(log)
 
 
 def setup(bot):

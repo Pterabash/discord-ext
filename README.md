@@ -8,19 +8,19 @@ Discord API wrapper's wrapper, ironically.
 
 ## Features
 
-`descord/bot` - Provide simple setup for Discord bot hosting.
+`dscord` - Provide simple setup for Discord bot hosting
 
-`descord/ext` - Discord.py extensions collection.
+`dscord/ext` - Discord.py extensions collection
 
-    from dscord import bot, wake
-    bot.load('system') # load ext from module
-    bot.run(TOKEN) # start bot with token
+    import dscord
+    dscord.load('system') # load from dscord/ext
+    dscord.run(TOKEN) # start bot with token
 
 ## Purpose
 
 Solely for me to learn how to write a Discord bot
 
-It is no longer actively maintained, since `Dscord 2` a thing now
+It is no longer actively maintained, since `dscord2` a thing now... that was, until someone dragged me out again
 
 Oh, and I managed to implement temporal extension loading for Discord.py (bug?)
 
