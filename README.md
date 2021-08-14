@@ -12,7 +12,7 @@ Discord API wrapper's wrapper, ironically.
 
 `descord/ext` - Discord.py extensions collection.
 
-    from descord import bot, wake
+    from dscord import bot, wake
     bot.load('system') # load ext from module
     bot.run(TOKEN) # start bot with token
 
