@@ -40,6 +40,7 @@ Load `discord.py` extentions from local modules or packages.
 
 `name`, `package` - Identical to its [original counterpart](https://docs.python.org/3/library/importlib.html#importlib.import_module), `importlib.import_module()`
 
+
 #### `dscord.run(token)`
 
 Start the Discord bot, identical to `discord.Client().run(token)`.
@@ -47,6 +48,7 @@ Start the Discord bot, identical to `discord.Client().run(token)`.
 > Use this on last line of the script
 
 `token` - Access token of Discord bot in *string*.
+
 
 ### dscord/wake
 
