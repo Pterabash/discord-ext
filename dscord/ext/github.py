@@ -1,4 +1,5 @@
-import os
+from os import remove
+from typing import List
 from urllib.request import urlretrieve
 
 from discord.ext import commands
@@ -7,6 +8,11 @@ from dscord.func import Db, code_wrap
 
 base_url = 'https://raw.githubusercontent.com/'
 db = Db('path')
+
+
+async def extlist(ctx):
+    logs = code_wrap('\n'.join(db.keys()))
+    for log in logs: await ctx.send(log)
 
 
 def basename(path: str) -> str:
@@ -22,7 +28,7 @@ def extLoad(bot: commands.Bot, path: str):
     try: bot.load_extension(name)
     except commands.ExtensionAlreadyLoaded:
         bot.reload_extension(name)
-    finally: os.remove(base)
+    finally: remove(base)
 
 
 def extsLoad():
@@ -35,29 +41,33 @@ class GithubExt(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.Cog.listener()
-    async def on_ready(self):
-        extsLoad()
-
-    @commands.command('ghreld', brief='Reload all extensions')
-    async def extsReload(self, ctx):
-        extsLoad()
-        await ctx.send('Done')
-
-    @commands.command('ghload', brief='[owner/repo/branch/file.py]')
+    @commands.command('ghload', brief='path: [owner/repo/branch/filepath]')
     async def extsLoad(self, ctx, *paths):
         for path in paths:
             extLoad(self.bot, path)
-            _, name = basename(path)
-            db.write(path, name)
-        logs = code_wrap('\n'.join(db.keys()))
-        for log in logs: await ctx.send(log)
+            _, ext = basename(path)
+            db.write(path, ext)
+        await extlist(ctx)
 
-    @commands.command('ghunld', brief='Unload extensions')
+    @commands.command('ghexts', brief='List exts')
+    async def extsList(self, ctx):
+        await extlist(ctx)
+
+    @commands.command('ghreld', brief='Reload all exts')
+    async def extsReload(self, ctx):
+        extsLoad()
+        await ctx.send('Done')
+    
+    @commands.command('ghunld', brief='Unload exts')
     async def extsUnload(self, ctx, *exts):
         for ext in exts:
             db.erase(str(ext))
             self.bot.unload_extension(ext)
+        await extlist(ctx)
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        extsLoad()
 
 
 def setup(bot):
