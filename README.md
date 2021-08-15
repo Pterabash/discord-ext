@@ -18,19 +18,17 @@ It is no longer actively maintained, since `dscord2` a thing now
 
 `dscord/ext` - Discord.py extensions collection
 
-## Documentation
+`dscord/wake` - Used in bot hosting on [Replit](https://replit.com)
 
-### Modules
+## Documentation - Modules
 
 This section contain informations about functions that are available on this module. 
 ~~Information about the bot's OOTB commands will be covered in the next segment, but I am lazy.~~
 
-### `dscord`
+### dscord
 
 Provide minimal setup for Discord bot hosting.
 ~~(but again, why you need a wrapper for wrapper)~~ 
-
-#### Usage
 
     import dscord
     dscord.load('system')
@@ -50,11 +48,9 @@ Start the Discord bot, identical to `discord.Client().run(token)`.
 
 `token` - Access token of Discord bot in *string*.
 
-### `dscord.wake`
+### dscord/wake
 
 Used in bot hosting on [Replit](https://replit.com) to keep the bot up 24/7. self-pinger included, and **debug mode** returns status code on request.
-
-#### Usage
 
     from dscord import wake
     import replit
