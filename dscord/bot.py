@@ -1,7 +1,6 @@
+import os, sys
 from importlib import import_module
-from os import execl, system
 from pydoc import plaintext, render_doc
-from sys import argv, executable
 
 from discord.ext import commands
 
@@ -32,13 +31,13 @@ async def botRestart(ctx):
 @bot.command('update', aliases)
 async def botUpdate(ctx):
     await ctx.send('Updating')
-    system('pip3 install git+https://github.com/thisgary/dscord')
+    os.system('pip3 install git+https://github.com/thisgary/dscord')
     await ctx.send('Success & restarting')
     restart()
 
 
 def restart():
-    execl(executable, executable, *argv)
+    os.execl(sys.executable, sys.executable, *sys.argv)
 
 
 def load(name: str, package: str = None):
