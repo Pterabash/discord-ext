@@ -7,28 +7,28 @@ from discord.ext import commands
 from dscord import ext
 from .func import code_wrap
 
-bot = commands.Bot(',')
+client = commands.Bot(',')
 
 
-@bot.command('exts')
+@client.command('exts')
 async def extList(ctx):
     ext_doc = render_doc(ext, 'Help on %s', renderer=plaintext)
     for x in code_wrap(ext_doc): await ctx.send(x)
 
 
-@bot.command('load')
+@client.command('load')
 async def extLoad(ctx, module: str):
     load('.'+module, 'dscord.ext')
     await ctx.send(f'`{mdl}` loaded')
 
 
-@bot.command('restart', aliases=['respawn', 'retard'])
+@client.command('restart', aliases=['respawn', 'retard'])
 async def botRestart(ctx):
     await ctx.send('Restarting')
     restart()
 
 
-@bot.command('update', aliases=['upgrade'])
+@client.command('update', aliases=['upgrade'])
 async def botUpdate(ctx):
     await ctx.send('Updating')
     os.system('pip3 install git+https://github.com/thisgary/dscord')
