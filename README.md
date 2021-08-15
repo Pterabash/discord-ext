@@ -20,9 +20,13 @@ It is no longer actively maintained, since `dscord2` a thing now
 
 ## Documentation
 
-### `dscord`
+### Module
 
-Provide minimal setup for Discord bot hosting. ~~(but again, why you need a wrapper for wrapper)~~ This section covers the functions that can be used to kickstart a Discord bot~~, information about the bot's OOTB commands will be covered in later section. But since I am lazy, you would probably never see it~~.
+This section contain informations about functions that are available on this module~~. Information about the bot's OOTB commands will be covered in the next segment. But I am lazy~~.
+
+#### `dscord`
+
+Provide minimal setup for Discord bot hosting. ~~(but again, why you need a wrapper for wrapper)~~ 
 
 **Example:**
 
@@ -30,13 +34,13 @@ Provide minimal setup for Discord bot hosting. ~~(but again, why you need a wrap
     dscord.load('system')
     dscord.run(TOKEN)
 
-#### `dscord.load(name, package='dscord.ext')`
+##### `dscord.load(name, package='dscord.ext')`
 
 Load `discord.py` extentions from local modules or packages.
 
 `name`, `package` - Identical to its [original counterpart](https://docs.python.org/3/library/importlib.html#importlib.import_module), `importlib.import_module()`
 
-#### `dscord.run(token)`
+##### `dscord.run(token)`
 
 Start the Discord bot, identical to `discord.Client().run(token)`.
 
@@ -44,7 +48,7 @@ Start the Discord bot, identical to `discord.Client().run(token)`.
 
 `token` - Access token of Discord bot in *string*.
 
-### `dscord.wake`
+#### `dscord.wake`
 
 Start two threads, one that starts `flask` server and the other one that ping an url every half an hour. Sounds like a weird combo? Well, turned out the url pinger is meant for pinging the flask server started from first thread. It is an ancient technique used for bot hosting on [Replit](https://replit.com) to keep the bot up 24/7.
 
@@ -54,7 +58,7 @@ Start two threads, one that starts `flask` server and the other one that ping an
     import replit
     dscord.wake.up(replit.info.co_url)
     
-#### `wake.up(url, debug=False)`
+##### `wake.up(url, debug=False)`
 
 `url` - The hosted replit.co url of an repl, can be obtained by method as shown on example
 
