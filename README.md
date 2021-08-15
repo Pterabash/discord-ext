@@ -22,7 +22,9 @@ It is no longer actively maintained, since `dscord2` a thing now
 
 # Documentation
 
-## Quick Reference
+## Reference
+
+A quick reference to the functions and arguments from this module.
 
 ---
 
