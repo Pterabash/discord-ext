@@ -5,6 +5,7 @@ from urllib.request import urlopen
 
 from flask import Flask
 
+__all__ = ['up']
 app = Flask('')
 
 
