@@ -28,13 +28,13 @@ A quick reference to the functions and arguments from this module.
 
 ### dscord
 
-#### `dscord.load(name, package)`
+#### `dscord.load(name, package='dscord.ext')`
 
 `name`, `package` - refer to their [original counterpart](https://docs.python.org/3/library/importlib.html#importlib.import_module)
 
 #### `dscord.run(token)`
 
-`token` - **String**, Discord bot's access token
+`token` - Discord bot's access token
 
 ---
 
@@ -42,16 +42,14 @@ A quick reference to the functions and arguments from this module.
 
 #### `wake.up(url, debug=False)`
 
-`url` - **String**, target url to be pinged every half hour
+`url` - Target url to be pinged every half hour
 
-`debug` - **Optional boolean**, used to activate **debug mode**
+`debug` - **Optional**, used to activate **debug mode**
 
 ## Modules
 
 This section contain informations about functions that are available on this module. 
 ~~Information about the bot's OOTB commands will be covered in the next segment, but I am lazy.~~
-
----
 
 ### dscord
 
@@ -86,5 +84,3 @@ Has an url pinger with **debug mode** that logs ping's status code on console.
 #### `wake.up(url, debug=False)`
 
 Start a thread that runs a Flask server and start another thread that does GET request (act as ping) from url every half an hour.
-
----
