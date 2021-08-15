@@ -17,6 +17,7 @@ class Whitelist(commands.Cog):
     @commands.command('wladd', brief='Add member')
     async def add(self, ctx, member: Member):
         db.write(member.id)
+        await ctx.send("Welcome!")
 
     @commands.command('wlcheck', brief='Check member')
     async def isAdded(self, ctx, member: Member):
