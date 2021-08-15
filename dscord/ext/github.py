@@ -49,7 +49,7 @@ class GithubExt(commands.Cog):
         for path in paths:
             extLoad(self.bot, path)
             _, name = basename(path)
-            db.write(name, path)
+            db.write(path, name)
         logs = code_wrap('\n'.join(db.keys()))
         for log in logs: await ctx.send(log)
 
