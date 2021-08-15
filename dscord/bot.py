@@ -28,7 +28,7 @@ async def botRestart(ctx):
     restart()
 
 
-@bot.command('update', aliases)
+@bot.command('update', aliases=['upgrade'])
 async def botUpdate(ctx):
     await ctx.send('Updating')
     os.system('pip3 install git+https://github.com/thisgary/dscord')
