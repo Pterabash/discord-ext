@@ -40,8 +40,8 @@ def restart():
     os.execl(sys.executable, sys.executable, *sys.argv)
 
 
-def load(name: str, package: str = None):
-    if package and name[0] != '.':
+def load(name: str, package: str = 'dscord.ext'):
+    if package != '' and name[0] != '.':
         name = '.' + name
     module = import_module(name, package)
     module.setup(client)
