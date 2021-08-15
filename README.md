@@ -30,7 +30,7 @@ Provide minimal setup for Discord bot hosting. ~~(but again, why you need a wrap
     dscord.load('system')
     dscord.run(TOKEN)
 
-#### `dscord.load(name, package=None)`
+#### `dscord.load(name, package='dscord.ext')`
 
 Load `discord.py` extentions from local modules or packages.
 
