@@ -11,8 +11,11 @@ db = Db('path')
 
 
 async def extlist(ctx):
-    logs = code_wrap('\n'.join(db.keys()))
-    for log in logs: await ctx.send(log)
+    keys = db.keys()
+    if keys:
+        logs = code_wrap('\n'.join(keys))
+        for log in logs: await ctx.send(log)
+    else: await ctx.send('No extension loaded from Github')
 
 
 def basename(path: str) -> str:
@@ -41,7 +44,7 @@ class GithubExt(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command('ghload', brief='path: [owner/repo/branch/filepath]')
+    @commands.command('ghload', brief='Path: [owner/repo/branch/filepath]')
     async def extsLoad(self, ctx, *paths):
         for path in paths:
             extLoad(self.bot, path)
