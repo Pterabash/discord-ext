@@ -24,27 +24,23 @@ It is no longer actively maintained, since `dscord2` a thing now
 
 ## Quick Reference
 
-### dscord
-
----
-
-#### dscord.**load(name, package)**
+### dscord.**load(name, package)**
 
 `name`, `package` - refer to their [original counterpart](https://docs.python.org/3/library/importlib.html#importlib.import_module)
 
-#### dscord.**run(token)**
+### dscord.run(token)
 
 `token` - **String**, Discord bot's access token
 
-### dscord/wake
-
 ---
 
-#### wake.**up(url, debug=False)**
+### wake.up(url, debug=False)
 
 `url` - **String**, target url to be pinged every half hour
 
 `debug` - **Optional boolean**, used to activate **debug mode**
+
+---
 
 ## Modules
 
