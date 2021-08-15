@@ -1,31 +1,43 @@
 from importlib import import_module
-from os import execl
-from pydoc import render_doc, plaintext
-from sys import executable, argv
+from os import execl, system
+from pydoc import plaintext, render_doc
+from sys import argv, executable
 
 from discord.ext import commands
 
 from dscord import ext
 from .func import code_wrap
 
-client = commands.Bot(',')
+bot = commands.Bot(',')
 
 
-@client.command('exts')
+@bot.command('exts')
 async def extList(ctx):
     ext_doc = render_doc(ext, 'Help on %s', renderer=plaintext)
     for x in code_wrap(ext_doc): await ctx.send(x)
 
 
-@client.command('load')
+@bot.command('load')
 async def extLoad(ctx, module: str):
     load('.'+module, 'dscord.ext')
     await ctx.send(f'`{mdl}` loaded')
 
 
-@client.command(aliases=['respawn', 'retard'])
-async def restart(ctx):
+@bot.command('restart', aliases=['respawn', 'retard'])
+async def botRestart(ctx):
     await ctx.send('Restarting')
+    restart()
+
+
+@bot.command('update', aliases)
+async def botUpdate(ctx):
+    await ctx.send('Updating')
+    system('pip3 install git+https://github.com/thisgary/dscord')
+    await ctx.send('Success & restarting')
+    restart()
+
+
+def restart():
     execl(executable, executable, *argv)
 
 
