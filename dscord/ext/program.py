@@ -1,5 +1,6 @@
 import os
 from tempfile import NamedTemporaryFile
+from typing import List
 
 from discord.ext import commands
 
@@ -8,20 +9,20 @@ from dscord.func import sub_logs
 
 class Program(commands.Cog):
     class Execute:
-        def __init__(self, suffix: str, commands: list, 
-                *, header=None, footer=None):
+        def __init__(self, suffix: str, command: list, *,
+                header: str = None, footer: str = None):
             self.suffix = '.' + suffix
-            self.commands = commands
+            self.command = command
             self.header = header
             self.footer = footer
 
-        def output(self, code: str):
+        def output(self, code: str) -> List[str]:
             with NamedTemporaryFile('r+t', suffix=self.suffix) as fp:
                 if self.header: fp.write(self.header+'\n')
                 fp.write(code)
                 if self.footer: fp.write(self.footer+'\n')
                 fp.seek(0)
-                return sub_logs(self.commands+[fp.name])
+                return sub_logs(self.command+[fp.name])
 
 
     @commands.command()
