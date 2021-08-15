@@ -50,8 +50,9 @@ class GithubExt(commands.Cog):
             extLoad(self.bot, path)
             _, name = basename(path)
             db.write(name, path)
-        logs = code_wrap(db.keys())
-        for log in logs: await ctx.send(log)
+        # logs = code_wrap(db.keys())
+        # for log in logs: await ctx.send(log)
+        await ctx.send(db.keys())
 
     @commands.command('ghunld', brief='Unload extensions')
     async def extsUnload(self, ctx, *exts):
