@@ -24,11 +24,11 @@ It is no longer actively maintained, since `dscord2` a thing now
 
 This section contain informations about functions that are available on this module~~. Information about the bot's OOTB commands will be covered in the next segment. But I am lazy~~.
 
-#### `dscord`
+#### dscord
 
 Provide minimal setup for Discord bot hosting. ~~(but again, why you need a wrapper for wrapper)~~ 
 
-**Example:**
+##### Usage
 
     import dscord
     dscord.load('system')
@@ -48,18 +48,20 @@ Start the Discord bot, identical to `discord.Client().run(token)`.
 
 `token` - Access token of Discord bot in *string*.
 
-#### `dscord.wake`
+#### dscord.wake
 
-Start two threads, one that starts `flask` server and the other one that ping an url every half an hour. Sounds like a weird combo? Well, turned out the url pinger is meant for pinging the flask server started from first thread. It is an ancient technique used for bot hosting on [Replit](https://replit.com) to keep the bot up 24/7.
+Used in bot hosting on [Replit](https://replit.com) to keep the bot up 24/7. self-pinger included, and **debug mode** returns status code on request.
 
-**Example:**
+##### Usage
 
-    import dscord
+    from dscord import wake
     import replit
-    dscord.wake.up(replit.info.co_url)
+    wake.up(replit.info.co_url)
+
+> It's recommended that one should get some external pingers too
     
 ##### `wake.up(url, debug=False)`
 
 `url` - The hosted replit.co url of an repl, can be obtained by method as shown on example
 
-`debug` - **Optional**. Used to trigger debug mode of pinger, which print out the status code of every requests (ping) on console
+`debug` - **Optional**. Used to activate **debug mode**.
