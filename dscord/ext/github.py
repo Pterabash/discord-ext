@@ -1,4 +1,4 @@
-from os import remove
+import os
 from typing import List
 from urllib.request import urlretrieve
 
@@ -31,7 +31,7 @@ def extLoad(bot: commands.Bot, path: str):
     try: bot.load_extension(name)
     except commands.ExtensionAlreadyLoaded:
         bot.reload_extension(name)
-    finally: remove(base)
+    finally: os.remove(base)
 
 
 def extsLoad():
