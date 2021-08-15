@@ -18,8 +18,8 @@ async def extList(ctx):
 
 
 @client.command('load')
-async def extLoad(ctx, mdl: str):
-    load(mdl)
+async def extLoad(ctx, module: str):
+    load('.'+module, 'dscord.ext')
     await ctx.send(f'`{mdl}` loaded')
 
 
@@ -29,8 +29,10 @@ async def restart(ctx):
     execl(executable, executable, *argv)
 
 
-def load(mdl: str, lib: str = 'dscord.ext'):
-    module = import_module('.' + mdl, lib)
+def load(name: str, package: str = None):
+    if package and name[0] != '.':
+        name = '.' + name
+    module = import_module(name, package)
     module.setup(client)
 
 
