@@ -24,8 +24,8 @@ class Whitelist(commands.Cog):
             await ctx.send("Member is whitelisted")
         else:
             await ctx.send("Member not in whitelist")
-
-   @commands.command('wlrmv', brief='Remove member')
+        
+    @commands.command('wlrmv', brief='Remove member')
     async def remove(self, ctx, member: Member):
         if ctx.author.id == member.id: await ctx.send('No')
         else: 
