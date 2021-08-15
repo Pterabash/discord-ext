@@ -24,6 +24,8 @@ It is no longer actively maintained, since `dscord2` a thing now
 
 ## Quick Reference
 
+---
+
 ### dscord.**load(name, package)**
 
 `name`, `package` - refer to their [original counterpart](https://docs.python.org/3/library/importlib.html#importlib.import_module)
