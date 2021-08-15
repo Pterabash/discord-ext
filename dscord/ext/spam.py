@@ -1,33 +1,32 @@
-import discord
+from discord import User
 from discord.ext import commands
 
-from dscord.func import clamp, rnd_str
+from dscord.func import clamp, rng_str
 
 
 class Spam(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
+    @commands.command('cmspam', brief='Chn & msg spam')
+    async def channelMessage(self, ctx, channel_count: int, message_count: int, *, message: str):
+        cc, mc = clamp(channel_count), clamp(message_count)
+        category = await ctx.guild.create_category_channel(rng_str())
+        for _ in range(cc):
+            await category.create_text_channel(rng_str())
+        for channel in categoty.channels:
+            for _ in range(mc):
+                await channel.send(message)
 
-    @commands.command(
-        'spamsend',
-        brief='Spam messages')
-    async def spamSend(self, ctx, times: int, *, msg):
-        for i in range(clamp(times)): await ctx.send(msg)
+    @commands.command('dmspam', brief='DM spam')
+    async def directMessage(self, ctx, user: User, count: int, *, message: str):
+        c = clamp(count)
+        for _ in range(c):
+            await user.send(message)
 
-    @commands.command(
-        'spamdir',
-        brief='Spam dm member')
-    async def spamDirect(self, ctx, user: discord.User, times: int, *, msg):
-        for i in range(clamp(times)): await user.send(msg)
-
-    @commands.command(
-        'spamcs',
-        brief='Spam channels & messages')
-    async def chnMsgSpam(self, ctx, chn_num: int, msg_num: int, *, msg):
-        cat = await ctx.guild.create_category_channel(rnd_str())
-        for i in range(clamp(chn_num)): await cat.create_text_channel(rnd_str())
-        for chn in cat.channels: [await chn.send(msg) for i in range(clamp(msg_num))]
+    @commands.command('msgspam', brief='Msg spam')
+    async def message(self, ctx, count: int, *, message: str):
+        c = clamp(times)
+        for _ in range(c):
+            await ctx.send(message)
 
 
 def setup(bot):
-    bot.add_cog(Spam(bot))
+    bot.add_cog(Spam())

@@ -6,49 +6,49 @@ import textwrap
 from typing import List
 
 
-def clamp(val, min_val=1, max_val=100):
-    return min(max(val, min_val), max_val)
+def clamp(i: int, min_int: int = 1, max_int:int = 100) -> int:
+    return min(max(i, min_int), max_int)
 
 
-def rnd_str():
+def rng_str() -> str:
     return str(random.random())[2:]
 
 
-def code_wrap(txt: str, wd: int = 1950) -> List[str]:
-    ls = textwrap.wrap(txt, wd, replace_whitespace=False)
-    return ['```\n' + x + ' \n```' for x in ls]
+def code_wrap(txt: str, width: int = 1950) -> List[str]:
+    lines = textwrap.wrap(txt, width, replace_whitespace=False)
+    return [f'```\n{l}\n```' for l in lines]
 
 
-def ls_attr(dic, attrs=None):
-    if not attrs: attrs = dir(dic)
-    ls = [f'{attr} : {getattr(dic, attr)}\n' for attr in attrs]
-    return code_wrap('\n'.join(ls))
+def dict_wrap(d: dict, keys: List[str] = None) -> List[str]:
+    if not keys: keys = dir(d)
+    keyvals = [f'{key}: {getattr(d, key)}' for key in keys]
+    return code_wrap('\n\n'.join(keyvals))
 
 
-def log_proc(arg: List[str], inp=None) -> List[str]:
-    with tempfile.TemporaryFile('r+t') as tp:
-        subprocess.run(args=arg, input=inp, stdout=tp, stderr=subprocess.STDOUT)
-        tp.seek(0)
-        return code_wrap(tp.read())
+def sub_logs(args: List[str], inp: str = None) -> List[str]:
+    with tempfile.TemporaryFile('r+t') as fp:
+        subprocess.run(args=args, input=inp, stdout=fp, stderr=subprocess.STDOUT)
+        fp.seek(0)
+        return code_wrap(fp.read())
 
 
 class Db:
-    def __init__(self, file):
-        self.file = file
+    def __init__(self, name):
+        self.name = name
 
     def write(self, value, key=None):
         if not key: key = str(value)
-        with shelve.open(self.file) as db:
+        with shelve.open(self.name) as db:
             db[key] = value
 
     def erase(self, key):
-        with shelve.open(self.file) as db:
+        with shelve.open(self.name) as db:
             del db[key]
 
-    def readkey(self):
-        with shelve.open(self.file) as db:
-            return [key for key in db.keys()]
+    def keys(self):
+        with shelve.open(self.name) as db:
+            return list(db)
 
-    def readval(self):
-        with shelve.open(self.file) as db:
+    def vals(self):
+        with shelve.open(self.name) as db:
             return [db[key] for key in db.keys()]

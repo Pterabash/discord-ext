@@ -1,43 +1,34 @@
 import os
 import sys
+from typing import List
 
 from discord.ext import commands
 
-from dscord.func import log_proc
+from dscord.func import sub_logs
+
+
+def pip(args: List[str], inp: str = None):
+    args = [sys.executable, '-m', 'pip'] + args
+    return sub_logs(args, inp)
 
 
 class System(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-
     @commands.Cog.listener()
     async def on_command_error(self, ctx, err):
-        if isinstance(err, commands.CommandNotFound): return
+        if isinstance(err, commands.CommandNotFound) or isinstance(err, commands.CheckFailure): return
         print(err)
-        if isinstance(err, commands.CheckFailure): return
         await ctx.send(err)
 
-    @commands.command(
-        'restart',
-        aliases=['respawn', 'retard'])
-    async def sysRestart(self, ctx):
-        await ctx.send('Restarting')
-        os.execl(sys.executable, sys.executable, *sys.argv)
+    @commands.command('pipinst')
+    async def pipInstall(self, ctx, *, package):
+        logs = pip(['install', package])
+        for log in logs: await ctx.send(log)
 
-    @commands.command(
-        'pipinst',
-        aliases=['pipadd'])
-    async def sysPipInstall(self, ctx, package):
-        log = log_proc([sys.executable, '-m', 'pip', 'install', package])
-        for x in log: await ctx.send(x)
-
-    @commands.command(
-        'pipunst',
-        aliases=['piprmv'])
-    async def sysPipUninstall(self, ctx, package):
-        log = log_proc([sys.executable, '-m', 'pip', 'uninstall', package], b'y')
-        for x in log: await ctx.send(x)
+    @commands.command('pipunst')
+    async def pipUninstall(self, ctx, *, package): 
+        logs = pip(['uninstall', package], b'y')
+        for log in logs: await ctx.send(log)
 
 
 def setup(bot):
-    bot.add_cog(System(bot))
+    bot.add_cog(System())

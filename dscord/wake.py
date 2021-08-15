@@ -1,5 +1,5 @@
-import logging
-import time
+from logging import getLogger, ERROR
+from time import sleep
 from threading import Thread
 from urllib.request import urlopen
 
@@ -21,11 +21,11 @@ def ping(target, debug):
     while True:
         r = urlopen(target)
         if debug: print(f'Status Code: {r.getcode()}')
-        time.sleep(30 * 60)
+        sleep(30 * 60)
 
 
 def up(url, debug=False):
-    log = logging.getLogger('werkzeug')
-    log.setLevel(logging.ERROR)
+    log = getLogger('werkzeug')
+    log.setLevel(ERROR)
     Thread(target=run).start()
     Thread(target=ping, args=(url, debug,)).start()

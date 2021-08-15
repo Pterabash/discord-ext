@@ -3,68 +3,66 @@ from urllib.request import urlretrieve
 
 from discord.ext import commands
 
-from dscord.func import Db
+from dscord.func import Db, code_wrap
 
-paths = Db('path')
-gh = 'https://raw.githubusercontent.com/'
-
-
-def pathToExt(path):
-    f = path.split('/')[-1]
-    ext = f.split('.')[0]
-    return f, ext
+base_url = 'https://raw.githubusercontent.com/'
+db = Db('path')
 
 
-def extLoad(path):
-    f, ext = pathToExt(path)
-    urlretrieve(gh + path, f)
+def basename(path: str) -> str:
+    base = path.split('/')[-1]
+    name = base.split('.')[0]
+    return base, name
+
+
+def extLoad(bot: commands.Bot, path: str):
+    base, name = basename(path)
+    url = base_url + path
+    urlretrieve(url, base)
     try:
-        bot.load_extension(ext)
+        bot.load_extension(name)
     except commands.ExtensionAlreadyLoaded:
-        bot.reload_extension(ext)
+        bot.reload_extension(name)
     finally:
-        os.remove(f)
+        os.remove(base)
 
 
-def extLoadAll():
-    for path in paths.readkey():
+def extsLoad():
+    for path in db.keys():
         try:
             extLoad(path)
         except Exception as e:
             print(e)
 
 
-class GhExt(commands.Cog):
+class GithubExt(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
-        extLoadAll()
+        extsLoad()
 
-    @commands.command(
-        'rfsh',
-        brief='Reload all extensions')
-    async def ghRefresh(self, ctx):
-        extLoadAll()
-        await ctx.send('Reloaded')
+    @commands.command('ghreld', brief='Reload all extensions')
+    async def extsReload(self, ctx):
+        extsLoad()
+        await ctx.send('Done')
 
-    @commands.command(
-        'load',
-        brief='owner/repo/branch/file.py')
-    async def ghLoad(self, ctx, *paths):
+    @commands.command('ghload', brief='[owner/repo/branch/file.py]')
+    async def extsLoad(self, ctx, *paths):
         for path in paths:
-            extLoad(path)
-            _, ext = pathToExt(path)
-            paths.write(ext, path)
-        await ctx.send(codelist(paths.readkey()))
+            extLoad(self.bot, path)
+            _, name = basename(path)
+            db.write(name, path)
+        exts = code_wrap(db.keys())
+        await ctx.send(exts)
 
-    @commands.command('unload')
-    async def ghUnload(self, ctx, *exts):
+    @commands.command('ghunld', brief='Unload extensions')
+    async def extsUnload(self, ctx, *exts):
         for ext in exts:
-            paths.erase(ext)
-            bot.unload_extension(ext)
+            db.erase(ext)
+            self.bot.unload_extension(ext)
 
 
 def setup(bot):
-    bot.add_cog(GhExt(bot))
+    bot.add_cog(GithubExt(bot))
