@@ -26,7 +26,7 @@ It is no longer actively maintained, since `dscord2` a thing now
 
 A quick reference to the functions and arguments from this module.
 
-### `dscord`
+### dscord
 
 #### `dscord.load(name, package='dscord.ext')`
 
@@ -38,7 +38,7 @@ A quick reference to the functions and arguments from this module.
 
 ---
 
-### `dscord/wake`
+### dscord/wake
 
 #### `wake.up(url, debug=False)`
 
