@@ -22,11 +22,13 @@ It is no longer actively maintained, since `dscord2` a thing now
 
 ### Module
 
-This section contain informations about functions that are available on this module~~. Information about the bot's OOTB commands will be covered in the next segment. But I am lazy~~.
+This section contain informations about functions that are available on this module. 
+~~Information about the bot's OOTB commands will be covered in the next segment, but I am lazy.~~
 
 #### dscord
 
-Provide minimal setup for Discord bot hosting. ~~(but again, why you need a wrapper for wrapper)~~ 
+Provide minimal setup for Discord bot hosting.
+~~(but again, why you need a wrapper for wrapper)~~ 
 
 ##### Usage
 
@@ -44,7 +46,7 @@ Load `discord.py` extentions from local modules or packages.
 
 Start the Discord bot, identical to `discord.Client().run(token)`.
 
-> Since it is `discord.Client().run(token)` equivalent, any code after this function will obviously, won't be running.
+> Use this on last line of the script
 
 `token` - Access token of Discord bot in *string*.
 
