@@ -22,7 +22,7 @@ It is no longer actively maintained, since `dscord2` a thing now
 
 ### `dscord`
 
-Provide minimal setup for Discord bot hosting. ~~(Every Discord.py wrapper claimed to be)~~ This section covers the functions that can be used to kickstart a Discord bot~~, information about the bot's OOTB commands will be covered in later section. But since I am lazy, you would probably never see it~~.
+Provide minimal setup for Discord bot hosting. ~~(but again, why you need a wrapper for wrapper)~~ This section covers the functions that can be used to kickstart a Discord bot~~, information about the bot's OOTB commands will be covered in later section. But since I am lazy, you would probably never see it~~.
 
 **Example:**
 
