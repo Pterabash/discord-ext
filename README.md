@@ -20,12 +20,12 @@ It is no longer actively maintained, since `dscord2` a thing now
 
 `dscord/wake` - Used in bot hosting on [Replit](https://replit.com)
 
-# Documentation - Modules
+# Documentation
 
 This section contain informations about functions that are available on this module. 
 ~~Information about the bot's OOTB commands will be covered in the next segment, but I am lazy.~~
 
-## `dscord`
+## `dscord` module
 
 Provide minimal setup for Discord bot hosting.
 ~~(but again, why you need a wrapper for wrapper)~~ 
@@ -48,7 +48,7 @@ Start the Discord bot, identical to `discord.Client().run(token)`.
 
 `token` - Access token of Discord bot in *string*.
 
-## `dscord/wake`
+## `dscord/wake` module
 
 Used in bot hosting on [Replit](https://replit.com) to keep the bot up 24/7. self-pinger included, and **debug mode** returns status code on request.
 
