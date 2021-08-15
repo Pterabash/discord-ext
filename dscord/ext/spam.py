@@ -11,7 +11,7 @@ class Spam(commands.Cog):
         category = await ctx.guild.create_category_channel(rng_str())
         for _ in range(cc):
             await category.create_text_channel(rng_str())
-        for channel in categoty.channels:
+        for channel in category.channels:
             for _ in range(mc):
                 await channel.send(message)
 

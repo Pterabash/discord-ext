@@ -10,7 +10,7 @@ class Message(commands.Cog):
         if not user: user = ctx.author
         await user.send(message)
 
-    @commands.command('msgdel', brief='Delete msgs')
+    @commands.command('delmsg', brief='Delete msgs')
     async def delete(self, ctx, num: int = 1):
         num = clamp(num + 1)
         logs = []
