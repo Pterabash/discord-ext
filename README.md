@@ -26,7 +26,7 @@ It is no longer actively maintained, since `dscord2` a thing now
 
 A quick reference to the functions and arguments from this module.
 
-### dscord
+### `dscord`
 
 #### `dscord.load(name, package='dscord.ext')`
 
@@ -38,7 +38,7 @@ A quick reference to the functions and arguments from this module.
 
 ---
 
-### dscord/wake
+### `dscord/wake`
 
 #### `wake.up(url, debug=False)`
 
@@ -51,7 +51,7 @@ A quick reference to the functions and arguments from this module.
 This section contain informations about functions that are available on this module. 
 ~~Information about the bot's OOTB commands will be covered in the next segment, but I am lazy.~~
 
-### dscord
+### `dscord`
 
 Provide minimal setup for Discord bot hosting.
 ~~(but again, why you need a wrapper for wrapper)~~ 
@@ -66,11 +66,11 @@ Load Discord.py extentions from local modules or packages.
 
 #### `dscord.run(token)`
 
-Start the Discord bot, identical to `discord.Client().run(token)`.
+Start the Discord bot, identical to `discord.run(token)`. Comes with some OOTB (out-of-the-box) bot commads.
 
 ---
 
-### dscord/wake
+### `dscord/wake`
 
 Used in bot hosting on [Replit](https://replit.com) to keep the bot up 24/7. 
 Has an url pinger with **debug mode** that logs ping's status code on console.
