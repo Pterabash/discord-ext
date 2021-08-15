@@ -10,7 +10,7 @@ def test_code_wrap():
     w = func.code_wrap
     x = 'x' * 1950
     y, z = x + 'x', x * 2
-    assert w(x) = [x]
-    assert w(y) = [x, 'x']
-    assert w(z) = [x, x]
+    assert w(x) == [x]
+    assert w(y) == [x, 'x']
+    assert w(z) == [x, x]
 
