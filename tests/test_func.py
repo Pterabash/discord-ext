@@ -8,9 +8,8 @@ def test_clamp():
 
 def test_code_wrap():
     w = func.code_wrap
-    x = 'x' * 1950
-    y, z = x + 'x', x * 2
-    assert w(x) == [x]
-    assert w(y) == [x, 'x']
-    assert w(z) == [x, x]
+    h, t = '```\n', '\n```'
+    a, f = 'abcde', 'f'
+    assert w(a, 5) == [h+a+t]
+    assert w(a+f, 5) == [h+x+t for x in [a,f]]
 
