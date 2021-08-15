@@ -24,7 +24,7 @@ async def extLoad(ctx, mdl: str):
 
 
 @client.command(aliases=['respawn', 'retard'])
-async def restart(self, ctx):
+async def restart(ctx):
     await ctx.send('Restarting')
     execl(executable, executable, *argv)
 
