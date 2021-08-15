@@ -19,20 +19,16 @@ def extLoad(bot: commands.Bot, path: str):
     base, name = basename(path)
     url = base_url + path
     urlretrieve(url, base)
-    try:
-        bot.load_extension(name)
+    try: bot.load_extension(name)
     except commands.ExtensionAlreadyLoaded:
         bot.reload_extension(name)
-    finally:
-        os.remove(base)
+    finally: os.remove(base)
 
 
 def extsLoad():
     for path in db.keys():
-        try:
-            extLoad(path)
-        except Exception as e:
-            print(e)
+        try: extLoad(path)
+        except Exception as e: print(e)
 
 
 class GithubExt(commands.Cog):
@@ -54,8 +50,8 @@ class GithubExt(commands.Cog):
             extLoad(self.bot, path)
             _, name = basename(path)
             db.write(name, path)
-        exts = code_wrap(db.keys())
-        await ctx.send(exts)
+        logs = code_wrap(db.keys())
+        for log in logs: await ctx.send(log)
 
     @commands.command('ghunld', brief='Unload extensions')
     async def extsUnload(self, ctx, *exts):
