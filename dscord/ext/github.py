@@ -56,7 +56,7 @@ class GithubExt(commands.Cog):
     @commands.command('ghunld', brief='Unload extensions')
     async def extsUnload(self, ctx, *exts):
         for ext in exts:
-            db.erase(ext)
+            db.erase(str(ext))
             self.bot.unload_extension(ext)
 
 
