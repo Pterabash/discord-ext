@@ -22,10 +22,32 @@ It is no longer actively maintained, since `dscord2` a thing now
 
 # Documentation
 
+## Quick Reference
+
+### `dscord`
+
+#### `dscord.load(name, package)`
+
+`name`, `package` - refer to their [original counterpart](https://docs.python.org/3/library/importlib.html#importlib.import_module)
+
+#### `dscord.run(token)`
+
+`token` - **String**, Discord bot's access token
+
+### `dscord/wake`
+
+#### `wake.up(url, debug=False)`
+
+`url` - **String**, target url to be pinged every half hour
+
+`debug` - **Optional boolean**, used to activate **debug mode**
+
+## Modules
+
 This section contain informations about functions that are available on this module. 
 ~~Information about the bot's OOTB commands will be covered in the next segment, but I am lazy.~~
 
-## `dscord` module
+### `dscord`
 
 Provide minimal setup for Discord bot hosting.
 ~~(but again, why you need a wrapper for wrapper)~~ 
@@ -34,32 +56,25 @@ Provide minimal setup for Discord bot hosting.
     dscord.load('system')
     dscord.run(TOKEN)
 
-### `dscord.load(name, package='dscord.ext')`
+#### `dscord.load(name, package='dscord.ext')`
 
-Load `discord.py` extentions from local modules or packages.
+Load Discord.py extentions from local modules or packages.
 
-`name`, `package` - Identical to its [original counterpart](https://docs.python.org/3/library/importlib.html#importlib.import_module), `importlib.import_module()`
-
-### `dscord.run(token)`
+#### `dscord.run(token)`
 
 Start the Discord bot, identical to `discord.Client().run(token)`.
 
-> Use this on last line of the script
+### `dscord/wake`
 
-`token` - Access token of Discord bot in *string*.
-
-## `dscord/wake` module
-
-Used in bot hosting on [Replit](https://replit.com) to keep the bot up 24/7. self-pinger included, and **debug mode** returns status code on request.
+Used in bot hosting on [Replit](https://replit.com) to keep the bot up 24/7. 
+Has an url pinger with **debug mode** that logs ping's status code on console.
 
     from dscord import wake
     import replit
     wake.up(replit.info.co_url)
 
-> It's recommended that one should get some external pingers too
-    
-### `wake.up(url, debug=False)`
+> It is still recommended to have some external pingers
 
-`url` - The hosted replit.co url of an repl, can be obtained by method as shown on example
+#### `wake.up(url, debug=False)`
 
-`debug` - **Optional**. Used to activate **debug mode**.
+Start a thread that runs a Flask server and start another thread that does GET request (act as ping) from url every half an hour.
