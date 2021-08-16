@@ -1,5 +1,4 @@
 import os
-from tempfile import NamedTemporaryFile
 from typing import List
 
 from discord.ext import commands
@@ -8,73 +7,82 @@ from dscord.func import sub_logs
 
 
 class Program(commands.Cog):
-    class Execute:
-        def __init__(self, suffix: str, command: list, *,
-                header: str = None, footer: str = None):
-            self.suffix = '.' + suffix
-            self.command = command
-            self.header = header
-            self.footer = footer
+    class File:
+        def __init__(self, suffix: str, code: str, 
+                *, header: str = None, footer: str = None):
+            self.base = f'file.{suffix}'
+            with open(self.base, 'w') as f:
+                if header: f.write(f'{header}\n')
+                f.write(code)
+                if footer: f.write(f'\n{footer}')
+            self.base = f'./{self.base}'
 
-        def output(self, code: str) -> List[str]:
-            with NamedTemporaryFile('r+t', suffix=self.suffix) as fp:
-                if self.header: fp.write(self.header+'\n')
-                fp.write(code)
-                if self.footer: fp.write(self.footer+'\n')
-                fp.seek(0)
-                return sub_logs(self.command+[fp.name])
+        def chmod(self):
+            os.system(f'chmod +x {self.base}')
+
+        def execute(self, args: List[str] = []) -> List[str]:
+            logs = sub_logs(args + [self.base])
+            os.system(f'rm {self.base}')
+            return logs
 
 
     @commands.command()
     async def groovy(self, ctx, *, code):
-        groovy = Program.Execute('groovy', ['groovy'], 
+        groovy = Program.File('groovy', code, 
                 header='#!/usr/bin/env groovy')
-        for log in groovy.output(code): await ctx.send(log)
+        logs = groovy.execute(['groovy'])
+        for log in logs: await ctx.send(log)
 
     @commands.command()
     async def js(self, ctx, *, code):
-        javascript = Program.Execute('js', ['node'])
-        for log in javascript.output(code): await ctx.send(log)
+        javascript = Program.File('js', code)
+        logs = javascript.execute(['node'])
+        for log in logs: await ctx.send(log)
 
     @commands.command()
     async def java(self, ctx, *, code):
-        java = Program.Execute('java', ['java'])
-        for log in java.output(code): await ctx.send(log)
+        java = Program.Execute('java', code)
+        logs = java.execute(['java'])
+        for log in logs: await ctx.send(log)
 
     @commands.command()
     async def php(self, ctx, *, code):
-        php = Program.Execute('php', ['php'], 
+        php = Program.File('php', code, 
                 header='<?php', footer='?>')
-        for log in php.output(code): await ctx.send(log)
+        logs = php.execute(['pfp'])
+        for log in logs: await ctx.send(log)
 
     @commands.command()
     async def py(self, ctx, *, code):
-        python = Program.Execute('py', ['python'])
-        for log in python.output(code): await ctx.send(log)
+        python = Program.File('py', code)
+        logs = python.execute(['python3'])
+        for log in logs: await ctx.send(log)
 
     @commands.command()
     async def r(self, ctx, *, code):
-        r = Program.Execute('r', ['Rscript'])
-        for log in r.output(code): await ctx.send(log)
+        r = Program.File('r', code)
+        logs = r.execute(['Rscript'])
+        for log in logs: await ctx.send(log)
 
     @commands.command()
     async def ruby(self, ctx, *, code):
-        ruby = Program.Execute('rb', ['ruby'])
-        for log in ruby.output(code): await ctx.send(log)
+        ruby = Program.File('rb', code)
+        logs = ruby.execute(['ruby'])
+        for log in logs: await ctx.send(log)
 
     @commands.command()
     async def sh(self, ctx, *, code):
-        with open('script.sh', 'w') as f:
-            f.write('#!/bin/bash\n')
-            f.write(code)
-        os.system('chmod +x ./script.sh')
-        for log in sub_logs(['./script.sh']): await ctx.send(log)
-        os.system('rm script.sh')
+        bash = Program.File('sh', code,
+                header='#!/bin/bash')
+        bash.chmod()
+        logs = bash.execute()
+        for log in logs: await ctx.send(log)
 
     @commands.command()
     async def swift(self, ctx, *, code):
-        swift = Program.Execute('swift', ['swift'])
-        for log in swift.output(code): await ctx.send(log)
+        swift = Program.File('swift', code)
+        logs = swift.execute(['swift'])
+        for log in logs: await ctx.send(log)
 
 
 def setup(bot):
