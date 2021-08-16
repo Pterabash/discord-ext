@@ -19,7 +19,7 @@ async def extList(ctx):
 @client.command('load')
 async def extLoad(ctx, module: str):
     load('.'+module, 'dscord.ext')
-    await ctx.send(f'`{mdl}` loaded')
+    await ctx.send(f'`{module}` loaded')
 
 
 @client.command('restart', aliases=['respawn', 'retard'])
