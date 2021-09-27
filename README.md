@@ -1,17 +1,17 @@
 # Dscord
 
-Discord API wrapper's wrapper, ironically
+Discord API wrapper's wrapper, ironically.
 
-# Purpose
+## Purpose
 
 Solely for me to learn how to make Discord bot and Python module.
 No longer actively maintained, since [Dscord2](https://thisgary.github.io/Dscord2) a thing now.
 
-# Installation
+## Installation
 
     pip install git+https://github.com/thisgary/Dscord
 
-# Features
+## Features
 
 `dscord` - Provide minimal setup for Discord bot hosting
 
