@@ -1,84 +1,21 @@
-Discord API wrapper's wrapper, ironically.
+# Dscord
 
-## Purpose
+Discord API wrapper's wrapper, ironically
+
+# Purpose
 
 Solely for me to learn how to write a Discord bot
 
-It is no longer actively maintained, since `dscord2` a thing now
+It is no longer actively maintained, since [Dscord2](https://thisgary.github.io/Dscord2) a thing now
 
-## Installation
+# Installation
 
-    pip install git+https://github.com/thisgary/dscord
+    pip install git+https://github.com/thisgary/Dscord
 
-## Features
+# Features
 
 `dscord` - Provide minimal setup for Discord bot hosting
 
 `dscord/ext` - Discord.py extensions collection
 
-`dscord/wake` - Used in bot hosting on [Replit](https://replit.com)
-
-# Documentation
-
-## Reference
-
-A quick reference to the functions and arguments from this module.
-
-### dscord
-
-#### `dscord.load(name, package='dscord.ext')`
-
-`name`, `package` - refer to their [original counterpart](https://docs.python.org/3/library/importlib.html#importlib.import_module)
-
-#### `dscord.run(token)`
-
-`token` - Discord bot's access token
-
----
-
-### dscord/wake
-
-#### `wake.up(url, debug=False)`
-
-`url` - Target url to be pinged every half hour
-
-`debug` - **Optional**, used to activate **debug mode**
-
-## Modules
-
-This section contain informations about functions that are available on this module. 
-~~Information about the bot's OOTB commands will be covered in the next segment, but I am lazy.~~
-
-### dscord
-
-Provide minimal setup for Discord bot hosting.
-~~(but again, why you need a wrapper for wrapper)~~ 
-
-    import dscord
-    dscord.load('system')
-    dscord.run(TOKEN)
-
-#### `dscord.load(name, package='dscord.ext')`
-
-Load Discord.py extentions from local modules or packages.
-
-#### `dscord.run(token)`
-
-Start the Discord bot, identical to `discord.run(token)`. Comes with some OOTB (out-of-the-box) bot commads.
-
----
-
-### dscord/wake
-
-Used in bot hosting on [Replit](https://replit.com) to keep the bot up 24/7. 
-Has an url pinger with **debug mode** that logs ping's status code on console.
-
-    from dscord import wake
-    import replit
-    wake.up(replit.info.co_url)
-
-> It is still recommended to have some external pingers
-
-#### `wake.up(url, debug=False)`
-
-Start a thread that runs a Flask server and start another thread that does GET request (act as ping) from url every half an hour.
+`dscord/wake` - Used for bot hosting on [Replit](https://replit.com)
