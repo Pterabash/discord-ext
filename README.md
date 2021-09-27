@@ -19,4 +19,4 @@ No longer actively maintained, since [Dscord2](https://thisgary.github.io/Dscord
 
 `dscord/wake` - Used for bot hosting on [Replit](https://replit.com)
 
-More information can be found on [documentation](DOCUMENTATION.md).
+More information can be found on [documentation](DOCS.md)
