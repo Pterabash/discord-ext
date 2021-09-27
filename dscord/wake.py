@@ -21,7 +21,7 @@ def ping() -> None:
         urlopen(info.co_url)
         time.sleep(5*60)
 
-def up() -> None: 
-    logging.getLogger('werkzeug').setLevel(logging.ERROR)
-    threading.Thread(target=run).start()
-    threading.Thread(target=ping).start()
+
+logging.getLogger('werkzeug').setLevel(logging.ERROR)
+threading.Thread(target=run).start()
+threading.Thread(target=ping).start()
