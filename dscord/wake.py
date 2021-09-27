@@ -1,32 +1,27 @@
-from logging import getLogger, ERROR
-from time import sleep
-from threading import Thread
+import logging
+import time
+import threading
 from urllib.request import urlopen
 
 from flask import Flask
+from replit import info
 
+# Variables
 __all__ = ['up']
+
+# Instances
 app = Flask('')
+home = app.route('/')(lambda: 'Bot is up!')
 
+# Functions
+run = lambda: app.run(host='0.0.0.0', port=8080)
 
-@app.route('/')
-def home():
-    return 'Bot is up!'
-
-
-def run():
-    app.run(host='0.0.0.0', port=8080)
-
-
-def ping(target, debug):
+def ping() -> None:
     while True:
-        r = urlopen(target)
-        if debug: print(f'Status Code: {r.getcode()}')
-        sleep(30 * 60)
+        urlopen(info.co_url)
+        time.sleep(5*60)
 
-
-def up(url, debug=False):
-    log = getLogger('werkzeug')
-    log.setLevel(ERROR)
-    Thread(target=run).start()
-    Thread(target=ping, args=(url, debug,)).start()
+def up() -> None: 
+    logging.getLogger('werkzeug').setLevel(logging.ERROR)
+    threading.Thread(target=run).start()
+    threading.Thread(target=ping).start()
