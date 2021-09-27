@@ -1,5 +1,3 @@
-# Dscord
-
 Discord API wrapper's wrapper, ironically.
 
 ## Purpose
