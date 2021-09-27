@@ -4,9 +4,8 @@ Discord API wrapper's wrapper, ironically
 
 # Purpose
 
-Solely for me to learn how to write a Discord bot
-
-It is no longer actively maintained, since [Dscord2](https://thisgary.github.io/Dscord2) a thing now
+Solely for me to learn how to write a Discord bot.
+No longer actively maintained, since [Dscord2](https://thisgary.github.io/Dscord2) a thing now.
 
 # Installation
 
@@ -19,3 +18,5 @@ It is no longer actively maintained, since [Dscord2](https://thisgary.github.io/
 `dscord/ext` - Discord.py extensions collection
 
 `dscord/wake` - Used for bot hosting on [Replit](https://replit.com)
+
+More information can be found on [documentation](documentation.md).
