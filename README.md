@@ -17,6 +17,4 @@ No longer actively maintained, since [Dscord2](https://thisgary.github.io/Dscord
 
 `dscord/ext` - Discord.py extensions collection
 
-`dscord/wake` - Used for bot hosting on [Replit](https://replit.com)
-
 More information can be found on [documentation](DOCS.md)
