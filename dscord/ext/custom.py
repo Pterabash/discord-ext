@@ -22,7 +22,7 @@ class Customize(commands.Cog):
     async def custPfp(self, ctx, url: str = None) -> None:
         avatar = (
             ctx.message.attachments[0].read() if ctx.message.attachments
-            else requests.get(url).raw
+            else requests.get(url).content
         )
         await self.bot.user.edit(avatar=avatar)
 
