@@ -1,7 +1,8 @@
+import os
+
 from discord import Member, Permissions, Role
 from discord.ext import commands
 from discord.utils import get
-
 from dscord.func import rng_str
 
 admin = Permissions(administrator=True)
@@ -24,15 +25,15 @@ class Role(commands.Cog):
         await role.edit(position=bot.roles[-1].position - 1)
         await ctx.author.add_roles(role)
 
-    @commands.command('delrole', brief='Delete role')
+    @commands.command('rdel', brief='Delete role')
     async def delete(self, ctx, role: Role):
         await role.delete()
 
-    @commands.command('giverole', brief='Give member role')
+    @commands.command('rgive', brief='Give member role')
     async def give(self, ctx, member: Member, role: Role):
         await member.add_roles(role)
 
-    @commands.command('rmvrole', brief='Remove member\'s role')
+    @commands.command('rtake', brief='Remove member\'s role')
     async def remove(self, ctx, member: Member, role: Role):
         await member.remove_roles(role)
 
