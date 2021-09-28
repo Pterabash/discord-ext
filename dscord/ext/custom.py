@@ -19,8 +19,8 @@ class Customize(commands.Cog):
 
     @commands.command('pfp', brief='Change bot pfp')
     async def custPfp(self, ctx, url: str = None) -> None:
-        if message.attachments:
-            url = message.attachments[0].url
+        if ctx.message.attachments:
+            url = ctx.message.attachments[0].url
         avatar = url.read()
         await self.bot.user.edit(avatar=avatar)
 
