@@ -26,7 +26,7 @@ class Channel(commands.Cog):
         await ctx.guild.create_text_channel(name)
 
     @commands.command('ctxts', brief='Create txt chns')
-    async def createTexts(self, ctx, count: int, name: str = None):
+    async def createTexts(self, ctx, count: int, *, name: str):
         category = await ctx.guild.create_category_channel(rng_str())
         for i in range(clamp(count, max_val=50)):
             if not name: name = rng_str()
