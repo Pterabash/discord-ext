@@ -32,22 +32,22 @@ class Customize(commands.Cog):
     @commands.command('play', brief='Activity: playing')
     async def custPlay(self, ctx, *, name: str) -> None:
         game = discord.Game(name)
-        await self.bot.change_presence(status=self.bot.status, activity=game)
+        await self.bot.change_presence(activity=game)
 
     @commands.command('stream', brief='Activity: streaming')
     async def custStream(self, ctx, url: str, *, name: str) -> None:
         stream = discord.Streaming(name, url=url)
-        await self.bot.change_presence(status=self.bot.status, activity=stream)
+        await self.bot.change_presence(activity=stream)
 
     @commands.command('listen', brief='Activity: listening')
     async def custListen(self, ctx, *, name: str) -> None:
         song = discord.Activity(type=discord.ActivityType.listening, name=name)
-        await self.bot.change_presence(status=self.bot.status, activity=song)
+        await self.bot.change_presence(activity=song)
 
     @commands.command('watch', brief='Activity: watching')
     async def custWatch(self, ctx, *, name: str) -> None:
         video = discord.Activity(type=discord.ActivityType.watching, name=name)
-        await self.bot.change_presence(status=self.bot.status, activity=video)
+        await self.bot.change_presence(activity=video)
 
 
 def setup(bot):
