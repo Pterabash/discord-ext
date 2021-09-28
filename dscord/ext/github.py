@@ -40,11 +40,11 @@ def extsLoad():
         except Exception as e: print(e)
 
 
-class GithubExt(commands.Cog):
+class Github(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command('ghload', brief='Path: [owner/repo/branch/filepath]')
+    @commands.command('gload', brief='Path: [owner/repo/branch/filepath]')
     async def extsLoad(self, ctx, *paths):
         for path in paths:
             extLoad(self.bot, path)
@@ -52,16 +52,16 @@ class GithubExt(commands.Cog):
             db.write(path, ext)
         await extlist(ctx)
 
-    @commands.command('ghexts', brief='List exts')
+    @commands.command('gexts', brief='List exts')
     async def extsList(self, ctx):
         await extlist(ctx)
 
-    @commands.command('ghreld', brief='Reload all exts')
+    @commands.command('greld', brief='Reload all exts')
     async def extsReload(self, ctx):
         extsLoad()
         await ctx.send('Done')
     
-    @commands.command('ghunld', brief='Unload exts')
+    @commands.command('gunld', brief='Unload exts')
     async def extsUnload(self, ctx, *exts):
         for ext in exts:
             db.erase(str(ext))
@@ -74,4 +74,4 @@ class GithubExt(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(GithubExt(bot))
+    bot.add_cog(Github(bot))
