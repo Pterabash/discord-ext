@@ -1,9 +1,7 @@
-import os
 import sys
 from typing import List
 
 from discord.ext import commands
-
 from dscord.func import sub_logs
 
 
@@ -19,14 +17,15 @@ class System(commands.Cog):
         print(err)
         await ctx.send(err)
 
-    @commands.command('pipinst')
-    async def pipInstall(self, ctx, *, package):
-        logs = pip(['install', package])
-        for log in logs: await ctx.send(log)
-
-    @commands.command('pipunst')
-    async def pipUninstall(self, ctx, *, package): 
-        logs = pip(['uninstall', package], b'y')
+    @commands.command('pip')
+    async def pipInstall(self, ctx, mode, package):
+        if mode == 'i':
+            logs = pip(['install', package])
+        elif mode == 'u':
+            logs = pip(['uninstall', package], b'y')
+        else:
+            await ctx.send('`Invalid mode (i or u)`')
+            return
         for log in logs: await ctx.send(log)
 
 
