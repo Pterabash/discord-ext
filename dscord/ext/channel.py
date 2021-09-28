@@ -26,17 +26,19 @@ class Channel(commands.Cog):
         await ctx.guild.create_text_channel(name)
 
     @commands.command('ctxts', brief='Create txt chns')
-    async def createTexts(self, ctx, count: int):
+    async def createTexts(self, ctx, count: int, name: str = None):
         category = await ctx.guild.create_category_channel(rng_str())
         for i in range(clamp(count, max_val=50)):
-            await category.create_text_channel(rng_str())
+            if not name: name = rng_str()
+            name += f'-{i}'
+            await category.create_text_channel(name)
 
     @commands.command('cvo', brief='Create voice chn')
     async def createVoice(self, ctx, name: str = rng_str()):
         await ctx.guild.create_voice_channel(name)
 
-    @commands.command('delchn', brief='Delete chn')
-    async def delete(self, ctx, channel: AnyChannel = None):
+    @commands.command('cdel', brief='Delete chn')
+    async def deleteChannel(self, ctx, channel: AnyChannel = None):
         if not channel: channel = ctx.channel
         if isinstance(channel, discord.CategoryChannel):
             for c in channel.channels: await c.delete()
