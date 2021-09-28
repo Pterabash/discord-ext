@@ -5,19 +5,19 @@ from dscord.func import clamp
 
 
 class Message(commands.Cog):
-    @commands.command('dm', brief='Dm user')
+    @commands.command('mdir', brief='DM user', aliases=['dm'])
     async def direct(self, ctx, user: User = None, *, message: str):
         if not user: user = ctx.author
         await user.send(message)
 
-    @commands.command('delmsg', brief='Delete msgs')
+    @commands.command('mdel', brief='Delete msgs')
     async def delete(self, ctx, num: int = 1):
         num = clamp(num + 1)
         logs = []
         async for log in ctx.channel.history(limit=num): logs.append(log)
         await ctx.channel.delete_messages(logs)
 
-    @commands.command('msgsend', aliases=['say','echo'], brief='Send msg')
+    @commands.command('msend', brief='Send msg', aliases=['say','echo'])
     async def send(self, ctx, *, message: str):
         await ctx.send(message)
 
