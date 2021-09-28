@@ -3,9 +3,9 @@ from importlib import import_module
 from pydoc import plaintext, render_doc
 
 from discord.ext import commands
-
 from dscord import ext
 from .func import code_wrap
+
 
 client = commands.Bot(',')
 
@@ -17,35 +17,40 @@ async def extList(ctx):
 
 
 @client.command('load')
-async def extLoad(ctx, module: str):
+async def extLoad(ctx, module: str) -> None:
     load('.'+module, 'dscord.ext')
     await ctx.send(f'`{module}` loaded')
 
 
 @client.command('restart', aliases=['respawn', 'retard'])
-async def botRestart(ctx):
+async def botRestart(ctx) -> None:
     await ctx.send('Restarting')
     restart()
 
 
 @client.command('update', aliases=['upgrade'])
-async def botUpdate(ctx):
+async def botUpdate(ctx) -> None:
     await ctx.send('Updating')
     os.system('pip3 install git+https://github.com/thisgary/dscord')
     await ctx.send('Success & restarting')
     restart()
 
 
-def restart():
-    os.execl(sys.executable, sys.executable, *sys.argv)
+def prefix(pf: str) -> None:
+    global client
+    client = commands.Bot(pf)
 
 
-def load(name: str, package: str = 'dscord.ext'):
+def load(name: str, package: str = 'dscord.ext') -> None:
     if package != '' and name[0] != '.':
         name = '.' + name
     module = import_module(name, package)
     module.setup(client)
 
 
-def run(token: str):
+def restart() -> None:
+    os.execl(sys.executable, sys.executable, *sys.argv)
+
+
+def run(token: str) -> None:
     client.run(token)
