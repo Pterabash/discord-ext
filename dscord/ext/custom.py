@@ -1,3 +1,5 @@
+from urllib.request import urlopen
+
 from discord import Game, Member, Status
 from discord.ext import commands
 
@@ -19,9 +21,10 @@ class Customize(commands.Cog):
 
     @commands.command('pfp', brief='Change bot pfp')
     async def custPfp(self, ctx, url: str = None) -> None:
-        if ctx.message.attachments:
-            url = ctx.message.attachments[0].url
-        avatar = url.read()
+        avatar = (
+            ctx.message.attachments[0].read() if ctx.message.attachments
+            else urlopen(url).read() 
+        )
         await self.bot.user.edit(avatar=avatar)
 
     @commands.command('status', brief='Change bot status')
