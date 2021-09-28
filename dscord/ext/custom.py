@@ -11,6 +11,7 @@ class Customize(commands.Cog):
         if not member: member = ctx.author
         avatar = await member.avatar_url.read()
         await self.bot.user.edit(username=member.name, avatar=avatar)
+        await ctx.send(f'Hi, I am {member.name}')
 
     @commands.command('name', brief='Rename bot')
     async def custName(self, ctx, *, name: str):
