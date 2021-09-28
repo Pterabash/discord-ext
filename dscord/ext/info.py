@@ -11,17 +11,17 @@ attrRole = ['color', 'created_at', 'guild', 'hoist', 'id', 'managed', 'mentionab
 
 class Episonage(commands.Cog):
     @commands.command('getchn', brief='Get chn info')
-    async def getChannel(self, ctx, channel: AnyChannel = None):
+    async def getChannel(self, ctx, channel: AnyChannel = None) -> None:
         if not channel: channel = ctx.channel
         for log in dict_wrap(channel, attrChn): await ctx.send(log)
 
     @commands.command('getmem', brief='You stalker')
-    async def getMember(self, ctx, member: Member = None):
+    async def getMember(self, ctx, member: Member = None) -> None:
         if not member: member = ctx.author
         for log in dict_wrap(member): await ctx.send(log)
 
     @commands.command('getrole', brief='Get role info')
-    async def getRole(self, ctx, role: Role):
+    async def getRole(self, ctx, role: Role) -> None:
         for log in dict_wrap(role, attrRole): await ctx.send(log)
 
 

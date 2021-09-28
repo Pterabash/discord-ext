@@ -9,7 +9,7 @@ base_url = 'https://raw.githubusercontent.com/'
 db = Db('path')
 
 
-async def extlist(ctx):
+async def extlist(ctx) -> None:
     keys = db.keys()
     if keys:
         logs = code_wrap('\n'.join(keys))
@@ -23,7 +23,7 @@ def basename(path: str) -> str:
     return base, name
 
 
-def extLoad(bot: commands.Bot, path: str):
+def extLoad(bot: commands.Bot, path: str) -> None:
     base, name = basename(path)
     url = base_url + path
     urlretrieve(url, base)
@@ -33,18 +33,18 @@ def extLoad(bot: commands.Bot, path: str):
     finally: os.remove(base)
 
 
-def extsLoad():
+def extsLoad() -> None:
     for path in db.keys():
         try: extLoad(path)
         except Exception as e: print(e)
 
 
 class Github(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot) -> None:
         self.bot = bot
 
     @commands.command('gload', brief='Path: [owner/repo/branch/filepath]')
-    async def extsLoad(self, ctx, *paths):
+    async def extsLoad(self, ctx, *paths: str) -> None:
         for path in paths:
             extLoad(self.bot, path)
             _, ext = basename(path)
@@ -52,23 +52,23 @@ class Github(commands.Cog):
         await extlist(ctx)
 
     @commands.command('gexts', brief='List exts')
-    async def extsList(self, ctx):
+    async def extsList(self, ctx) -> None:
         await extlist(ctx)
 
     @commands.command('greld', brief='Reload all exts')
-    async def extsReload(self, ctx):
+    async def extsReload(self, ctx) -> None:
         extsLoad()
         await ctx.send('Done')
     
     @commands.command('gunld', brief='Unload exts')
-    async def extsUnload(self, ctx, *exts):
+    async def extsUnload(self, ctx, *exts: str) -> None:
         for ext in exts:
             db.erase(str(ext))
             self.bot.unload_extension(ext)
         await extlist(ctx)
 
     @commands.Cog.listener()
-    async def on_ready(self):
+    async def on_ready(self) -> None:
         extsLoad()
 
 
