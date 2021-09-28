@@ -9,7 +9,7 @@ attrChn = ['category', 'created_at', 'guild', 'name', 'permissions_synced', 'pos
 attrRole = ['color', 'created_at', 'guild', 'hoist', 'id', 'managed', 'mentionable', 'permissions', 'position', 'tags']
 
 
-class Information(commands.Cog):
+class Episonage(commands.Cog):
     @commands.command('getchn', brief='Get chn info')
     async def getChannel(self, ctx, channel: AnyChannel = None):
         if not channel: channel = ctx.channel
@@ -26,4 +26,4 @@ class Information(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Information())
+    bot.add_cog(Episonage())
