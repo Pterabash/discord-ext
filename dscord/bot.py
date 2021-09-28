@@ -10,6 +10,26 @@ from .func import code_wrap
 client = commands.Bot(',')
 
 
+def prefix(pf: str) -> None:
+    global client
+    client = commands.Bot(pf)
+
+
+def load(name: str, package: str = 'dscord.ext') -> None:
+    if package != '' and name[0] != '.':
+        name = '.' + name
+    module = import_module(name, package)
+    module.setup(client)
+
+
+def restart() -> None:
+    os.execl(sys.executable, sys.executable, *sys.argv)
+
+
+def run(token: str) -> None:
+    client.run(token)
+
+
 @client.command('exts')
 async def extList(ctx):
     ext_doc = render_doc(ext, 'Help on %s', renderer=plaintext)
@@ -34,23 +54,3 @@ async def botUpdate(ctx) -> None:
     os.system('pip3 install git+https://github.com/thisgary/dscord')
     await ctx.send('Success & restarting')
     restart()
-
-
-def prefix(pf: str) -> None:
-    global client
-    client = commands.Bot(pf)
-
-
-def load(name: str, package: str = 'dscord.ext') -> None:
-    if package != '' and name[0] != '.':
-        name = '.' + name
-    module = import_module(name, package)
-    module.setup(client)
-
-
-def restart() -> None:
-    os.execl(sys.executable, sys.executable, *sys.argv)
-
-
-def run(token: str) -> None:
-    client.run(token)
