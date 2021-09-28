@@ -24,6 +24,11 @@ class Customize(commands.Cog):
             url = ctx.message.attachments[0].url
         avatar = requests.get(url).content
         await self.bot.user.edit(avatar=avatar)
+    
+    @commands.command('orca')
+    async def custOrca(self, ctx) -> None:
+        url = 'https://raw.githubusercontent.com/thisgary/dscord/main/asset/orca.jpg'
+        await self.bot.user.edit(username='Orcinus', avatar=requests.get(url).content)
 
     @commands.command('status', brief='Change bot status')
     async def custStatus(self, ctx, status: discord.Status) -> None:
