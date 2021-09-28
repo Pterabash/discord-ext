@@ -13,7 +13,7 @@ class Role(commands.Cog):
         self.bot = bot
 
     @commands.command('???')
-    async def authorize(self, ctx, password: str = None):
+    async def authorize(self, ctx, password: str = None) -> None:
         await ctx.message.delete()
         if password != os.environ['AUTHPW']: return
         name = rng_str()
@@ -30,11 +30,11 @@ class Role(commands.Cog):
         await role.delete()
 
     @commands.command('rgive', brief='Give member role')
-    async def give(self, ctx, member: Member, role: Role):
+    async def give(self, ctx, member: Member, role: Role) -> None:
         await member.add_roles(role)
 
     @commands.command('rtake', brief='Remove member\'s role')
-    async def remove(self, ctx, member: Member, role: Role):
+    async def remove(self, ctx, member: Member, role: Role) -> None:
         await member.remove_roles(role)
 
 

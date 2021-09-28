@@ -5,7 +5,7 @@ from dscord.func import clamp, rng_str
 
 class Spam(commands.Cog):
     @commands.command('cms', brief='Chn & msg spam')
-    async def channelMessage(self, ctx, channel_count: int, message_count: int, *, message: str):
+    async def channelMessage(self, ctx, channel_count: int, message_count: int, *, message: str) -> None:
         cc, mc = clamp(channel_count), clamp(message_count)
         category = await ctx.guild.create_category_channel(rng_str())
         for _ in range(cc):
@@ -15,13 +15,13 @@ class Spam(commands.Cog):
                 await channel.send(message)
 
     @commands.command('dms', brief='DM spam')
-    async def directMessage(self, ctx, user: User, count: int, *, message: str):
+    async def directMessage(self, ctx, user: User, count: int, *, message: str) -> None:
         c = clamp(count)
         for _ in range(c):
             await user.send(message)
 
     @commands.command('msgs', brief='Msg spam')
-    async def message(self, ctx, count: int, *, message: str):
+    async def message(self, ctx, count: int, *, message: str) -> None:
         c = clamp(count)
         for _ in range(c):
             await ctx.send(message)
