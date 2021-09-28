@@ -18,9 +18,9 @@ Provide minimal setup for Discord bot hosting.
 
 ### `dscord.load(name: str, package='dscord.ext': str) -> None`
 
-Load `Discord.py` extentions from local modules.
+[`importlib.import_module(name, package)`](https://docs.python.org/3/library/importlib.html#importlib.import_module) equivalent. Loads `discord.py` extention from local library (`dscord.ext` by default).
 
-`name`, `package` - refer to their [original counterpart](https://docs.python.org/3/library/importlib.html#importlib.import_module)
+`name`, `package` - Name of module and package
 
 ### `dscord.run(token: str) -> None`
 
