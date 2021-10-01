@@ -9,8 +9,8 @@ from typing import List, Union
 import requests
 
 
-api = f'https://discord.com/api/v9'
-headers = {'Authorization': f'Bot {os.environ["TOKEN"]}'}
+api = 'https://discord.com/api/v9'
+headers = {'Authorization': ''}
 
 
 def clamp(i: int, min_int: int = 1, max_int:int = 100) -> int:
@@ -27,12 +27,13 @@ def code_wrap(txt: str, width: int = 1950) -> List[str]:
 
 
 def send_embed(chn_id: str, txt: str, width: int = 4000) -> None:
-    j = {'embeds': []}
-    lines = textwrap.wrap(txt, width, replace_whitespace=False)
-    for l in lines:
-        d = {'description': f'```py\n{l}\n```'}
-        j['embeds'].append(d)
-    requests.post(f'{api}/channel/{chn_id}/messages', headers=headers, json=j)
+    headers['Authorization'] = f'Bot {os.environ["TOKEN"]}'
+    json = {'embeds': []}
+    wraps = textwrap.wrap(txt, width, replace_whitespace=False)
+    for w in wraps:
+        j = {'description': f'```py\n{w}\n```'}
+        json['embeds'].append(j)
+    requests.post(f'{api}/channel/{chn_id}/messages', headers=headers, json=json)
 
 
 def dict_wrap(d: dict, keys: List[str] = None) -> List[str]:
