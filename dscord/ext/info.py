@@ -1,7 +1,7 @@
 from discord import Member, Role
 from discord.ext import commands
 
-from dscord import channel
+from dscord.ext import channel
 from dscord.func import dict_wrap
 
 attrChn = ['category', 'created_at', 'guild', 'name', 'permissions_synced', 'position']
