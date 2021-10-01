@@ -59,11 +59,11 @@ class Github(commands.Cog):
                 extLoad(self.bot, path)
                 _, ext = basename(path)
                 db['Github'][ext] = path
-        extList(ctx)
+        extList(ctx.channel.id)
 
     @commands.command('gexts', brief='List exts')
     async def ghExtList(self, ctx) -> None:
-        extList(ctx)
+        extList(ctx.channel.id)
 
     @commands.command('gunld', brief='Unload exts')
     async def extsUnload(self, ctx, *exts: str) -> None:
@@ -74,7 +74,7 @@ class Github(commands.Cog):
                     del es[ext]
                 db['Github'] = es
                 self.bot.unload_extension(ext)
-        extList(ctx)
+        extList(ctx.channel.id)
 
     @commands.command('greld', brief='Reload all exts')
     async def extsReload(self, ctx) -> None:
