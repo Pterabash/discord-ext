@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Log into registry
-        run: echo ${{ secrets.TOKEN }} | docker login ghcr.io -u thisgary --password-stdin
+        run: echo ${{ secrets.GH_TOKEN }} | docker login ghcr.io -u thisgary --password-stdin
 
       - name: Build Docker image
         run: docker build -t ${{ env.IMAGE_NAME }}:${{ env.VERSION }} -t ${{ env.IMAGE_NAME }}:latest .
