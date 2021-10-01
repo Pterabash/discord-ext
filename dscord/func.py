@@ -1,3 +1,4 @@
+import json
 import os
 import random
 import shelve
@@ -44,14 +45,14 @@ def sub_logs(args: List[str], inp: str = None) -> List[str]:
 
 def send_embed(chn_id: str, txt: str, width: int = 4000, *, title: str = None) -> None:
     headers['Authorization'] = f'Bot {os.environ["TOKEN"]}'
-    json = {'embeds': []}
+    j = {'embeds': []}
     wraps = textwrap.wrap(txt, width, replace_whitespace=False)
     for w in wraps:
         j = {'description': f'```py\n{w}\n```'}
         if title:
             j['title'] = title
         json['embeds'].append(j)
-    r = requests.post(f'{api}/channels/{chn_id}/messages', headers=headers, json=json)
+    r = requests.post(f'{api}/channels/{chn_id}/messages', headers=headers, json=json.loads(j))
     print(r)
 
 
