@@ -17,12 +17,10 @@ def basename(path: str) -> Tuple[str, str]:
     return (base := path.split('/')[-1]), base.split('.')[0]
 
 
-def extList(channel_id) -> None:
+def extList(channel_id: int) -> None:
     with database() as db:
-        send_embed(
-            channel_id,
-            '\n'.join(list(db['Github'])), 
-            title='Github Extensions')
+        exts = list(db['Github'])
+        send_embed(channel_id, '\n'.join(exts), title='Github Extensions')
 
 
 def extLoad(bot: commands.Bot, path: str) -> None:

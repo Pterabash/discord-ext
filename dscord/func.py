@@ -51,18 +51,8 @@ def send_embed(chn_id: str, txt: str, width: int = 4000, *, title: str = None) -
         if title:
             j['title'] = title
         json['embeds'].append(j)
-    requests.post(f'{api}/channels/{chn_id}/messages', headers=headers, json=json)
+    print(requests.post(f'{api}/channels/{chn_id}/messages', headers=headers, json=json))
 
-def send_embed(chn_id: str, txt: str, width: int = 4000, *, title: str = None) -> None:
-    headers['Authorization'] = f'Bot {os.environ["TOKEN"]}'
-    json = {'embeds': []}
-    wraps = textwrap.wrap(txt, width, replace_whitespace=False)
-    for w in wraps:
-        j = {'description': f'```py\n{w}\n```'}
-        if title:
-            j['title'] = title
-        json['embeds'].append(j)
-    requests.post(f'{api}/channels/{chn_id}/messages', headers=headers, json=json)
 
 class Db:
     def __init__(self, name):
