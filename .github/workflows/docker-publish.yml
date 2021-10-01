@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 env:
-  IMAGE_NAME: ghcr.io/thisgary/dockcord
+  IMAGE_NAME: ghcr.io/thisgary/dscord
   VERSION: ${GITHUB_REF/refs\/tags\//}
 
 jobs:
