@@ -51,7 +51,8 @@ def send_embed(chn_id: str, txt: str, width: int = 4000, *, title: str = None) -
         if title:
             j['title'] = title
         json['embeds'].append(j)
-    requests.post(f'{api}/channels/{chn_id}/messages', headers=headers, json=json)
+    r = requests.post(f'{api}/channels/{chn_id}/messages', headers=headers, json=json)
+    print(r)
 
 
 class Db:
