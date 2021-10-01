@@ -9,7 +9,7 @@ attrRole = ['color', 'created_at', 'guild', 'hoist', 'id', 'managed', 'mentionab
 attrUsr = ['activities', 'activity', 'avatar', 'avatar_url', 'bot', 'color', 'created_at', 'default_avatar', 'default_avatar_url', 'desktop_status', 'discriminator', 'display_name', 'dm_channel', 'guild', 'guild_permissions', 'id', 'joined_at', 'mention', 'mobile_status', 'mutual_guilds', 'name', 'nick', 'pending', 'premium_since', 'public_flags', 'raw_status', 'relationship', 'roles', 'status', 'system', 'top_role', 'voice', 'web_status']
 
 
-class Episonage(commands.Cog):
+class Info(commands.Cog):
     @commands.command('schn', brief='Get chn info')
     async def spyChannel(self, ctx, channel: channel.AnyChannel = None) -> None:
         if not channel: channel = ctx.channel
@@ -29,4 +29,4 @@ class Episonage(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Episonage())
+    bot.add_cog(Info())
