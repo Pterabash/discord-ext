@@ -40,7 +40,7 @@ async def botExtLoad(ctx, module: str) -> None:
     await ctx.send(f'`{module}` loaded')
 
 
-@client.command('restart', aliases=['upgrade'])
+@client.command('restart', aliases=['retard', 'reboot', 'update', 'upgrade'])
 async def botRestart(ctx) -> None:
     await ctx.send('Updating')
     os.system('pip3 install git+https://github.com/thisgary/dscord')
