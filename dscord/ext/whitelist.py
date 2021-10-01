@@ -1,4 +1,4 @@
-from discord import Member
+import discord
 from discord.ext import commands
 
 from dscord.func import Db, code_wrap
@@ -14,24 +14,32 @@ async def check(ctx):
 
 
 class Whitelist(commands.Cog):
-    @commands.command('wladd', brief='Add member')
-    async def add(self, ctx, member: Member) -> None:
+    @commands.command('wadd', brief='Add member')
+    async def add(self, ctx, member: discord.Member) -> None:
         db.write(member.id)
         await ctx.send("Welcome!")
 
-    @commands.command('wlcheck', brief='Check member')
-    async def isAdded(self, ctx, member: Member) -> None:
-        if member.id in db.vals():
-            await ctx.send("Member is whitelisted")
+    @commands.command('wcheck', brief='Check member')
+    async def isAdded(self, ctx, member: discord.Member = None) -> None:
+        if member:
+            await ctx.send(f"{member.name} {'is whitelisted' if member.id in db.vals() else 'not in whitelist'}")
         else:
-            await ctx.send("Member not in whitelist")
+            await ctx.send(f'{len(db.keys())} user(s) whitelisted')
         
-    @commands.command('wlrmv', brief='Remove member')
-    async def remove(self, ctx, member: Member) -> None:
-        if ctx.author.id == member.id: await ctx.send('No')
-        else: 
-            db.erase(str(member.id))
-            await ctx.send("Get banished")
+    @commands.command('wrmv', brief='Remove member')
+    async def remove(self, ctx, member: discord.Member) -> None:
+        wl = db.vals()
+        if ctx.author.id == member.id:
+            await ctx.send('No')
+        elif member.id in wl:
+            if wl.index(ctx.author.id) < wl.index(member.id):
+                db.erase(str(member.id))
+                await ctx.send('Get banished')
+            else:
+                await ctx.send('Skill issue')
+        else:
+            await ctx.send('Member not in whitelist')
+
 
 
 def setup(bot):
