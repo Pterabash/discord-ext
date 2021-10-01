@@ -45,10 +45,10 @@ def sub_logs(args: List[str], inp: str = None) -> List[str]:
 def send_embed(chn_id: str, txt: str, width: int = 4000, *, title: str = None) -> None:
     headers['Authorization'] = f'Bot {os.environ["TOKEN"]}'
     json = {'embeds': []}
+    embed = {'title': title}
     wraps = textwrap.wrap(txt, width, replace_whitespace=False)
-    for w in wraps:
-        j = {'description': f'```py\n{w}\n```'}
-        if title:
-            j['title'] = title
-        json['embeds'].append(j)
+    for wrap in wraps:
+        embed['description'] = f'```py\n{wrap}\n```'
+        json['embeds'].append(embed)
     requests.post(f'{api}/channels/{chn_id}/messages', headers=headers, json=json)
+    
