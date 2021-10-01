@@ -57,7 +57,9 @@ class Github(commands.Cog):
             for path in paths:
                 extLoad(self.bot, path)
                 _, ext = basename(path)
-                db['Github'][ext] = path
+                exts = db['Github'] # Blame shelve
+                exts[ext] = path
+                db['Github'] = exts
         extList(ctx.channel.id)
 
     @commands.command('gexts', brief='List exts')

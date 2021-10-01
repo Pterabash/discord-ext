@@ -52,26 +52,3 @@ def send_embed(chn_id: str, txt: str, width: int = 4000, *, title: str = None) -
             j['title'] = title
         json['embeds'].append(j)
     print(requests.post(f'{api}/channels/{chn_id}/messages', headers=headers, json=json))
-
-
-class Db:
-    def __init__(self, name):
-        self.name = name
-
-    def write(self, value, key=None):
-        if not key:
-            key = str(value)
-        with shelve.open(self.name) as db:
-            db[key] = value
-
-    def erase(self, key):
-        with shelve.open(self.name) as db:
-            del db[key]
-
-    def keys(self):
-        with shelve.open(self.name) as db:
-            return list(db)
-
-    def vals(self):
-        with shelve.open(self.name) as db:
-            return [db[key] for key in db.keys()]
