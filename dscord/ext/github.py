@@ -52,12 +52,9 @@ def extsLoad(bot) -> List[str]:
 class Github(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
-    
-    @commands.Cog.listener()
-    async def on_ready(self) -> None:
-        await self.bot.wait_until_ready()
         exts = extsLoad(self.bot)
         print(f'{exts} loaded')
+
 
     @commands.command('gload', brief='Load exts. Path: [owner/repo/branch/filepath]')
     async def ghExtLoad(self, ctx, *paths: str) -> None:
