@@ -37,12 +37,12 @@ def extLoad(bot: commands.Bot, path: str) -> None:
         os.remove(base)
 
 
-def extsLoad() -> List[str]:
+def extsLoad(bot) -> List[str]:
     with database() as db:
         exts = db['Github']
         for ext in exts.keys():
             try:
-                extLoad(exts[ext])
+                extLoad(bot, exts[ext])
             except Exception as e:
                 print(e)
 
@@ -79,12 +79,12 @@ class Github(commands.Cog):
 
     @commands.command('greld', brief='Reload all exts')
     async def ghExtsReload(self, ctx) -> None:
-        exts = extsLoad()
+        exts = extsLoad(self.bot)
         send_embed(ctx.channel.id, '\n'.join(exts), title='Extensions Reloaded')
 
     @commands.Cog.listener()
     async def on_ready(self) -> None:
-        exts = extsLoad()
+        exts = extsLoad(self.bot)
         print(f'{exts} loaded')
 
 
