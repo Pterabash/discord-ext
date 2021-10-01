@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 
 
-database = lambda : shelve.open('Database')
+from dscord import database
 
 
 async def check(ctx) -> bool:
@@ -34,6 +34,7 @@ class Whitelist(commands.Cog):
             if member.id in wl:
                 if wl.index(ctx.author.id) < wl.index(member.id):
                     wl.remove(member.id)
+                    db ['Whitelist'] = wl
                     await ctx.send(f'Removed {member.name}')
                 else:
                     await ctx.send('Skill issue')

@@ -13,6 +13,9 @@ api = 'https://discord.com/api/v9'
 headers = {'Authorization': ''}
 
 
+database = lambda : shelve.open('Database')
+
+
 def clamp(i: int, min_int: int = 1, max_int:int = 100) -> int:
     return min(max(i, min_int), max_int)
 
@@ -39,12 +42,14 @@ def sub_logs(args: List[str], inp: str = None) -> List[str]:
         return code_wrap(fp.read())
 
 
-def send_embed(chn_id: str, txt: str, width: int = 4000) -> None:
+def send_embed(chn_id: str, txt: str, width: int = 4000, *, title: str = None) -> None:
     headers['Authorization'] = f'Bot {os.environ["TOKEN"]}'
     json = {'embeds': []}
     wraps = textwrap.wrap(txt, width, replace_whitespace=False)
     for w in wraps:
         j = {'description': f'```py\n{w}\n```'}
+        if title:
+            j['title'] = title
         json['embeds'].append(j)
     requests.post(f'{api}/channel/{chn_id}/messages', headers=headers, json=json)
 
