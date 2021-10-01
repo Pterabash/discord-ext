@@ -20,6 +20,7 @@ def basename(path: str) -> Tuple[str, str]:
 def extList(channel_id: int) -> None:
     with database() as db:
         exts = list(db['Github'])
+        print(exts)
         send_embed(channel_id, '\n'.join(exts), title='Github Extensions')
 
 
@@ -64,7 +65,7 @@ class Github(commands.Cog):
         extList(ctx.channel.id)
 
     @commands.command('gunld', brief='Unload exts')
-    async def extsUnload(self, ctx, *exts: str) -> None:
+    async def ghExtsUnload(self, ctx, *exts: str) -> None:
         with database() as db:
             for ext in exts:
                 es = db['Github'] # Blame shelve
@@ -75,7 +76,7 @@ class Github(commands.Cog):
         extList(ctx.channel.id)
 
     @commands.command('greld', brief='Reload all exts')
-    async def extsReload(self, ctx) -> None:
+    async def ghExtsReload(self, ctx) -> None:
         extsLoad()
         await ctx.send('Finished reloading')
 
