@@ -9,7 +9,7 @@ from typing import List, Union
 import requests
 
 
-uri = f'https://discord.com/api/v9/channel/{chn_id}/messages'
+api = f'https://discord.com/api/v9'
 headers = {'Authorization': f'Bot {os.environ["TOKEN"]}'}
 
 
@@ -32,7 +32,7 @@ def send_embed(chn_id: str, txt: str, width: int = 4000) -> None:
     for l in lines:
         d = {'description': f'```py\n{l}\n```'}
         j['embeds'].append(d)
-    requests.post(uri, headers=headers, json=j)
+    requests.post(f'{api}/channel/{chn_id}/messages', headers=headers, json=j)
 
 
 def dict_wrap(d: dict, keys: List[str] = None) -> List[str]:
