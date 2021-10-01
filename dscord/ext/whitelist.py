@@ -22,12 +22,14 @@ class Whitelist(commands.Cog):
     async def add(self, ctx, member: discord.Member) -> None:
         with database() as db:
             db['Whitelist'].append(member.id)
+            print(db) # Debug
         await ctx.send(f'Whitelisted {member.name}')
 
     @commands.command('wrmv', brief='Remove member')
     async def remove(self, ctx, member: discord.Member) -> None:
         if ctx.author.id == member.id:
             await ctx.send('Self removing is prohibited')
+            return
         with database() as db:
             wl = db['Whitelist']
             if member.id in wl:
