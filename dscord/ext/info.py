@@ -6,7 +6,7 @@ from dscord.func import dict_wrap
 
 attrChn = ['category', 'created_at', 'guild', 'name', 'permissions_synced', 'position']
 attrRole = ['color', 'created_at', 'guild', 'hoist', 'id', 'managed', 'mentionable', 'permissions', 'position', 'tags']
-attrUsr = ['activities', 'activity', 'avatar', 'avatar_url', 'bot', 'color', 'colour', 'created_at', 'default_avatar', 'default_avatar_url', 'desktop_status', 'discriminator', 'display_name', 'dm_channel', 'guild', 'guild_permissions', 'id', 'joined_at', 'mention', 'mobile_status', 'mutual_guilds', 'name', 'nick', 'pending', 'premium_since', 'public_flags', 'raw_status', 'relationship', 'roles', 'status', 'system', 'top_role', 'voice', 'web_status']
+attrUsr = ['activities', 'activity', 'avatar', 'avatar_url', 'bot', 'color', 'created_at', 'default_avatar', 'default_avatar_url', 'desktop_status', 'discriminator', 'display_name', 'dm_channel', 'guild', 'guild_permissions', 'id', 'joined_at', 'mention', 'mobile_status', 'mutual_guilds', 'name', 'nick', 'pending', 'premium_since', 'public_flags', 'raw_status', 'relationship', 'roles', 'status', 'system', 'top_role', 'voice', 'web_status']
 
 
 class Episonage(commands.Cog):
