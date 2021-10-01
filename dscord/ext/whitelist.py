@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 
 
-from dscord import database
+from dscord.func import database
 
 
 async def check(ctx) -> bool:
