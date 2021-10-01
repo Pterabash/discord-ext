@@ -41,8 +41,12 @@ async def botExtLoad(ctx, module: str) -> None:
 
 
 @client.command('restart', aliases=['retard', 'reboot', 'update', 'upgrade'])
-async def botRestart(ctx) -> None:
-    await ctx.send('Updating')
-    os.system('pip3 install git+https://github.com/thisgary/dscord')
-    await ctx.send('Finished updating. Restarting...')
+async def botRestart(ctx, flag: str = None) -> None:
+    if not flag:
+        await ctx.send('Updating')
+        os.system('pip3 install git+https://github.com/thisgary/dscord')
+        await ctx.send('Finished updating')
+    elif flag == 'skip':
+        await ctx.send('Skipped updating')
+    await ctx.send('Restarting')
     os.execl(sys.executable, sys.executable, *sys.argv)
