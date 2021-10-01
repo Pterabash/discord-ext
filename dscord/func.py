@@ -4,7 +4,7 @@ import shelve
 import subprocess
 import tempfile
 import textwrap
-from typing import List, Union
+from typing import List
 
 import requests
 
@@ -26,16 +26,6 @@ def code_wrap(txt: str, width: int = 1950) -> List[str]:
     return [f'```\n{l}\n```' for l in lines]
 
 
-def send_embed(chn_id: str, txt: str, width: int = 4000) -> None:
-    headers['Authorization'] = f'Bot {os.environ["TOKEN"]}'
-    json = {'embeds': []}
-    wraps = textwrap.wrap(txt, width, replace_whitespace=False)
-    for w in wraps:
-        j = {'description': f'```py\n{w}\n```'}
-        json['embeds'].append(j)
-    requests.post(f'{api}/channel/{chn_id}/messages', headers=headers, json=json)
-
-
 def dict_wrap(d: dict, keys: List[str] = None) -> List[str]:
     if not keys: keys = dir(d)
     keyvals = [f'{key}: {getattr(d, key)}' for key in keys]
@@ -49,12 +39,23 @@ def sub_logs(args: List[str], inp: str = None) -> List[str]:
         return code_wrap(fp.read())
 
 
+def send_embed(chn_id: str, txt: str, width: int = 4000) -> None:
+    headers['Authorization'] = f'Bot {os.environ["TOKEN"]}'
+    json = {'embeds': []}
+    wraps = textwrap.wrap(txt, width, replace_whitespace=False)
+    for w in wraps:
+        j = {'description': f'```py\n{w}\n```'}
+        json['embeds'].append(j)
+    requests.post(f'{api}/channel/{chn_id}/messages', headers=headers, json=json)
+
+
 class Db:
     def __init__(self, name):
         self.name = name
 
     def write(self, value, key=None):
-        if not key: key = str(value)
+        if not key:
+            key = str(value)
         with shelve.open(self.name) as db:
             db[key] = value
 
