@@ -21,7 +21,7 @@ class Whitelist(commands.Cog):
     @commands.command('wadd', brief='Add member')
     async def add(self, ctx, member: discord.Member) -> None:
         with database() as db:
-            db['Whitelist'].append(member.id)
+            db['Whitelist'] += [member.id]
             print(db) # Debug
         await ctx.send(f'Whitelisted {member.name}')
 
