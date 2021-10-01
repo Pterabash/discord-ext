@@ -1,0 +1,31 @@
+name: Docker
+
+on:
+  release:
+    types: [ published ]
+    branches: [ main ]
+
+env:
+  IMAGE_NAME: ghcr.io/thisgary/dockcord
+  VERSION: ${GITHUB_REF/refs\/tags\//}
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log into registry
+        run: echo ${{ secrets.TOKEN }} | docker login ghcr.io -u thisgary --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t ${{ env.IMAGE_NAME }}:${{ env.VERSION }} -t ${{ env.IMAGE_NAME }}:latest .
+
+      - name: Push Docker image
+        run: docker push ${{ env.IMAGE_NAME }} --all-tags
