@@ -1,71 +1,84 @@
 import os
-from typing import List
-from urllib.request import urlretrieve
+from typing import Tuple
+from urllib.request import urlopen
 
 from discord.ext import commands
-from dscord.func import Db, code_wrap
-
-base_url = 'https://raw.githubusercontent.com/'
-db = Db('path')
+from dscord.func import database, send_embed
 
 
-async def extlist(ctx) -> None:
-    keys = db.keys()
-    if keys:
-        logs = code_wrap('\n'.join(keys))
-        for log in logs: await ctx.send(log)
-    else: await ctx.send('No extension loaded from Github')
+with database() as db:
+    if 'Github' not in db:
+        db['Github'] = {}
 
 
-def basename(path: str) -> str:
-    base = path.split('/')[-1]
-    name = base.split('.')[0]
-    return base, name
+def basename(path: str) -> Tuple[str, str]:
+    # Get file's basename from url
+    # eg. https://website.com/index.html -> (index.html, index)
+    return (base := path.split('/')[-1]), base.split('.')[0]
+
+
+def extList() -> None:
+    with database() as db:
+        send_embed(
+            '\n'.join(list(db['Github'])), 
+            title='Github Extensions')
 
 
 def extLoad(bot: commands.Bot, path: str) -> None:
     base, name = basename(path)
-    url = base_url + path
-    urlretrieve(url, base)
-    try: bot.load_extension(name)
+    url = 'https://raw.githubusercontent.com/' + path
+    with open(base, 'w') as f:
+        f.write(urlopen(url).read().decode('utf-8'))
+    try:
+        bot.load_extension(name)
     except commands.ExtensionAlreadyLoaded:
         bot.reload_extension(name)
-    finally: os.remove(base)
+    finally:
+        os.remove(base)
 
 
 def extsLoad() -> None:
-    for path in db.keys():
-        try: extLoad(path)
-        except Exception as e: print(e)
+    with database() as db:
+        exts = db['Github']
+        for ext in exts.keys():
+            try:
+                extLoad(exts[ext])
+            except Exception as e:
+                print(e)
 
 
 class Github(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
-    @commands.command('gload', brief='Path: [owner/repo/branch/filepath]')
-    async def extsLoad(self, ctx, *paths: str) -> None:
-        for path in paths:
-            extLoad(self.bot, path)
-            _, ext = basename(path)
-            db.write(path, ext)
-        await extlist(ctx)
+    @commands.command('gload', brief='Load exts. Path: [owner/repo/branch/filepath]')
+    async def ghExtLoad(self, ctx, *paths: str) -> None:
+        with database() as db:
+            for path in paths:
+                extLoad(self.bot, path)
+                _, ext = basename(path)
+                db['Github'][ext] = path
+        extList()
 
     @commands.command('gexts', brief='List exts')
-    async def extsList(self, ctx) -> None:
-        await extlist(ctx)
+    async def ghExtList(self, ctx) -> None:
+        extList()
+
+    @commands.command('gunld', brief='Unload exts')
+    async def extsUnload(self, ctx, *exts: str) -> None:
+        with database() as db:
+            for ext in exts:
+                es = db['Github'] # Blame shelve
+                if ext in es:
+                    del es[ext]
+                db['Github'] = es
+                self.bot.unload_extension(ext)
+        extList()
 
     @commands.command('greld', brief='Reload all exts')
     async def extsReload(self, ctx) -> None:
         extsLoad()
         await ctx.send('Done')
-    
-    @commands.command('gunld', brief='Unload exts')
-    async def extsUnload(self, ctx, *exts: str) -> None:
-        for ext in exts:
-            db.erase(str(ext))
-            self.bot.unload_extension(ext)
-        await extlist(ctx)
 
     @commands.Cog.listener()
     async def on_ready(self) -> None:
