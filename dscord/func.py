@@ -1,9 +1,16 @@
+import os
 import random
 import shelve
 import subprocess
 import tempfile
 import textwrap
-from typing import List
+from typing import List, Union
+
+import requests
+
+
+uri = f'https://discord.com/api/v9/channel/{chn_id}/messages'
+headers = {'Authorization': f'Bot {os.environ["TOKEN"]}'}
 
 
 def clamp(i: int, min_int: int = 1, max_int:int = 100) -> int:
@@ -17,6 +24,15 @@ def rng_str() -> str:
 def code_wrap(txt: str, width: int = 1950) -> List[str]:
     lines = textwrap.wrap(txt, width, replace_whitespace=False)
     return [f'```\n{l}\n```' for l in lines]
+
+
+def send_embed(chn_id: str, txt: str, width: int = 4000) -> None:
+    j = {'embeds': []}
+    lines = textwrap.wrap(txt, width, replace_whitespace=False)
+    for l in lines:
+        d = {'description': f'```py\n{l}\n```'}
+        j['embeds'].append(d)
+    requests.post(uri, headers=headers, json=j)
 
 
 def dict_wrap(d: dict, keys: List[str] = None) -> List[str]:
