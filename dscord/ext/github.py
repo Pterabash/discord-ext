@@ -40,11 +40,14 @@ def extLoad(bot: commands.Bot, path: str) -> None:
 def extsLoad(bot) -> List[str]:
     with database() as db:
         exts = db['Github']
+        loaded = []
         for ext in exts.keys():
             try:
                 extLoad(bot, exts[ext])
+                loaded.append(ext)
             except Exception as e:
                 print(e)
+        return loaded
 
 
 class Github(commands.Cog):
@@ -62,10 +65,6 @@ class Github(commands.Cog):
                 db['Github'] = exts
         extList(ctx.channel.id)
 
-    @commands.command('gexts', brief='List exts')
-    async def ghExtList(self, ctx) -> None:
-        extList(ctx.channel.id)
-
     @commands.command('gunld', brief='Unload exts')
     async def ghExtsUnload(self, ctx, *exts: str) -> None:
         with database() as db:
@@ -75,6 +74,10 @@ class Github(commands.Cog):
                     del es[ext]
                 db['Github'] = es
                 self.bot.unload_extension(ext)
+        extList(ctx.channel.id)
+
+    @commands.command('gexts', brief='List exts')
+    async def ghExtList(self, ctx) -> None:
         extList(ctx.channel.id)
 
     @commands.command('greld', brief='Reload all exts')
