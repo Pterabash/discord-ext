@@ -93,4 +93,3 @@ class Github(commands.Cog):
 
 def setup(bot):
     bot.add_cog(Github(bot))
-    bot.add_check()
