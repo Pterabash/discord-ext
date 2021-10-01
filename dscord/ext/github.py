@@ -1,5 +1,5 @@
 import os
-from typing import Tuple
+from typing import List, Tuple
 from urllib.request import urlopen
 
 from discord.ext import commands
@@ -37,7 +37,7 @@ def extLoad(bot: commands.Bot, path: str) -> None:
         os.remove(base)
 
 
-def extsLoad() -> None:
+def extsLoad() -> List[str]:
     with database() as db:
         exts = db['Github']
         for ext in exts.keys():
@@ -79,12 +79,13 @@ class Github(commands.Cog):
 
     @commands.command('greld', brief='Reload all exts')
     async def ghExtsReload(self, ctx) -> None:
-        extsLoad()
-        await ctx.send('Finished reloading')
+        exts = extsLoad()
+        send_embed(ctx.channel.id, '\n'.join(exts), title='Extensions Reloaded')
 
     @commands.Cog.listener()
     async def on_ready(self) -> None:
-        extsLoad()
+        exts = extsLoad()
+        print(f'{exts} loaded')
 
 
 def setup(bot):
