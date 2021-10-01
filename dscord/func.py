@@ -52,7 +52,7 @@ def send_embed(chn_id: str, txt: str, width: int = 4000, *, title: str = None) -
         if title:
             j['title'] = title
         json['embeds'].append(j)
-    r = requests.post(f'{api}/channels/{chn_id}/messages', headers=headers, json=json.loads(j))
+    r = requests.post(f'{api}/channels/{chn_id}/messages', headers=headers, json=json.dumps(j))
     print(r)
 
 
