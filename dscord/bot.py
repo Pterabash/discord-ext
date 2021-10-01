@@ -29,19 +29,19 @@ def run(token: str) -> None:
 
 
 @client.command('exts')
-async def extList(ctx):
+async def botExtList(ctx):
     ext_doc = pydoc.render_doc(ext, 'Help on %s', renderer=pydoc.plaintext)
     for x in code_wrap(ext_doc): await ctx.send(x)
 
 
 @client.command('load')
-async def extLoad(ctx, module: str) -> None:
+async def botExtLoad(ctx, module: str) -> None:
     load('.'+module, 'dscord.ext')
     await ctx.send(f'`{module}` loaded')
 
 
-@client.command('update', aliases=['upgrade'])
-async def botUpdate(ctx) -> None:
+@client.command('restart', aliases=['upgrade'])
+async def botRestart(ctx) -> None:
     await ctx.send('Updating')
     os.system('pip3 install git+https://github.com/thisgary/dscord')
     await ctx.send('Finished updating. Restarting...')
