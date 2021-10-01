@@ -20,7 +20,6 @@ def basename(path: str) -> Tuple[str, str]:
 def extList(channel_id: int) -> None:
     with database() as db:
         exts = list(db['Github'])
-        print(exts)
         send_embed(channel_id, '\n'.join(exts), title='Github Extensions')
 
 
@@ -53,6 +52,12 @@ def extsLoad(bot) -> List[str]:
 class Github(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
+    
+    @commands.Cog.listener()
+    async def on_ready(self) -> None:
+        await self.bot.wait_until_ready()
+        exts = extsLoad(self.bot)
+        print(f'{exts} loaded')
 
     @commands.command('gload', brief='Load exts. Path: [owner/repo/branch/filepath]')
     async def ghExtLoad(self, ctx, *paths: str) -> None:
@@ -85,11 +90,7 @@ class Github(commands.Cog):
         exts = extsLoad(self.bot)
         send_embed(ctx.channel.id, '\n'.join(exts), title='Extensions Reloaded')
 
-    @commands.Cog.listener()
-    async def on_ready(self) -> None:
-        exts = extsLoad(self.bot)
-        print(f'{exts} loaded')
-
 
 def setup(bot):
     bot.add_cog(Github(bot))
+    bot.add_check()
