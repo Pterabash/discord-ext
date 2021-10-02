@@ -15,6 +15,6 @@ No longer actively maintained, since [Dscord2](https://thisgary.github.io/dscord
 
 `dscord` - Provide minimal setup for Discord bot hosting
 
-`dscord/ext` - Pre-made bot command extensions for this library
+`dscord.ext` - Pre-made bot command extensions for this library
 
 More information can be found on [documentation](DOCS.md)
