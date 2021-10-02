@@ -1,0 +1,5 @@
+{
+    "name": "Dockord",
+    "description": "Discord bot lazy hosting on Heroku",
+    "repository": "https://github.com/thisgary/dscord"
+}
