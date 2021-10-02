@@ -11,6 +11,8 @@ No longer actively maintained, since [Dscord2](https://thisgary.github.io/dscord
 
     pip install git+https://github.com/thisgary/dscord
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://dashboard.heroku.com/new?template=https%3A%2F%2Fgithub.com%2Fthisgary%2Fdscord)
+
 ## Features
 
 `dscord` - Provide minimal setup for Discord bot hosting
