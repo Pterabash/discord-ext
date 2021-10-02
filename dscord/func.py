@@ -4,20 +4,20 @@ import shelve
 import subprocess
 import tempfile
 import textwrap
-from typing import List
+from typing import List, Shelf
 
 import requests
 
 
-api = 'https://discord.com/api/v9'
-headers = {'Authorization': ''}
+API = 'https://discord.com/api/v9'
 
 
-database = lambda : shelve.open('Database')
+def database() -> Shelf[object]:
+    return shelve.open('Database')
 
 
-def clamp(i: int, min_int: int = 1, max_int:int = 100) -> int:
-    return min(max(i, min_int), max_int)
+def clamp(i: int, *, min: int = 1, max: int = 100) -> int:
+    return min(max(i, min), max)
 
 
 def rng_str() -> str:
@@ -30,22 +30,36 @@ def code_wrap(txt: str, width: int = 1950) -> List[str]:
 
 
 def dict_wrap(d: dict, keys: List[str] = None) -> List[str]:
-    if not keys: keys = dir(d)
-    keyvals = [f'{key}: {getattr(d, key)}' for key in keys]
+    if not keys: 
+        keys = dir(d)
+    keyvals = [f'{key} : {d[key]}' for key in keys]
     return code_wrap('\n\n'.join(keyvals))
 
 
 def sub_logs(args: List[str], inp: str = None) -> List[str]:
     with tempfile.TemporaryFile('r+t') as fp:
-        subprocess.run(args=args, input=inp, stdout=fp, stderr=subprocess.STDOUT)
+        subprocess.run(
+            args=args, 
+            input=inp, 
+            stdout=fp, 
+            stderr=subprocess.STDOUT
+        )
         fp.seek(0)
         return code_wrap(fp.read())
 
 
-def send_embed(chn_id: str, txt: str, width: int = 4000, *, title: str = None) -> None:
-    headers['Authorization'] = f'Bot {os.environ["TOKEN"]}'
-    embed, json = {'title': title}, {'embeds': []}
-    for wrap in textwrap.wrap(txt, width, replace_whitespace=False):
-        embed['description'] = f'```py\n{wrap}\n```'
+def send_embed(
+    chn_id: str, txt: str, width: int = 4000, *, title: str = None
+) -> None:
+    headers = {'Authorization': f'Bot {os.environ["TOKEN"]}'}
+    json = {'embeds': []}
+    embed = {'title': title}
+    wrap = textwrap.wrap(txt, width, replace_whitespace=False)
+    for w in wrap:
+        embed['description'] = f'```py\n{w}\n```'
         json['embeds'].append(embed)
-    requests.post(f'{api}/channels/{chn_id}/messages', headers=headers, json=json)
+    requests.post(
+        f'{API}/channels/{chn_id}/messages', 
+        headers=headers, 
+        json=json
+    )
