@@ -39,10 +39,7 @@ def dict_wrap(d: dict, keys: List[str] = None) -> List[str]:
 def sub_logs(args: List[str], inp: str = None) -> List[str]:
     with tempfile.TemporaryFile('r+t') as fp:
         subprocess.run(
-            args=args, 
-            input=inp, 
-            stdout=fp, 
-            stderr=subprocess.STDOUT
+            args=args, input=inp, stdout=fp, stderr=subprocess.STDOUT
         )
         fp.seek(0)
         return code_wrap(fp.read())
@@ -59,7 +56,5 @@ def send_embed(
         embed['description'] = f'```py\n{w}\n```'
         json['embeds'].append(embed)
     requests.post(
-        f'{API}/channels/{chn_id}/messages', 
-        headers=headers, 
-        json=json
+        f'{API}/channels/{chn_id}/messages', headers=headers, json=json
     )
