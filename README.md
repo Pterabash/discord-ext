@@ -17,4 +17,4 @@ No longer actively maintained, since [Dscord2](https://thisgary.github.io/dscord
 
 `dscord.ext` - Collections of pre-made bot command extensions
 
-More information can be found on [documentation](wiki/Documentation)
+More information can be found on [documentation](https://github.com/thisgary/dscord/wiki/Documentation)
