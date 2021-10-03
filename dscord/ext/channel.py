@@ -40,13 +40,13 @@ class Channel(commands.Cog):
 
     @commands.command('ctxts', brief='Create text channels')
     async def create_text_channels(
-        self, ctx, count: int, *, name: str = None
+        self, ctx, amount: int, *, name: str = None
     ) -> None:
         if name is None: 
             name = randoms()
         category = await ctx.guild.create_category_channel(name)
-        count = clamp(count, min_i=1, max_i=50)
-        for i in range(count):
+        amount = clamp(amount, min_i=1, max_i=50)
+        for i in range(amount):
             if name is None:
                 name = randoms()
             else:
