@@ -1,6 +1,6 @@
 import setuptools
 
-readme = open('DOCS.md').read() 
+readme = open('README.md').read() 
 requirements = open('requirements.txt').read().splitlines()
 
 setuptools.setup(
