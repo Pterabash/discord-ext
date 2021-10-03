@@ -4,7 +4,7 @@ import shelve
 import subprocess
 import tempfile
 import textwrap
-from typing import Callable, List, Shelf
+from typing import List, Shelf
 
 import requests
 
@@ -12,11 +12,31 @@ import requests
 API = 'https://discord.com/api/v9'
 
 
-database: Shelf[object] = lambda: shelve.open('Database')
-clamp: Callable[[int, int, int], int] = lambda i, j, k: min(max(i, j), k)
-randoms = lambda: str(random.random())[2:]
+def database() -> Shelf[object]:
+    return shelve.open('Database')
 
 
+def clamp(i: int, *, min_i: int = 1, max_i: int = 100) -> int:
+    return min(max(i, min_i), max_i)
+
+
+def randoms() -> str:
+    return str(random.random())[2:]
+
+
+def send_embed(
+    chn_id: int, text: str, *, title: str = None, width: int = 4000, 
+    token: str = os.environ['TOKEN']
+) -> None:
+    headers = {'Authorization': f'Bot {token}'}
+    wrap = textwrap.wrap(text, width, replace_whitespace=False)
+    json = {'embeds': [{'title': title, 'description': w} for w in wrap]}
+    requests.post(
+        f'{API}/channels/{chn_id}/messages', headers=headers, json=json
+    )
+
+
+# Deprecated
 def code_wrap(txt: str, width: int = 1950) -> List[str]:
     lines = textwrap.wrap(txt, width, replace_whitespace=False)
     return [f'```\n{l}\n```' for l in lines]
@@ -36,15 +56,3 @@ def sub_logs(args: List[str], inp: str = None) -> List[str]:
         )
         fp.seek(0)
         return code_wrap(fp.read())
-
-
-def send_embed(
-    chn_id: int, text: str, *, title: str = None, width: int = 4000, 
-    token: str = os.environ['TOKEN']
-) -> None:
-    headers = {'Authorization': f'Bot {token}'}
-    wrap = textwrap.wrap(text, width, replace_whitespace=False)
-    json = {'embeds': [{'title': title, 'description': w} for w in wrap]}
-    requests.post(
-        f'{API}/channels/{chn_id}/messages', headers=headers, json=json
-    )
