@@ -24,6 +24,11 @@ def randoms() -> str:
     return str(random.random())[2:]
 
 
+def list_attrs(obj: object, attrs: List[str]) -> str:
+    ls = [f'{a}: {getattr(obj, a)}' for a in attrs]
+    return '\n'.join(ls)
+
+
 def send_embed(
     chn_id: int, text: str, *, title: str = None, width: int = 4000, 
     token: str = os.environ['TOKEN']
