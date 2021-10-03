@@ -33,7 +33,6 @@ class Info(commands.Cog):
         text = list_attrs(channel, channel_attr)
         send_embed(text, title='Channel Info')
 
-
     @commands.command('imem', brief='You stalker')
     async def get_member_info(self, ctx, member: Member = None) -> None:
         if not member: member = ctx.author
