@@ -12,4 +12,4 @@ def test_send_embed():
     r = func.send_embed(
         os.environ['CHANNEL'], 'Test Message', title='Test Embed'
     )
-    assert r == 200
+    assert r.status_code == 200
