@@ -1,4 +1,4 @@
-import discord
+from discord import Activity, ActivityType, Game, Member, Status, Streaming
 from discord.ext import commands
 import requests
 
@@ -30,7 +30,7 @@ class Customize(commands.Cog):
         aliases=['become','henshin', 'morph', 'mimic', 'steal']
     )
     async def copy_member(
-        self, ctx, member: discord.Member = None
+        self, ctx, member: Member = None
     ) -> None:
         if member is None:
             member = ctx.author
@@ -40,32 +40,32 @@ class Customize(commands.Cog):
         await ctx.send(f'Hi, I am {name}')
 
     @commands.command('status', brief='Change bot status')
-    async def set_status(self, ctx, status: discord.Status) -> None:
+    async def set_status(self, ctx, status: Status) -> None:
         await self.bot.change_presence(status=status)
     
     @commands.command('play', brief='Playing __')
     async def set_activity_game(self, ctx, *, name: str) -> None:
-        game = discord.Game(name)
+        game = Game(name)
         await self.bot.change_presence(activity=game)
 
     @commands.command('stream', brief='Streaming __')
     async def set_activity_stream(
         self, ctx, url: str, *, name: str
     ) -> None:
-        stream = discord.Streaming(name=name, url=url)
+        stream = Streaming(name=name, url=url)
         await self.bot.change_presence(activity=stream)
 
     @commands.command('listen', brief='Listening __')
     async def set_activity_listen(self, ctx, *, name: str) -> None:
-        listen = discord.Activity(
-            type=discord.ActivityType.listening, name=name
+        listen = Activity(
+            type=ActivityType.listening, name=name
         )
         await self.bot.change_presence(activity=listen)
 
     @commands.command('watch', brief='Watching __')
     async def set_activity_watch(self, ctx, *, name: str) -> None:
-        watch = discord.Activity(
-            type=discord.ActivityType.watching, name=name
+        watch = Activity(
+            type=ActivityType.watching, name=name
         )
         await self.bot.change_presence(activity=watch)
 
