@@ -37,7 +37,7 @@ def send_embed(
     headers = {'Authorization': f'Bot {token}'}
     wrap = textwrap.wrap(text, width, replace_whitespace=False)
     json = {'embeds': [{'title': title, 'description': w} for w in wrap]}
-    requests.post(
+    return requests.post(
         f'{API}/channels/{chn_id}/messages', headers=headers, json=json
     )
 
