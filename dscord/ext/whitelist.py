@@ -1,12 +1,10 @@
-import shelve
-
 import discord
 from discord.ext import commands
 
 from dscord.func import database
 
 
-async def check(ctx) -> bool:
+async def whitelist_check(ctx) -> bool:
     with database() as db:
         if 'Whitelist' in db: 
             return ctx.author.id in db['Whitelist']
@@ -18,13 +16,13 @@ async def check(ctx) -> bool:
 
 class Whitelist(commands.Cog):
     @commands.command('wadd', brief='Add member')
-    async def add(self, ctx, member: discord.Member) -> None:
+    async def user_add(self, ctx, member: discord.Member) -> None:
         with database() as db:
             db['Whitelist'] += [member.id]
         await ctx.send(f'Whitelisted {member.name}')
 
     @commands.command('wrmv', brief='Remove member')
-    async def remove(self, ctx, member: discord.Member) -> None:
+    async def user_remove(self, ctx, member: discord.Member) -> None:
         if ctx.author.id == member.id:
             await ctx.send('Self removing is prohibited')
             return
@@ -41,12 +39,15 @@ class Whitelist(commands.Cog):
                 await ctx.send('Member not whitelisted')
 
     @commands.command('wcheck', brief='Check member')
-    async def isAdded(self, ctx, member: discord.Member = None) -> None:
+    async def user_check(self, ctx, member: discord.Member = None) -> None:
         with database() as db:
-            status = 'is whitelisted' if member.id in db['Whitelist'] else 'not in whitelist'
+            if member.id in db['Whitelist']:
+                status = 'is whitelisted'
+            else: 
+                status = 'not in whitelist'
             await ctx.send(f'{member.name} {status}')
 
 
 def setup(bot):
-    bot.add_check(check)
+    bot.add_check(whitelist_check)
     bot.add_cog(Whitelist())
