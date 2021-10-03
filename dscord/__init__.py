@@ -1,1 +1,1 @@
-from .bot import bot_prefix, bot_run, ext_load
+from .bot import load, prefix, run
