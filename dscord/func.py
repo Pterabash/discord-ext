@@ -1,10 +1,11 @@
+import asyncio
 import os
 import random
 import shelve
 import subprocess
 import tempfile
 import textwrap
-from typing import List, Shelf
+from typing import Awaitable, List, Shelf
 
 import requests
 
@@ -39,6 +40,15 @@ def send_embed(
     requests.post(
         f'{API}/channels/{chn_id}/messages', headers=headers, json=json
     )
+
+
+def error_log(f: callable) -> callable:
+    def fx():
+        try:
+            f()
+        except Exception as e:
+            print(e)
+    return fx
 
 
 # Deprecated
