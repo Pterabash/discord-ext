@@ -5,8 +5,7 @@ import sys
 
 from discord.ext import commands
 
-from dscord import ext
-from .func import code_wrap
+import dscord
 
 
 client = commands.Bot(',')
@@ -17,36 +16,35 @@ def prefix(pf: str) -> None:
     client = commands.Bot(pf)
 
 
+def run(token: str) -> None:
+    client.run(token)
+
+
 def load(name: str, package: str = 'dscord.ext') -> None:
-    if package != '' and name[0] != '.':
+    if not name.startswith('.') and package != '':
         name = '.' + name
     module = importlib.import_module(name, package)
     module.setup(client)
 
 
-def run(token: str) -> None:
-    client.run(token)
-
-
-@client.command('exts')
-async def botExtList(ctx):
-    ext_doc = pydoc.render_doc(ext, 'Help on %s', renderer=pydoc.plaintext)
-    for x in code_wrap(ext_doc): await ctx.send(x)
-
-
 @client.command('load')
-async def botExtLoad(ctx, module: str) -> None:
+async def command_ext_load(ctx, module: str) -> None:
     load('.'+module, 'dscord.ext')
     await ctx.send(f'`{module}` loaded')
 
 
-@client.command('restart', aliases=['retard', 'reboot', 'update', 'upgrade'])
-async def botRestart(ctx, flag: str = None) -> None:
-    if flag == 'skip':
-        await ctx.send('Skipped updating')
-    else:
+@client.command('exts')
+async def command_ext_list(ctx):
+    doc = pydoc.render_doc(
+        dscord.ext, 'Help on %s', renderer=pydoc.plaintext
+    )
+    dscord.func.send_embed(doc)
+
+
+@client.command(aliases=['retard', 'reboot', 'update', 'upgrade'])
+async def restart(ctx, flag: str = None) -> None:
+    if flag != 'skip': # Will reverse after official
         await ctx.send('Updating')
         os.system('pip3 install git+https://github.com/thisgary/dscord')
-        await ctx.send('Finished updating')
     await ctx.send('Restarting')
     os.execl(sys.executable, sys.executable, *sys.argv)
