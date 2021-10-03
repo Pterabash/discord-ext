@@ -4,7 +4,7 @@ import shelve
 import subprocess
 import tempfile
 import textwrap
-from typing import List
+from typing import Callable, List, Shelf
 
 import requests
 
@@ -12,8 +12,8 @@ import requests
 API = 'https://discord.com/api/v9'
 
 
-database = lambda: shelve.open('Database')
-clamp = lambda i, j, k: min(max(i, j), k)
+database: Shelf[object] = lambda: shelve.open('Database')
+clamp: Callable[[int, int, int], int] = lambda i, j, k: min(max(i, j), k)
 randoms = lambda: str(random.random())[2:]
 
 
