@@ -11,16 +11,16 @@ import dscord
 client = commands.Bot(',')
 
 
-def bot_prefix(pf: str) -> None:
+def prefix(pf: str) -> None:
     global client
     client = commands.Bot(pf)
 
 
-def bot_run(token: str) -> None:
+def run(token: str) -> None:
     client.run(token)
 
 
-def ext_load(name: str, package: str = 'dscord.ext') -> None:
+def load(name: str, package: str = 'dscord.ext') -> None:
     if not name.startswith('.') and package != '':
         name = '.' + name
     module = importlib.import_module(name, package)
@@ -29,7 +29,7 @@ def ext_load(name: str, package: str = 'dscord.ext') -> None:
 
 @client.command('load')
 async def command_ext_load(ctx, module: str) -> None:
-    ext_load('.'+module, 'dscord.ext')
+    load('.'+module, 'dscord.ext')
     await ctx.send(f'`{module}` loaded')
 
 
