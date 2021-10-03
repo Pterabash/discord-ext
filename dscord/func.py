@@ -1,11 +1,10 @@
-import asyncio
 import os
 import random
 import shelve
 import subprocess
 import tempfile
 import textwrap
-from typing import Awaitable, List, Shelf
+from typing import List
 
 import requests
 
@@ -13,7 +12,7 @@ import requests
 API = 'https://discord.com/api/v9'
 
 
-def database() -> Shelf[object]:
+def database(): # -> Shelf[object]:
     return shelve.open('Database')
 
 
