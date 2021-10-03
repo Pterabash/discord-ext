@@ -4,7 +4,7 @@ import shelve
 import subprocess
 import tempfile
 import textwrap
-from typing import List, Shelf
+from typing import List
 
 import requests
 
@@ -12,16 +12,9 @@ import requests
 API = 'https://discord.com/api/v9'
 
 
-def database() -> Shelf[object]:
-    return shelve.open('Database')
-
-
-def clamp(i: int, *, min: int = 1, max: int = 100) -> int:
-    return min(max(i, min), max)
-
-
-def rng_str() -> str:
-    return str(random.random())[2:]
+database = lambda: shelve.open('Database')
+clamp = lambda i, j, k: min(max(i, j), k)
+randoms = lambda: str(random.random())[2:]
 
 
 def code_wrap(txt: str, width: int = 1950) -> List[str]:
