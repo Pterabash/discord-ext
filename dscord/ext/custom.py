@@ -7,52 +7,67 @@ class Customize(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
-    @commands.command('become', brief='D-D-D-Decade')
-    async def custImposter(self, ctx, member: discord.Member = None) -> None:
-        if not member: member = ctx.author
-        avatar = await member.avatar_url.read()
-        await self.bot.user.edit(username=member.name, avatar=avatar)
-        await ctx.send(f'Hi, I am {member.name}')
+    @commands.command('orca')
+    async def set_default(self, ctx) -> None:
+        url = 'https://raw.githubusercontent.com/thisgary/dscord/main/asset/orca.jpg'
+        await self.bot.user.edit(
+            username='Orcinus', avatar=requests.get(url).content
+        )
 
-    @commands.command('name', brief='Rename bot')
-    async def custName(self, ctx, *, name: str) -> None:
+    @commands.command('name', brief='Set bot name')
+    async def set_name(self, ctx, *, name: str) -> None:
         await self.bot.user.edit(username=name)
 
-    @commands.command('pfp', brief='Change bot pfp')
-    async def custPfp(self, ctx, url: str = None) -> None:
+    @commands.command('pfp', brief='Set bot pfp')
+    async def set_avatar(self, ctx, url: str = None) -> None:
         if ctx.message.attachments:
             url = ctx.message.attachments[0].url
         avatar = requests.get(url).content
         await self.bot.user.edit(avatar=avatar)
-    
-    @commands.command('orca')
-    async def custOrca(self, ctx) -> None:
-        url = 'https://raw.githubusercontent.com/thisgary/dscord/main/asset/orca.jpg'
-        await self.bot.user.edit(username='Orcinus', avatar=requests.get(url).content)
+
+    @commands.command(
+        'copy', brief='Mimic another member', 
+        aliases=['become','henshin', 'morph', 'mimic', 'steal']
+    )
+    async def copy_member(
+        self, ctx, member: discord.Member = None
+    ) -> None:
+        if member is None:
+            member = ctx.author
+        name = member.name
+        avatar = member.avatar_url.read()
+        await self.bot.user.edit(username=name, avatar=avatar)
+        await ctx.send(f'Hi, I am {name}')
 
     @commands.command('status', brief='Change bot status')
-    async def custStatus(self, ctx, status: discord.Status) -> None:
+    async def set_status(self, ctx, status: discord.Status) -> None:
         await self.bot.change_presence(status=status)
     
-    @commands.command('agame', brief='Playing __')
-    async def custPlay(self, ctx, *, name: str) -> None:
+    @commands.command('play', brief='Playing __')
+    async def set_activity_game(self, ctx, *, name: str) -> None:
         game = discord.Game(name)
         await self.bot.change_presence(activity=game)
 
-    @commands.command('astream', brief='Streaming __')
-    async def custStream(self, ctx, url: str, *, name: str) -> None:
+    @commands.command('stream', brief='Streaming __')
+    async def set_activity_stream(
+        self, ctx, url: str, *, name: str
+    ) -> None:
         stream = discord.Streaming(name=name, url=url)
         await self.bot.change_presence(activity=stream)
 
-    @commands.command('asong', brief='Listening __')
-    async def custListen(self, ctx, *, name: str) -> None:
-        song = discord.Activity(type=discord.ActivityType.listening, name=name)
-        await self.bot.change_presence(activity=song)
+    @commands.command('listen', brief='Listening __')
+    async def set_activity_listen(self, ctx, *, name: str) -> None:
+        listen = discord.Activity(
+            type=discord.ActivityType.listening, name=name
+        )
+        await self.bot.change_presence(activity=listen)
 
-    @commands.command('avid', brief='Watching __')
-    async def custWatch(self, ctx, *, name: str) -> None:
-        video = discord.Activity(type=discord.ActivityType.watching, name=name)
-        await self.bot.change_presence(activity=video)
+    @commands.command('watch', brief='Watching __')
+    async def set_activity_watch(self, ctx, *, name: str) -> None:
+        watch = discord.Activity(
+            type=discord.ActivityType.watching, name=name
+        )
+        await self.bot.change_presence(activity=watch)
 
 
 def setup(bot):
