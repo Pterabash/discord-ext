@@ -1,31 +1,66 @@
+import asyncio
+
 from discord import User
+from discord.channel import CategoryChannel
 from discord.ext import commands
 
-from dscord.func import clamp, rng_str
+from dscord.ext.channel import AnyChannel
+from dscord.func import clamp, randoms
 
 
 class Spam(commands.Cog):
-    @commands.command('cms', brief='Chn & msg spam')
-    async def channelMessage(self, ctx, channel_count: int, message_count: int, *, message: str) -> None:
-        cc, mc = clamp(channel_count), clamp(message_count)
-        category = await ctx.guild.create_category_channel(rng_str())
-        for _ in range(cc):
-            await category.create_text_channel(rng_str())
+    @commands.command('schn', brief='Spam any channels')
+    async def create_text_channels(
+        self, ctx, chn_type: AnyChannel, amount: int, *, name: str = None
+    ) -> None:
+        if chn_type is CategoryChannel:
+            scope = ctx.guild
+        else:
+            scope = await ctx.guild.create_category_channel(
+                (randoms() if name is None else name)
+            )
+        for i in range(clamp(amount, max_i=50)):
+            await scope.create_text_channel(
+                (randoms() if name is None else f'{name}-{i}')
+            )
+
+    @commands.command('sdm', brief='DM spam')
+    async def spam_direct_message(
+        self, ctx, user: User, amount: int, *, message: str
+    ) -> None:
+        for _ in range(clamp(amount)):
+            await asyncio.gather(
+                user.send(message),
+                asyncio.sleep(0.5)
+            )
+
+    @commands.command('smsg', brief='Msg spam')
+    async def spam_message(
+        self, ctx, amount: int, *, message: str
+    ) -> None:
+        for _ in range(clamp(amount)):
+            await asyncio.gather(
+                ctx.send(message),
+                asyncio.sleep(0.5)
+            )
+
+    @commands.command('scm', brief='Spam create channels and messages')
+    async def spam_channel_message(
+        self, ctx, chn_amt: int, msg_amt: int, *, message: str
+    ) -> None:
+        category = await ctx.guild.create_category_channel(randoms())
+        for _ in range(clamp(chn_amt, max_i=50)):
+            await asyncio.gather(
+                category.create_text_channel(randoms()),
+                asyncio.sleep(0.5)
+            )
         for channel in category.channels:
-            for _ in range(mc):
-                await channel.send(message)
+            for _ in range(clamp(msg_amt)):
+                await asyncio.gather(
+                    channel.send(message),
+                    asyncio.sleep(0.5)
+                )
 
-    @commands.command('dms', brief='DM spam')
-    async def directMessage(self, ctx, user: User, count: int, *, message: str) -> None:
-        c = clamp(count)
-        for _ in range(c):
-            await user.send(message)
-
-    @commands.command('msgs', brief='Msg spam')
-    async def message(self, ctx, count: int, *, message: str) -> None:
-        c = clamp(count)
-        for _ in range(c):
-            await ctx.send(message)
 
 
 def setup(bot):

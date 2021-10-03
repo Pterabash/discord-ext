@@ -1,15 +1,15 @@
 from typing import Union
 
-import discord
+from discord import CategoryChannel, VoiceChannel, StageChannel, TextChannel
 from discord.ext import commands
 
 from dscord.func import clamp, randoms
 
 AnyChannel = Union[
-    discord.CategoryChannel, 
-    discord.VoiceChannel, 
-    discord.StageChannel, 
-    discord.TextChannel
+    CategoryChannel, 
+    VoiceChannel, 
+    StageChannel, 
+    TextChannel
 ]
 
 
@@ -38,21 +38,6 @@ class Channel(commands.Cog):
     ) -> None:
         await ctx.guild.create_voice_channel(name)
 
-    @commands.command('ctxts', brief='Create text channels')
-    async def create_text_channels(
-        self, ctx, amount: int, *, name: str = None
-    ) -> None:
-        if name is None: 
-            name = randoms()
-        category = await ctx.guild.create_category_channel(name)
-        amount = clamp(amount, min_i=1, max_i=50)
-        for i in range(amount):
-            if name is None:
-                name = randoms()
-            else:
-                name += f'-{i}'
-            await category.create_text_channel(name)
-
     @commands.command('cdel', brief='Delete channel')
     async def delete_any_channel(
         self, ctx, *channels: AnyChannel
@@ -60,7 +45,7 @@ class Channel(commands.Cog):
         if not channels:
             await ctx.channel.delete()
         for channel in channels:
-            if channel is discord.CategoryChannel:
+            if channel is CategoryChannel:
                 for c in channel.channels: 
                     await c.delete()
             await channel.delete()
