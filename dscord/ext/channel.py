@@ -55,14 +55,15 @@ class Channel(commands.Cog):
 
     @commands.command('cdel', brief='Delete channel')
     async def delete_any_channel(
-        self, ctx, channel: AnyChannel = None
+        self, ctx, *channels: AnyChannel
     ) -> None:
-        if channel is None:
-            channel = ctx.channel
-        elif channel is discord.CategoryChannel:
-            for c in channel.channels: 
-                await c.delete()
-        await channel.delete()
+        if not channels:
+            await ctx.channel.delete()
+        for channel in channels:
+            if channel is discord.CategoryChannel:
+                for c in channel.channels: 
+                    await c.delete()
+            await channel.delete()
 
 
 def setup(bot):
