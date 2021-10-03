@@ -10,6 +10,7 @@ on:
 
 jobs:
   build:
+    environment: TEST_SECRET
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,5 +19,6 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pytest
       - name: Test with Pytest
-        run: |
-          python setup.py pytest
+        run: python setup.py pytest
+        env:
+          TOKEN: ${{ secrets.TOKEN }}
