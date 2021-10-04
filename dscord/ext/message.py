@@ -1,8 +1,6 @@
 import discord
 from discord.ext import commands
 
-from dscord.func import clamp
-
 
 class Message(commands.Cog):
     @commands.command(

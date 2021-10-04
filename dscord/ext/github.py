@@ -4,7 +4,7 @@ from urllib.request import urlopen
 
 from discord.ext import commands
 
-from dscord.func import database, send_embed
+from dscord.func import database, send_embed, wrap
 
 
 def basename(path: str) -> Tuple[str, str]:
@@ -13,10 +13,14 @@ def basename(path: str) -> Tuple[str, str]:
     return (base := path.split('/')[-1]), base.split('.')[0]
 
 
-def exts_list(channel_id: int) -> None:
+def exts_list(chn_id: int) -> None:
     with database() as db:
         exts = list(db['Github'])
-        send_embed(channel_id, '\n'.join(exts), title='Github Extensions')
+        text = wrap('\n'.join(exts), lang='bash')
+        send_embed(
+            chn_id, text, title='Github Extensions',
+            color=333333
+        )
 
 
 def ext_load(bot: commands.Bot, path: str) -> None:
@@ -86,8 +90,10 @@ class Github(commands.Cog):
     @commands.command('greld', brief='Reload all exts')
     async def ghExtsReload(self, ctx) -> None:
         exts = exts_load(self.bot)
+        text = wrap('\n'.join(exts), lang='bash')
         send_embed(
-            ctx.channel.id, '\n'.join(exts), title='Extensions Reloaded'
+            ctx.channel.id, text, title='Extensions Reloaded', 
+            color=333333
         )
 
 

@@ -3,7 +3,7 @@ from typing import Union
 from discord import CategoryChannel, VoiceChannel, StageChannel, TextChannel
 from discord.ext import commands
 
-from dscord.func import clamp, randoms
+from dscord.func import randoms
 
 AnyChannel = Union[
     CategoryChannel, 
