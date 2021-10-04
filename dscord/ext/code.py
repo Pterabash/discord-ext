@@ -70,7 +70,10 @@ class Code(commands.Cog):
     @commands.command('langs', brief='List languages')
     async def list_languages(self, ctx) -> None:
         with database() as db:
-            send_embed(wrap(str(db['Code']), lang='bash'), title='Language List')
+            send_embed(
+                ctx.channel.id, wrap(str(db['Code']), lang='bash'), 
+                title='Language List'
+            )
 
     @commands.command('exec', brief='Execute script by language')
     async def exec_script(self, ctx, suffix: str, *, script: str) -> None:
