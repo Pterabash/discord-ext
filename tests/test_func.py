@@ -10,6 +10,6 @@ def test_clamp():
 
 def test_send_embed():
     r = func.send_embed(
-        os.environ['CHANNEL'], 'Test Message', title='Test Embed'
+        os.environ['CHANNEL'], ['Test Message'], title='Test Embed'
     )
     assert r.status_code == 200
