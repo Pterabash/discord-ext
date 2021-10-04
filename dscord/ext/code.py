@@ -31,8 +31,7 @@ class Code(commands.Cog):
                     f.write(f'\n{tail}')
 
         def exec(
-            self, args: List[str] = [], *, chmod: bool = False
-        ) -> List[str]:
+            self, args: List[str] = [], *, chmod: bool = False) -> List[str]:
             if chmod:
                 subprocess_log(['chmod', '+x', self.base])
             log, t = subprocess_log(args + [self.base])
@@ -81,7 +80,7 @@ class Code(commands.Cog):
             if suffix in db['Code']:
                 prop = db['Code'][suffix]
                 if 'file' in prop:
-                    f = Code.File(suffix, script, prop['file'])
+                    f = Code.File(suffix, script, **prop['file'])
                 else:
                     f = Code.File(suffix, script)
                 for args in prop['exec'].pop('args'):
