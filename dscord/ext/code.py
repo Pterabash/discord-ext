@@ -65,7 +65,9 @@ class Code(commands.Cog):
             elif a.startswith('tail='):
                 prop['file']['tail'] = a.split('=')[1]
         with database() as db:
-            db['Code'][suffix] = prop
+            langs = db['Code']
+            langs[suffix].update(prop)
+            db['Code'] = langs
         await ctx.send('Language added')
 
     @commands.command('langs', brief='List languages')
@@ -85,6 +87,7 @@ class Code(commands.Cog):
                 for i in prop['exec'].keys():
                     text += f'{i}: {prop["exec"][i]}\n'
                 if 'file' in prop:
+                    text += '\n'
                     for i in prop['file'].keys():
                         text += f'{i}: {prop["file"][i]}\n'
                 chunks = wrap(text, lang=suffix)
