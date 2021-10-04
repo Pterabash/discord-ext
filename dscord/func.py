@@ -53,7 +53,7 @@ def wrap(text: str, *, width: int = 4000, lang: str = None) -> List[str]:
 
 def send_embed(
     chn_id: int, chunks: List[str], *, width: int = 4000, 
-    token: str = os.environ['TOKEN'], **kwargs
+    token: str = os.getenv('TOKEN'), **kwargs
 ) -> None:
     headers = {'Authorization': f'Bot {token}'}
     json = {'embeds': []}
