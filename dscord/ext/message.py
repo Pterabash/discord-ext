@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 
+from dscord.func import clamp
+
 
 class Message(commands.Cog):
     @commands.command(
@@ -25,7 +27,7 @@ class Message(commands.Cog):
 
     @commands.command('purge', brief='Purge messages')
     async def purge_messages(self, ctx, amount: int = 1) -> None:
-        await ctx.channel.purge(limit=amount)
+        await ctx.channel.purge(limit=clamp(amount+1))
 
     @commands.command('purgemember', brief='Purge member messages')
     async def purge_member_messages(
