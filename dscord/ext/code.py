@@ -7,16 +7,11 @@ from dscord.func import database, send_embed, subprocess_log, wrap
 
 
 DEFAULT = {
-    'py': {
-        'args': [['python3']]
-    },
-    'js': {
-        'args': [['node']]
-    },
+    'py': {'exec': {'args': [['python3']]}},
+    'js': {'exec': {'args': [['node']]}},
     'sh': {
-        'args': [[]],
-        'head': '#!/bin/bash',
-        'chmod': True
+        'file': {'head': '#!/bin/bash'}, 
+        'exec': {'args': [[]], 'chmod': True}
     }
 }
 
@@ -24,26 +19,25 @@ DEFAULT = {
 class Code(commands.Cog):
     class File:
         def __init__(
-            self, suffix: str, code: str, *, head: str = None, 
-            tail: str = None, **kwargs
+            self, suffix: str, script: str, *, head: str = None, 
+            tail: str = None
         ) -> None:
             self.base = f'./foo.{suffix}'
             with open(self.base, 'w') as f:
                 if head is not None:
                     f.write(f'{head}\n')
-                f.write(code)
+                f.write(script)
                 if tail is not None:
                     f.write(f'\n{tail}')
 
         def exec(
-            self, args: List[str] = [], *, chmod: bool = False, **kwargs
-            # Considering better solution
+            self, args: List[str] = [], *, chmod: bool = False
         ) -> List[str]:
             if chmod:
                 os.system(f'chmod +x {self.base}')
-            log = subprocess_log(args + [self.base])
+            log, t = subprocess_log(args + [self.base])
             os.system(f'rm {self.base}')
-            return log
+            return log, t
 
 
     def __init__(self):
@@ -56,25 +50,46 @@ class Code(commands.Cog):
         prop = {}
         for a in args:
             if a.startswith('args='):
-                prop['args'] = [
+                prop['exec']['args'] = [
                     i.split(',') for i in a.split('=')[1].split(';')
                 ]
+            elif a.startswith('chmod='):
+                val = a.split('=')[1]
+                if val.lower() == 'true':
+                    prop['exec']['chmod'] = True
+                elif val.lower() == 'false':
+                    prop['exec']['chmod'] = False
             elif a.startswith('head='):
-                prop['head'] = a.split('=')[1]
+                prop['file']['head'] = a.split('=')[1]
             elif a.startswith('tail='):
-                prop['tail'] = a.split('=')[1]
+                prop['file']['tail'] = a.split('=')[1]
         with database() as db:
             db['Code'][suffix] = prop
         await ctx.send('Database updated')
-    
-    @commands.command('run', brief='Run script by language')
-    async def run_script(self, ctx, suffix: str, *, script: str) -> None:
+
+    @commands.command('langs', brief='List languages')
+    async def list_languages(self, ctx) -> None:
+        with database() as db:
+            send_embed(wrap(str(db['Code']), lang='bash'), title='Language List')
+
+    @commands.command('exec', brief='Execute script by language')
+    async def exec_script(self, ctx, suffix: str, *, script: str) -> None:
         with database() as db:
             if suffix in db['Code']:
                 prop = db['Code'][suffix]
-                f = Code.File(suffix, **prop)
-                log = f.exec(**prop)
-                send_embed(ctx.channel.id, wrap(log, lang=suffix))
+                f = Code.File(
+                    suffix, script, 
+                    **(prop['file'] if 'file' in prop else {})
+                )
+                for args in prop['exec'].pop('args'):
+                    log, t = f.exec(
+                        args=args, 
+                        **(prop['exec'] if 'exec' in prop else {})
+                    )
+                send_embed(
+                    ctx.channel.id, 
+                    wrap(log, lang=suffix, footer=f'Time taken: {t}s')
+                )
             else:
                 await ctx.send('Language not found')
 
