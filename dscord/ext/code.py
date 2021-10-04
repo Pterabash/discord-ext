@@ -84,11 +84,11 @@ class Code(commands.Cog):
                 del langs[suffix]
                 db['Code'] = langs
                 send_embed(
-                    ctx.channel.id, 'Language removed', title='Task'
+                    ctx.channel.id, ['Language removed'], title='Task'
                 )
             else:
                 send_embed(
-                    ctx.channel.id, 'Language not found', title='Error'
+                    ctx.channel.id, ['Language not found'], title='Error'
                 )
 
     @commands.command('langs', brief='List languages')
@@ -115,7 +115,7 @@ class Code(commands.Cog):
                 send_embed(ctx.channel.id, chunks, title='Language Info')
             else:
                 send_embed(
-                    ctx.channel.id, 'Language not found', title='Error'
+                    ctx.channel.id, ['Language not found'], title='Error'
                 )
 
     @commands.command('exec', brief='Execute script by language')
@@ -132,7 +132,7 @@ class Code(commands.Cog):
                 )
             else:
                 send_embed(
-                    ctx.channel.id, 'Language not found', title='Error'
+                    ctx.channel.id, ['Language not found'], title='Error'
                 )
 
 
