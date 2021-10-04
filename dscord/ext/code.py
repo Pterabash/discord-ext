@@ -66,14 +66,14 @@ class Code(commands.Cog):
                 prop['file']['tail'] = a.split('=')[1]
         if 'args' not in prop['exec']:
             send_embed(
-                ctx.channel.id, '`args` argument missing', title='Error'
+                ctx.channel.id, ['`args` argument missing'], title='Error'
             )
         with database() as db:
             langs = db['Code']
             langs[suffix] = prop
             db['Code'] = langs
         send_embed(
-            ctx.channel.id, 'Language added', title='Task'
+            ctx.channel.id, ['Language added'], title='Task'
         )
     
     @commands.command('langrmv', brief='Remove language')
