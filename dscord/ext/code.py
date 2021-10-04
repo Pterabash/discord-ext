@@ -71,9 +71,9 @@ class Code(commands.Cog):
     @commands.command('langs', brief='List languages')
     async def list_languages(self, ctx) -> None:
         with database() as db:
-            text = wrap('\n'.join(db['Code'].keys()))
+            chunks = wrap('\n'.join(db['Code'].keys()))
             send_embed(
-                ctx.channel.id, text, lang='bash', title='Language List'
+                ctx.channel.id, chunks, lang='bash', title='Language List'
             )
     
     @commands.command('lang', brief='Language info')
@@ -87,7 +87,8 @@ class Code(commands.Cog):
                 if 'file' in prop:
                     for i in prop['file'].keys():
                         text += f'{i}: {prop["file"][i]}\n'
-                send_embed(ctx.channel.id, text, title='Language Info')
+                chunks = wrap(text, lang=suffix)
+                send_embed(ctx.channel.id, chunks, title='Language Info')
             else:
                 send_embed(
                     ctx.channel.id, 'Language not found', title='Error'
