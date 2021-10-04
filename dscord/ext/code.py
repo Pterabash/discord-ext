@@ -8,8 +8,8 @@ from dscord.func import database, send_embed, subprocess_log, wrap
 
 
 DEFAULT = {
-    'py': {'exec': {'args': [['python3']]}},
-    'js': {'exec': {'args': [['node']]}},
+    'py': {'file': {}, 'exec': {'args': [['python3']]}},
+    'js': {'file': {}, 'exec': {'args': [['node']]}},
     'sh': {
         'file': {'head': '#!/bin/bash'}, 
         'exec': {'args': [[]], 'chmod': True}
@@ -46,9 +46,9 @@ class Code(commands.Cog):
             if 'Code' not in db:
                 db['Code'] = DEFAULT
 
-    @commands.command()
+    @commands.command('langadd', brief='Add language')
     async def add_language(self, ctx, suffix: str, *args: str) -> None:
-        prop = {}
+        prop = {'exec': {}, 'file': {}}
         for a in args:
             if a.startswith('args='):
                 prop['exec']['args'] = [
@@ -66,25 +66,39 @@ class Code(commands.Cog):
                 prop['file']['tail'] = a.split('=')[1]
         with database() as db:
             db['Code'][suffix] = prop
-        await ctx.send('Database updated')
+        await ctx.send('Language added')
 
     @commands.command('langs', brief='List languages')
     async def list_languages(self, ctx) -> None:
         with database() as db:
+            text = wrap('\n'.join(db['Code'].keys()))
             send_embed(
-                ctx.channel.id, wrap(str(db['Code']), lang='bash'), 
-                title='Language List'
+                ctx.channel.id, text, lang='bash', title='Language List'
             )
+    
+    @commands.command('lang', brief='Language info')
+    async def get_language_info(self, ctx, suffix: str) -> None: 
+        with database() as db:
+            if suffix in db['Code']:
+                text = f'suffix: {suffix}\n'
+                prop = db['Code'][suffix]
+                for i in prop['exec'].keys():
+                    text += f'{i}: {prop["exec"][i]}\n'
+                if 'file' in prop:
+                    for i in prop['file'].keys():
+                        text += f'{i}: {prop["file"][i]}\n'
+                send_embed(ctx.channel.id, text, title='Language Info')
+            else:
+                send_embed(
+                    ctx.channel.id, 'Language not found', title='Error'
+                )
 
     @commands.command('exec', brief='Execute script by language')
     async def exec_script(self, ctx, suffix: str, *, script: str) -> None:
         with database() as db:
             if suffix in db['Code']:
                 prop = db['Code'][suffix]
-                if 'file' in prop:
-                    f = Code.File(suffix, script, **prop['file'])
-                else:
-                    f = Code.File(suffix, script)
+                f = Code.File(suffix, script, **prop['file'])
                 for args in prop['exec'].pop('args'):
                     log, t = f.exec(args=args, **prop['exec'])
                 send_embed(
@@ -92,54 +106,9 @@ class Code(commands.Cog):
                     footer={'text': f'Time taken: {t}s'}
                 )
             else:
-                await ctx.send('Language not found')
-
-    # @commands.command()
-    # async def groovy(self, ctx, *, code: str) -> None:
-    #     groovy = Code.File('groovy', code, head='#!/usr/bin/env groovy')
-    #     groovy.execute(['groovy'])
-
-    # @commands.command()
-    # async def js(self, ctx, *, code) -> None:
-    #     javascript = Code.File('js', code)
-    #     logs = javascript.execute(['node'])
-
-    # @commands.command()
-    # async def java(self, ctx, *, code: str) -> None:
-    #     java = Code.Execute('java', code)
-    #     logs = java.execute(['java'])
-
-    # @commands.command()
-    # async def php(self, ctx, *, code: str) -> None:
-    #     php = Code.File('php', code, head='<?php', tail='?>')
-    #     logs = php.execute(['pfp'])
-
-    # @commands.command()
-    # async def py(self, ctx, *, code: str) -> None:
-    #     python = Code.File('py', code)
-    #     logs = python.execute(['python3'])
-
-    # @commands.command()
-    # async def r(self, ctx, *, code: str) -> None:
-    #     r = Code.File('r', code)
-    #     logs = r.execute(['Rscript'])
-
-    # @commands.command()
-    # async def ruby(self, ctx, *, code: str) -> None:
-    #     ruby = Code.File('rb', code)
-    #     logs = ruby.execute(['ruby'])
-
-    # @commands.command()
-    # async def sh(self, ctx, *, code: str) -> None:
-    #     bash = Code.File('sh', code,
-    #             head='#!/bin/bash')
-    #     bash.chmod()
-    #     logs = bash.execute()
-
-    # @commands.command()
-    # async def swift(self, ctx, *, code: str) -> None:
-    #     swift = Code.File('swift', code)
-    #     logs = swift.execute(['swift'])
+                send_embed(
+                    ctx.channel.id, 'Language not found', title='Error'
+                )
 
 
 def setup(bot):
