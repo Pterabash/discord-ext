@@ -41,9 +41,9 @@ async def command_ext_list(ctx):
     dscord.func.send_embed(doc)
 
 
-@client.command(aliases=['retard', 'reboot', 'update', 'upgrade'])
+@client.command(aliases=['retard', 'reboot'])
 async def restart(ctx, flag: str = None) -> None:
-    if flag != 'skip': # Will reverse after official
+    if flag != 'skip': # if  flag == 'u':
         await ctx.send('Updating')
         os.system('pip3 install git+https://github.com/thisgary/dscord')
     await ctx.send('Restarting')
