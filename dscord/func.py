@@ -4,7 +4,8 @@ import shelve
 import subprocess
 import tempfile
 import textwrap
-from typing import List
+import time
+from typing import List, Tuple
 
 import requests
 
@@ -29,44 +30,37 @@ def list_attrs(obj: object, attrs: List[str]) -> str:
     return '\n'.join(ls)
 
 
-def send_embed(
-    chn_id: int, text: str, *, title: str = None, width: int = 4000, 
-    token: str = os.environ['TOKEN']
-) -> None:
-    headers = {'Authorization': f'Bot {token}'}
-    wrap = textwrap.wrap(text, width, replace_whitespace=False)
-    json = {'embeds': [{'title': title, 'description': w} for w in wrap]}
-    return requests.post(
-        f'{API}/channels/{chn_id}/messages', headers=headers, json=json
-    )
-
-
-def error_log(f: callable) -> callable:
-    def fx():
-        try:
-            f()
-        except Exception as e:
-            print(e)
-    return fx
-
-
-# Deprecated
-def code_wrap(txt: str, width: int = 1950) -> List[str]:
-    lines = textwrap.wrap(txt, width, replace_whitespace=False)
-    return [f'```\n{l}\n```' for l in lines]
-
-
-def dict_wrap(d: dict, keys: List[str] = None) -> List[str]:
-    if not keys: 
-        keys = dir(d)
-    keyvals = [f'{key} : {d[key]}' for key in keys]
-    return code_wrap('\n\n'.join(keyvals))
-
-
-def sub_logs(args: List[str], inp: str = None) -> List[str]:
+def subprocess_log(args: List[str], inp: str = None) -> Tuple[str, str]:
     with tempfile.TemporaryFile('r+t') as fp:
+        t = time.time()
         subprocess.run(
             args=args, input=inp, stdout=fp, stderr=subprocess.STDOUT
         )
+        dt = time.time() - t
         fp.seek(0)
-        return code_wrap(fp.read())
+        return fp.read(), dt
+
+
+def wrap(text: str, *, width: int = 4000, lang: str = None) -> List[str]:
+    ws = textwrap.wrap(text, width, replace_whitespace=False)
+    if not ws:
+        return ['No output']
+    elif lang is not None:
+        return [f'```{lang}\n{w}\n```' for w in ws]
+    else:
+        return ws
+
+
+def send_embed(
+    chn_id: int, chunks: List[str], *, width: int = 4000, 
+    token: str = os.environ['TOKEN'], **kwargs
+) -> None:
+    headers = {'Authorization': f'Bot {token}'}
+    json = {'embeds': []}
+    for c in chunks:
+        embed = {'description': c}
+        embed.update(kwargs)
+        json['embeds'].append(embed)
+    return requests.post(
+        f'{API}/channels/{chn_id}/messages', headers=headers, json=json
+    )
