@@ -91,6 +91,12 @@ class Code(commands.Cog):
                 send_embed(
                     ctx.channel.id, ['Language not found'], title='Error'
                 )
+    
+    @commands.command('langreset', brief='Reset languages')
+    async def reset_languages(self, ctx):
+        with database() as db:
+            db['Code'] = DEFAULT
+        send_embed(ctx.channel.id, ['Language list reset'], title='Task')
 
     @commands.command('langs', brief='List languages')
     async def list_languages(self, ctx) -> None:
