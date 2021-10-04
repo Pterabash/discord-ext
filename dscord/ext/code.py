@@ -80,15 +80,12 @@ class Code(commands.Cog):
         with database() as db:
             if suffix in db['Code']:
                 prop = db['Code'][suffix]
-                f = Code.File(
-                    suffix, script, 
-                    **(prop['file'] if 'file' in prop else {})
-                )
+                if 'file' in prop:
+                    f = Code.File(suffix, script, prop['file'])
+                else:
+                    f = Code.File(suffix, script)
                 for args in prop['exec'].pop('args'):
-                    log, t = f.exec(
-                        args=args, 
-                        **(prop['exec'] if 'exec' in prop else {})
-                    )
+                    log, t = f.exec(args=args, **prop['exec'])
                 send_embed(
                     ctx.channel.id, 
                     wrap(log, lang=suffix, footer=f'Time taken: {t}s')
