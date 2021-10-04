@@ -88,7 +88,9 @@ class Code(commands.Cog):
                     log, t = f.exec(args=args, **prop['exec'])
                 send_embed(
                     ctx.channel.id, 
-                    wrap(log, lang=suffix, footer=f'Time taken: {t}s')
+                    wrap(log, lang=suffix),
+                    title='Output',
+                    footer=f'Time taken: {t}s'
                 )
             else:
                 await ctx.send('Language not found')
