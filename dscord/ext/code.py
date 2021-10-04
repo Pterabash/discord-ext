@@ -66,7 +66,7 @@ class Code(commands.Cog):
                 prop['file']['tail'] = a.split('=')[1]
         with database() as db:
             langs = db['Code']
-            langs[suffix].update(prop)
+            langs[suffix] = prop
             db['Code'] = langs
         await ctx.send('Language added')
 
