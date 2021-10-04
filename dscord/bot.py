@@ -27,6 +27,11 @@ def load(name: str, package: str = 'dscord.ext') -> None:
     module.setup(client)
 
 
+@client.event
+async def on_ready() -> None:
+    print('Bot is up!')
+
+
 @client.command('load')
 async def command_ext_load(ctx, module: str) -> None:
     load('.'+module, 'dscord.ext')
