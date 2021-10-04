@@ -64,6 +64,10 @@ class Code(commands.Cog):
                 prop['file']['head'] = a.split('=')[1]
             elif a.startswith('tail='):
                 prop['file']['tail'] = a.split('=')[1]
+        if 'args' not in prop['exec']:
+            send_embed(
+                ctx.channel.id, '`args` argument missing', title='Error'
+            )
         with database() as db:
             langs = db['Code']
             langs[suffix] = prop
