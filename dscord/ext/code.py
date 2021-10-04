@@ -68,6 +68,7 @@ class Code(commands.Cog):
             send_embed(
                 ctx.channel.id, ['`args` argument missing'], title='Error'
             )
+            return
         with database() as db:
             langs = db['Code']
             langs[suffix] = prop
