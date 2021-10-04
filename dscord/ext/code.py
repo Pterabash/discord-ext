@@ -68,7 +68,9 @@ class Code(commands.Cog):
             langs = db['Code']
             langs[suffix] = prop
             db['Code'] = langs
-        await ctx.send('Language added')
+        send_embed(
+            ctx.channel.id, 'Language added', title='Task'
+        )
     
     @commands.command('langrmv', brief='Remove language')
     async def remove_language(self, ctx, suffix: str) -> None:
@@ -77,6 +79,9 @@ class Code(commands.Cog):
             if suffix in langs:
                 del langs[suffix]
                 db['Code'] = langs
+                send_embed(
+                    ctx.channel.id, 'Language removed', title='Task'
+                )
             else:
                 send_embed(
                     ctx.channel.id, 'Language not found', title='Error'
