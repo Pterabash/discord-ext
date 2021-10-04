@@ -23,7 +23,7 @@ class Code(commands.Cog):
             self, suffix: str, script: str, *, head: str = None, 
             tail: str = None
         ) -> None:
-            self.base = f'foo.{suffix}'
+            self.base = f'./foo.{suffix}'
             with open(self.base, 'w') as f:
                 if head is not None:
                     f.write(f'{head}\n')
