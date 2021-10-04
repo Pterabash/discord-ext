@@ -30,7 +30,7 @@ class System(commands.Cog):
             return
         send_embed(
             ctx.channel.id, wrap(log, lang='bash'), title='Output',
-            footer=f'Time taken: {t}s'
+            footer={'text': f'Time taken: {t}s'}
         )
 
 

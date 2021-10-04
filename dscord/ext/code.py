@@ -87,13 +87,10 @@ class Code(commands.Cog):
                     f = Code.File(suffix, script)
                 for args in prop['exec'].pop('args'):
                     log, t = f.exec(args=args, **prop['exec'])
-                r = send_embed(
-                    ctx.channel.id, 
-                    wrap(log, lang=suffix),
-                    title='Output',
-                    footer=f'Time taken: {t}s'
+                send_embed(
+                    ctx.channel.id, wrap(log, lang=suffix), title='Output',
+                    footer={'text': f'Time taken: {t}s'}
                 )
-                print(r)
             else:
                 await ctx.send('Language not found')
 
