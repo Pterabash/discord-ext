@@ -34,9 +34,9 @@ class Code(commands.Cog):
             self, args: List[str] = [], *, chmod: bool = False
         ) -> List[str]:
             if chmod:
-                os.system(f'chmod +x {self.base}')
+                subprocess_log(['chmod', '+x', self.base])
             log, t = subprocess_log(args + [self.base])
-            os.system(f'rm {self.base}')
+            subprocess_log(['rm', self.base])
             return log, t
 
 
