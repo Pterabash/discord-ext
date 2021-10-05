@@ -20,7 +20,6 @@ DEFAULT = {
 class LanguageNotFoundError(Exception):
     def __init__(self, chn_id: int, lang: str):
         self.message = f'Language "{lang}" not found'
-        send_embed(chn_id, ['Language not found'], title='Error')
         super().__init__(self.message)
 
 

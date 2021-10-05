@@ -5,7 +5,8 @@ import sys
 
 from discord.ext import commands
 
-import dscord
+from dscord import ext
+from dscord.func import send_embed, wrap
 
 
 client = commands.Bot(',')
@@ -32,6 +33,18 @@ async def on_ready() -> None:
     print('Bot is up!')
 
 
+@client.event
+async def on_command_error(ctx, err) -> None:
+    if (
+        isinstance(err, commands.CommandNotFound) 
+        or isinstance(err, commands.CheckFailure)
+    ):
+        return
+    print(err)
+    log = wrap(str(err), lang='bash')
+    send_embed(ctx.channel.id, log, title='Error')
+
+
 @client.command('load')
 async def command_ext_load(ctx, module: str) -> None:
     load('.'+module, 'dscord.ext')
@@ -40,10 +53,8 @@ async def command_ext_load(ctx, module: str) -> None:
 
 @client.command('exts')
 async def command_ext_list(ctx):
-    doc = pydoc.render_doc(
-        dscord.ext, 'Help on %s', renderer=pydoc.plaintext
-    )
-    dscord.func.send_embed(doc)
+    doc = pydoc.render_doc(ext, 'Help on %s', renderer=pydoc.plaintext)
+    send_embed(doc)
 
 
 @client.command(aliases=['retard', 'reboot'])
