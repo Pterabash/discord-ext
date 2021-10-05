@@ -17,6 +17,13 @@ DEFAULT = {
 }
 
 
+class LanguageNotFoundError(Exception):
+    def __init__(self, chn_id: int, lang: str):
+        self.message = f'Language "{lang}" not found'
+        send_embed(chn_id, ['Language not found'], title='Error')
+        super().__init__(self.message)
+
+
 class Code(commands.Cog):
     class File:
         def __init__(
@@ -88,9 +95,7 @@ class Code(commands.Cog):
                     ctx.channel.id, ['Language removed'], title='Task'
                 )
             else:
-                send_embed(
-                    ctx.channel.id, ['Language not found'], title='Error'
-                )
+                raise LanguageNotFoundError(ctx.channel.id, suffix)
     
     @commands.command('langreset', brief='Reset languages')
     async def reset_languages(self, ctx):
@@ -121,9 +126,7 @@ class Code(commands.Cog):
                 chunks = wrap(text, lang=suffix)
                 send_embed(ctx.channel.id, chunks, title='Language Info')
             else:
-                send_embed(
-                    ctx.channel.id, ['Language not found'], title='Error'
-                )
+                raise LanguageNotFoundError(ctx.channel.id, suffix)
 
     @commands.command('exec', brief='Execute script by language')
     async def exec_script(self, ctx, suffix: str, *, script: str) -> None:
@@ -138,9 +141,7 @@ class Code(commands.Cog):
                     footer={'text': f'Time taken: {t}s'}
                 )
             else:
-                send_embed(
-                    ctx.channel.id, ['Language not found'], title='Error'
-                )
+                raise LanguageNotFoundError(ctx.channel.id, suffix)
 
 
 def setup(bot):
