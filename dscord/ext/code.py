@@ -115,6 +115,7 @@ class Code(commands.Cog):
                     print(j)
                     if type(prop[j]) is dict:
                         k = '\n'.join([f'{i}: {j[i]}' for i in j])
+                        print(k)
                         text += f'\n{j}\n{k}'
                 chunks = wrap(text, code='')
                 send_embed(ctx.channel.id, chunks, title='Language Info')
