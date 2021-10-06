@@ -1,5 +1,4 @@
 import os
-import re
 from typing import List
 
 from discord.ext import commands
@@ -29,8 +28,8 @@ class Code(commands.Cog):
             self, suffix: str, script: str, *, head: str = None, 
             tail: str = None
         ) -> None:
-            self.base = f'./foo.{suffix}'
-            with open(self.base, 'w') as f:
+            self.file = f'./foo.{suffix}'
+            with open(self.file, 'w') as f:
                 if head is not None:
                     f.write(f'{head}\n')
                 f.write(script)
@@ -39,13 +38,19 @@ class Code(commands.Cog):
 
         def exec(
             self, args: List[str] = [], *, chmod: bool = False
-        ) -> List[str]:
+        ) -> None:
             if chmod:
-                os.system(f'chmod +x {self.base}')
-            log, t = subprocess_log(args + [self.base])
-            os.system(f'rm {self.base}')
-            return log, t
-
+                os.system(f'chmod +x {self.file}')
+            self._logs, self._runtime = subprocess_log(args + [self.file])
+            os.system(f'rm {self.file}')
+        
+        @property
+        def logs(self):
+            return self._logs
+        
+        @property
+        def runtime(self):
+            return self._runtime
 
     def __init__(self):
         with database() as db:
@@ -91,18 +96,16 @@ class Code(commands.Cog):
     async def reset_languages(self, ctx):
         with database() as db:
             db['Code'] = DEFAULT
-        send_embed(ctx.channel.id, ['Language list reset'], title='Task')
+        send_embed(ctx.channel.id, ['Languages data reset'], title='Task')
 
     @commands.command('langs', brief='List languages')
     async def list_languages(self, ctx) -> None:
         with database() as db:
-            langs = wrap('\n'.join(db['Code'].keys()))
-            send_embed(
-                ctx.channel.id, langs, lang='bash', title='Language List'
-            )
+            langs = wrap('\n'.join(db['Code']), lang='bash')
+            send_embed(ctx.channel.id, langs, title='Language List')
     
     @commands.command('lang', brief='Language info')
-    async def get_language_info(self, ctx, suffix: str) -> None: 
+    async def get_language(self, ctx, suffix: str) -> None: 
         with database() as db:
             if suffix in db['Code']:
                 text = f'suffix: {suffix}\n'
@@ -119,19 +122,30 @@ class Code(commands.Cog):
                 raise LanguageNotFoundError(suffix)
 
     @commands.command('exec', brief='Execute script by language')
-    async def exec_script(self, ctx, suffix: str, *, script: str) -> None:
+    async def exec_language(
+        self, ctx, suffix: str, *, script: str
+    ) -> None:
         with database() as db:
             if suffix in db['Code']:
                 prop = db['Code'][suffix]
                 f = Code.File(suffix, script, **prop['file'])
-                for args in prop['exec'].pop('args'):
-                    logs, t = f.exec(args=args, **prop['exec'])
+                for a in prop['args']:
+                    f.exec(args=a, **prop['exec'])
                 send_embed(
-                    ctx.channel.id, wrap(logs, lang=suffix), 
-                    title='Output', footer={'text': f'Time taken: {t}s'}
+                    ctx.channel.id, wrap(f.logs, lang=suffix), title='Log', 
+                    footer={'text': f'Time taken: {f.runtime}s'}
                 )
             else:
                 raise LanguageNotFoundError(suffix)
+
+    @commands.command('py', brief='Execute python script')
+    async def exec_python(self, ctx, *, script: str) -> None:
+        f = Code.File('py', script)
+        f.exec(args=['python3'])
+        send_embed(
+            ctx.channel.id, wrap(f.logs, lang='py'), title='Log', 
+            footer={'text': f'Time taken: {f.runtime}s'}
+        )
 
 
 def setup(bot):
