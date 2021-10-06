@@ -22,12 +22,6 @@ class LanguageNotFoundError(Exception):
         self.message = f'Language "{suffix}" not found'
         super().__init__(self.message)
 
-class ArgumentsMissingError(Exception):
-    def __init__(self, *args: str) -> None:
-        args_ = ', '.join([f'"{a}"' for a in args])
-        self.message = f'Argument(s) {args_} is missing'
-        super().__init__(self.message)
-
 
 class Code(commands.Cog):
     class File:
@@ -60,24 +54,25 @@ class Code(commands.Cog):
 
     @commands.command('langadd', brief='Add language')
     async def add_language(
-        self, ctx, suffix: str, args: str, **kwargs: str
+        self, ctx, suffix: str, args: str, *kwargs: str
     ) -> None:
         prop = {'exec': {}, 'file': {}}
         prop['args'] = [l.split(',') for l in args.split(';')]
-        prop['exec']['chmod'] = 'chmod' in args
-        send_embed(ctx.channel.id, [str(kwargs)], lang='py', title='Test')
-        # for a in args:
-        #     if a.startswith('head='):
-        #         prop['file']['head'] = a.split('=')[1]
-        #     if a.startswith('tail='):
-        #         prop['file']['tail'] = a.split('=')[1]
-        # with database() as db:
-        #     langs = db['Code']
-        #     langs[suffix] = prop
-        #     db['Code'] = langs
-        # send_embed(
-        #     ctx.channel.id, ['Language added'], title='Task'
-        # )
+        for i in kwargs:
+            key, value = i.split('=', 1)
+            if key == 'chmod':
+                prop['exec']['chmod'] = True
+            elif key == 'head':
+                prop['file']['head'] = value
+            elif key == 'tail':
+                prop['file']['tail'] = value
+        with database() as db:
+            langs = db['Code']
+            langs[suffix] = prop
+            db['Code'] = langs
+        send_embed(
+            ctx.channel.id, ['Language added'], title='Task'
+        )
     
     @commands.command('langrmv', brief='Remove language')
     async def remove_language(self, ctx, suffix: str) -> None:
