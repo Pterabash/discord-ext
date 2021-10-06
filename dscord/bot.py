@@ -17,15 +17,15 @@ def prefix(pf: str) -> None:
     client = commands.Bot(pf)
 
 
-def run(token: str) -> None:
-    client.run(token)
-
-
 def load(name: str, package: str = 'dscord.ext') -> None:
     if not name.startswith('.') and package != '':
         name = '.' + name
     module = importlib.import_module(name, package)
     module.setup(client)
+
+
+def run(token: str) -> None:
+    client.run(token)
 
 
 @client.command('load')
@@ -63,4 +63,4 @@ async def on_command_error(ctx, err) -> None:
         return
     print(err)
     log = wrap(str(err), lang='bash')
-    send_embed(ctx.channel.id, log, title='Error', color=e74c3c)
+    send_embed(ctx.channel.id, log, title='Error', color=0xe74c3c)
