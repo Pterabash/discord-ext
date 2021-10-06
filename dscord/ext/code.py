@@ -110,7 +110,9 @@ class Code(commands.Cog):
             if suffix in db['Code']:
                 prop = db['Code'][suffix]
                 text = f'suffix: {suffix}\nargs: {prop["args"]}\n'
+                print(prop)
                 for j in prop:
+                    print(j)
                     if type(prop[j]) is dict:
                         k = '\n'.join([f'{i}: {j[i]}' for i in j])
                         text += f'\n{j}\n{k}'
