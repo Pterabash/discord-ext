@@ -41,12 +41,12 @@ def subprocess_log(args: List[str], inp: str = None) -> Tuple[str, str]:
         return fp.read(), dt
 
 
-def wrap(text: str, *, width: int = 4000, lang: str = None) -> List[str]:
+def wrap(text: str, *, width: int = 4000, code: str = None) -> List[str]:
     ws = textwrap.wrap(text, width, replace_whitespace=False)
     if not ws:
-        return ['No output']
-    elif lang is not None:
-        return [f'```{lang}\n{w}\n```' for w in ws]
+        return ['None']
+    elif code is not None:
+        return [f'```{code}\n{w}\n```' for w in ws]
     else:
         return ws
 

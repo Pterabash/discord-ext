@@ -101,7 +101,7 @@ class Code(commands.Cog):
     @commands.command('langs', brief='List languages')
     async def list_languages(self, ctx) -> None:
         with database() as db:
-            langs = wrap('\n'.join(db['Code']), lang='bash')
+            langs = wrap('\n'.join(db['Code']), code='')
             send_embed(ctx.channel.id, langs, title='Language List')
     
     @commands.command('lang', brief='Language info')
@@ -116,7 +116,7 @@ class Code(commands.Cog):
                     text += '\n'
                     for i in prop['file'].keys():
                         text += f'{i}: {prop["file"][i]}\n'
-                chunks = wrap(text, lang=suffix)
+                chunks = wrap(text, code='')
                 send_embed(ctx.channel.id, chunks, title='Language Info')
             else:
                 raise LanguageNotFoundError(suffix)
@@ -132,7 +132,7 @@ class Code(commands.Cog):
                 for a in prop['args']:
                     f.exec(args=a, **prop['exec'])
                 send_embed(
-                    ctx.channel.id, wrap(f.logs, lang=suffix), title='Log', 
+                    ctx.channel.id, wrap(f.logs, code=suffix), title='Log', 
                     footer={'text': f'Time taken: {f.runtime}s'}
                 )
             else:
@@ -143,7 +143,7 @@ class Code(commands.Cog):
         f = Code.File('py', script)
         f.exec(args=['python3'])
         send_embed(
-            ctx.channel.id, wrap(f.logs, lang='py'), title='Log', 
+            ctx.channel.id, wrap(f.logs, code='py'), title='Log', 
             footer={'text': f'Time taken: {f.runtime}s'}
         )
 
