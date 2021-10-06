@@ -110,10 +110,10 @@ class Code(commands.Cog):
             if suffix in db['Code']:
                 prop = db['Code'][suffix]
                 text = f'suffix: {suffix}\nargs: {prop["args"]}\n'
-                for j in prop:
-                    if type(prop[j]) is dict:
-                        k = '\n'.join([f'{i}: {j[i]}' for i in prop[j]])
-                        text += f'\n{j}\n{k}'
+                for k in prop:
+                    if type(j := prop[k]) is dict:
+                        l = '\n'.join([f'{i}: {j[i]}' for i in j])
+                        text += f'\n{k}\n{l}'
                 chunks = wrap(text, code='')
                 send_embed(ctx.channel.id, chunks, title='Language Info')
             else:
