@@ -61,7 +61,7 @@ class Code(commands.Cog):
     async def add_language(
         self, ctx, suffix: str, args: str, *kwargs: str
     ) -> None:
-        prop = {'exec': {}, 'file': {}}
+        prop = {'args': '','exec': {}, 'file': {}}
         prop['args'] = [l.split(',') for l in args.split(';')]
         for i in kwargs:
             key, value = i.split('=', 1)
@@ -108,14 +108,11 @@ class Code(commands.Cog):
     async def get_language(self, ctx, suffix: str) -> None: 
         with database() as db:
             if suffix in db['Code']:
-                text = f'suffix: {suffix}\n'
                 prop = db['Code'][suffix]
-                for i in prop['exec'].keys():
-                    text += f'{i}: {prop["exec"][i]}\n'
-                if 'file' in prop:
-                    text += '\n'
-                    for i in prop['file'].keys():
-                        text += f'{i}: {prop["file"][i]}\n'
+                text = f'suffix: {suffix}\nargs: {prop["args"]}\n'
+                for j in prop:
+                    k = '\n'.join([f'{i}: {j[i]}' for i in j])
+                    text += f'\n{j}\n{k}'
                 chunks = wrap(text, code='')
                 send_embed(ctx.channel.id, chunks, title='Language Info')
             else:
