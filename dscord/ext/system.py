@@ -16,7 +16,7 @@ class System(commands.Cog):
             await ctx.send('`Invalid mode (i or u)`')
             return
         send_embed(
-            ctx.channel.id, wrap(log, lang='bash'), title='Output',
+            ctx.channel.id, wrap(log, code='bash'), title='Output',
             footer={'text': f'Time taken: {t}s'}
         )
 

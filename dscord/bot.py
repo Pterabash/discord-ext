@@ -62,5 +62,5 @@ async def on_command_error(ctx, err) -> None:
     ):
         return
     print(err)
-    log = wrap(str(err), lang='bash')
+    log = wrap(str(err), code='bash')
     send_embed(ctx.channel.id, log, title='Error', color=0xe74c3c)

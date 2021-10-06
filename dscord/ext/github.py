@@ -16,9 +16,9 @@ def basename(path: str) -> Tuple[str, str]:
 def exts_list(chn_id: int) -> None:
     with database() as db:
         exts = list(db['Github'])
-        text = wrap('\n'.join(exts), lang='bash')
+        chunks = wrap('\n'.join(exts), code='bash')
         send_embed(
-            chn_id, text, title='Github Extensions',
+            chn_id, chunks, title='Github Extensions',
             color=333333
         )
 
@@ -90,9 +90,9 @@ class Github(commands.Cog):
     @commands.command('greld', brief='Reload all exts')
     async def ghExtsReload(self, ctx) -> None:
         exts = exts_load(self.bot)
-        text = wrap('\n'.join(exts), lang='bash')
+        chunks = wrap('\n'.join(exts), code='bash')
         send_embed(
-            ctx.channel.id, text, title='Extensions Reloaded', 
+            ctx.channel.id, chunks, title='Extensions Reloaded', 
             color=333333
         )
 
