@@ -113,6 +113,7 @@ class Code(commands.Cog):
                 for j in prop:
                     k = '\n'.join([f'{i}: {j[i]}' for i in j])
                     text += f'\n{j}\n{k}'
+                    print(text) # debug
                 chunks = wrap(text, code='')
                 send_embed(ctx.channel.id, chunks, title='Language Info')
             else:
