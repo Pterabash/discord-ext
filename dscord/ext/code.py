@@ -1,5 +1,5 @@
 import os
-import sys
+import re
 from typing import List
 
 from discord.ext import commands
@@ -8,18 +8,24 @@ from dscord.func import database, send_embed, subprocess_log, wrap
 
 
 DEFAULT = {
-    'py': {'file': {}, 'exec': {'args': [['python3']]}},
-    'js': {'file': {}, 'exec': {'args': [['node']]}},
+    'py': {'args': [['python3']], 'file': {}, 'exec': {}},
+    'js': {'args': [['node']], 'file': {}, 'exec': {}},
     'sh': {
-        'file': {'head': '#!/bin/bash'}, 
-        'exec': {'args': [[]], 'chmod': True}
+        'args': [[]], 'file': {'head': '#!/bin/bash'}, 
+        'exec': {'chmod': True}
     }
 }
 
 
 class LanguageNotFoundError(Exception):
-    def __init__(self, chn_id: int, lang: str):
-        self.message = f'Language "{lang}" not found'
+    def __init__(self, suffix: str) -> None:
+        self.message = f'Language "{suffix}" not found'
+        super().__init__(self.message)
+
+class ArgumentsMissingError(Exception):
+    def __init__(self, *args: str) -> None:
+        args_ = ', '.join([f'"{a}"' for a in args])
+        self.message = f'Argument(s) {args_} is missing'
         super().__init__(self.message)
 
 
@@ -53,35 +59,25 @@ class Code(commands.Cog):
                 db['Code'] = DEFAULT
 
     @commands.command('langadd', brief='Add language')
-    async def add_language(self, ctx, suffix: str, *args: str) -> None:
+    async def add_language(
+        self, ctx, suffix: str, args: str, **kwargs: str
+    ) -> None:
         prop = {'exec': {}, 'file': {}}
-        for a in args:
-            if a.startswith('args='):
-                prop['exec']['args'] = [
-                    i.split(',') for i in a.split('=')[1].split(';')
-                ]
-            elif a.startswith('chmod='):
-                val = a.split('=')[1]
-                if val.lower() == 'true':
-                    prop['exec']['chmod'] = True
-                elif val.lower() == 'false':
-                    prop['exec']['chmod'] = False
-            elif a.startswith('head='):
-                prop['file']['head'] = a.split('=')[1]
-            elif a.startswith('tail='):
-                prop['file']['tail'] = a.split('=')[1]
-        if 'args' not in prop['exec']:
-            send_embed(
-                ctx.channel.id, ['`args` argument missing'], title='Error'
-            )
-            return
-        with database() as db:
-            langs = db['Code']
-            langs[suffix] = prop
-            db['Code'] = langs
-        send_embed(
-            ctx.channel.id, ['Language added'], title='Task'
-        )
+        prop['args'] = [l.split(',') for l in args.split(';')]
+        prop['exec']['chmod'] = 'chmod' in args
+        send_embed(ctx.channel.id, [str(kwargs)], lang='py', title='Test')
+        # for a in args:
+        #     if a.startswith('head='):
+        #         prop['file']['head'] = a.split('=')[1]
+        #     if a.startswith('tail='):
+        #         prop['file']['tail'] = a.split('=')[1]
+        # with database() as db:
+        #     langs = db['Code']
+        #     langs[suffix] = prop
+        #     db['Code'] = langs
+        # send_embed(
+        #     ctx.channel.id, ['Language added'], title='Task'
+        # )
     
     @commands.command('langrmv', brief='Remove language')
     async def remove_language(self, ctx, suffix: str) -> None:
@@ -94,7 +90,7 @@ class Code(commands.Cog):
                     ctx.channel.id, ['Language removed'], title='Task'
                 )
             else:
-                raise LanguageNotFoundError(ctx.channel.id, suffix)
+                raise LanguageNotFoundError(suffix)
     
     @commands.command('langreset', brief='Reset languages')
     async def reset_languages(self, ctx):
@@ -105,9 +101,9 @@ class Code(commands.Cog):
     @commands.command('langs', brief='List languages')
     async def list_languages(self, ctx) -> None:
         with database() as db:
-            chunks = wrap('\n'.join(db['Code'].keys()))
+            langs = wrap('\n'.join(db['Code'].keys()))
             send_embed(
-                ctx.channel.id, chunks, lang='bash', title='Language List'
+                ctx.channel.id, langs, lang='bash', title='Language List'
             )
     
     @commands.command('lang', brief='Language info')
@@ -125,7 +121,7 @@ class Code(commands.Cog):
                 chunks = wrap(text, lang=suffix)
                 send_embed(ctx.channel.id, chunks, title='Language Info')
             else:
-                raise LanguageNotFoundError(ctx.channel.id, suffix)
+                raise LanguageNotFoundError(suffix)
 
     @commands.command('exec', brief='Execute script by language')
     async def exec_script(self, ctx, suffix: str, *, script: str) -> None:
@@ -134,13 +130,13 @@ class Code(commands.Cog):
                 prop = db['Code'][suffix]
                 f = Code.File(suffix, script, **prop['file'])
                 for args in prop['exec'].pop('args'):
-                    log, t = f.exec(args=args, **prop['exec'])
+                    logs, t = f.exec(args=args, **prop['exec'])
                 send_embed(
-                    ctx.channel.id, wrap(log, lang=suffix), title='Output',
-                    footer={'text': f'Time taken: {t}s'}
+                    ctx.channel.id, wrap(logs, lang=suffix), 
+                    title='Output', footer={'text': f'Time taken: {t}s'}
                 )
             else:
-                raise LanguageNotFoundError(ctx.channel.id, suffix)
+                raise LanguageNotFoundError(suffix)
 
 
 def setup(bot):
