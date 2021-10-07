@@ -130,7 +130,7 @@ class Code(commands.Cog):
                 for a in prop['args']:
                     f.exec(args=a, **prop['exec'])
                 send_embed(
-                    ctx.channel.id, wrap(f.logs, code=suffix), title='Log', 
+                    ctx.channel.id, wrap(f.logs, code=''), title='Log', 
                     footer={'text': f'Time taken: {f.runtime}s'}
                 )
             else:
@@ -141,7 +141,7 @@ class Code(commands.Cog):
         f = Code.File('py', script)
         f.exec(args=['python3'])
         send_embed(
-            ctx.channel.id, wrap(f.logs, code='bash'), title='Log', 
+            ctx.channel.id, wrap(f.logs, code=''), title='Log', 
             footer={'text': f'Time taken: {f.runtime}s'}
         )
 
