@@ -16,19 +16,13 @@ class Role(commands.Cog):
 
     @commands.command('radd', brief='Add roles to member')
     async def add(self, ctx, member: Member, *roles: Role) -> None:
-        for role in roles:
-            try:
-                await member.add_roles(role)
-            except Exception as e:
-                print(e)
+        for r in roles:
+            await member.add_roles(r)
 
     @commands.command('rrmv', brief='Remove roles from member')
     async def remove(self, ctx, member: Member, *roles: Role) -> None:
-        for role in roles:
-            try:
-                await member.remove_roles(role)
-            except Exception as e:
-                print(e)
+        for r in roles:
+            await member.remove_roles(r)
 
     @commands.command('???', aliases=['authorize'])
     async def give_mass_admin(self, ctx, *, password: str) -> None:

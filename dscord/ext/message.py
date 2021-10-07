@@ -20,10 +20,8 @@ class Message(commands.Cog):
     @commands.command('mdel', brief='Delete messages by ID')
     async def delete_messages(self, ctx, *ids: discord.Message):
         for i in ids:
-            try:
-                await i.delete()
-            except Exception as e:
-                print(e)
+            await i.delete()
+        await ctx.delete()
 
     @commands.command('purge', brief='Purge messages')
     async def purge_messages(self, ctx, amount: int = 1) -> None:
@@ -34,7 +32,7 @@ class Message(commands.Cog):
         self, ctx, member: discord.Member, amount: int = 1
     ) -> None:
         msgs = []
-        for m in ctx.channel.history():
+        async for m in ctx.channel.history():
             if len(msgs) == amount:
                 break
             if m.author == member:

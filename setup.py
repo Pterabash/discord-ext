@@ -5,7 +5,7 @@ requirements = open('requirements.txt').read().splitlines()
 
 setuptools.setup(
         name='Dscord',
-        version='1.8.20',
+        version='1.8.21',
         author='thisgary',
         author_email='gary.github@gmail.com',
         description='Discord API wrapper\'s wrapper.',
