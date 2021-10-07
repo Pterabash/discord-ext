@@ -13,16 +13,16 @@ class Spam(commands.Cog):
     async def create_text_channels(
         self, ctx, chn_type: AnyChannel, amount: int, *, name: str = None
     ) -> None:
+        if name is None:
+            get_name = lambda: randoms()
+        else:
+            get_name = lambda: name
         if chn_type is CategoryChannel:
             scope = ctx.guild
         else:
-            scope = await ctx.guild.create_category_channel(
-                (randoms() if name is None else name)
-            )
+            scope = await ctx.guild.create_category_channel(get_name())
         for i in range(clamp(amount, max_i=50)):
-            await scope.create_text_channel(
-                (randoms() if name is None else f'{name}-{i}')
-            )
+            await scope.create_text_channel(f'{get_name()}-{i}')
 
     @commands.command('sdm', brief='DM spam')
     async def spam_direct_message(
