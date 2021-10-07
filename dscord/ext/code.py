@@ -141,7 +141,7 @@ class Code(commands.Cog):
         f = Code.File('py', script)
         f.exec(args=['python3'])
         send_embed(
-            ctx.channel.id, wrap(f.logs, code='py'), title='Log', 
+            ctx.channel.id, wrap(f.logs, code='bash'), title='Log', 
             footer={'text': f'Time taken: {f.runtime}s'}
         )
 
