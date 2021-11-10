@@ -11,8 +11,8 @@ from dscord.func import clamp, randoms
 class Spam(commands.Cog):
     @commands.command('schn', brief='Spam any channels')
     async def create_text_channels(
-        self, ctx, chn_type: AnyChannel, amount: int, *, name: str = None
-    ) -> None:
+            self, ctx, chn_type: AnyChannel, 
+            amount: int, *, name: str = None) -> None:
         if name is None:
             get_name = lambda: randoms()
         else:
@@ -26,8 +26,7 @@ class Spam(commands.Cog):
 
     @commands.command('sdm', brief='DM spam')
     async def spam_direct_message(
-        self, ctx, user: User, amount: int, *, message: str
-    ) -> None:
+            self, ctx, user: User, amount: int, *, message: str) -> None:
         for _ in range(clamp(amount)):
             await asyncio.gather(
                 user.send(message),
@@ -35,9 +34,7 @@ class Spam(commands.Cog):
             )
 
     @commands.command('smsg', brief='Msg spam')
-    async def spam_message(
-        self, ctx, amount: int, *, message: str
-    ) -> None:
+    async def spam_message(self, ctx, amount: int, *, message: str) -> None:
         for _ in range(clamp(amount)):
             await asyncio.gather(
                 ctx.send(message),
@@ -46,8 +43,7 @@ class Spam(commands.Cog):
 
     @commands.command('scm', brief='Spam create channels and messages')
     async def spam_channel_message(
-        self, ctx, chn_amt: int, msg_amt: int, *, message: str
-    ) -> None:
+            self, ctx, chn_amt: int, msg_amt: int, *, message: str) -> None:
         category = await ctx.guild.create_category_channel(randoms())
         for _ in range(clamp(chn_amt, max_i=50)):
             await asyncio.gather(
@@ -60,7 +56,6 @@ class Spam(commands.Cog):
                     channel.send(message),
                     asyncio.sleep(0.5)
                 )
-
 
 
 def setup(bot):

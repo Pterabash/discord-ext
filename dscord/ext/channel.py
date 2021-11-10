@@ -6,43 +6,33 @@ from discord.ext import commands
 from dscord.func import randoms
 
 
-AnyChannel = Union[
-    CategoryChannel, 
-    VoiceChannel, 
-    StageChannel, 
-    TextChannel
-]
+AnyChannel = Union[CategoryChannel, VoiceChannel, StageChannel, TextChannel]
 
 
 class Channel(commands.Cog):
     @commands.command('ccat', brief='Create category channel')
     async def create_category_channel(
-        self, ctx, *, name: str = randoms()
-    ) -> None:
+            self, ctx, *, name: str = randoms()) -> None:
         await ctx.guild.create_category_channel(name)
  
     @commands.command('cstg', brief='Create stage channel')
     async def create_stage_channel(
-        self, ctx, *, name: str = randoms()
-    ) -> None:
+            self, ctx, *, name: str = randoms()) -> None:
         await ctx.guild.create_stage_channel(name)
    
     @commands.command('ctxt', brief='Create text channel')
     async def create_text_channel(
-        self, ctx, *, name: str = randoms()
-    ) -> None:
+            self, ctx, *, name: str = randoms()) -> None:
         await ctx.guild.create_text_channel(name)
 
     @commands.command('cvo', brief='Create voice channel')
     async def create_voice_channel(
-        self, ctx, name: str = randoms()
-    ) -> None:
+            self, ctx, name: str = randoms()) -> None:
         await ctx.guild.create_voice_channel(name)
 
     @commands.command('cdel', brief='Delete channel')
     async def delete_any_channel(
-        self, ctx, *channels: AnyChannel
-    ) -> None:
+            self, ctx, *channels: AnyChannel) -> None:
         if not channels:
             await ctx.channel.delete()
         for channel in channels:
@@ -52,5 +42,5 @@ class Channel(commands.Cog):
             await channel.delete()
 
 
-def setup(bot):
+def setup(bot): 
     bot.add_cog(Channel())

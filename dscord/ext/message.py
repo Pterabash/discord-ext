@@ -6,15 +6,13 @@ from dscord.func import clamp
 
 class Message(commands.Cog):
     @commands.command(
-        'send', brief='Send message', aliases=['say', 'echo']
-    )
+            'send', brief='Send message', aliases=['say', 'echo'])
     async def send_message(self, ctx, *, message: str) -> None:
         await ctx.send(message)
     
     @commands.command('direct', brief='DM user', aliases=['dm'])
     async def direct_message(
-        self, ctx, user: discord.User = None, *, message: str
-    ) -> None:
+            self, ctx, user: discord.User = None, *, message: str) -> None:
         await user.send(message)
 
     @commands.command('mdel', brief='Delete messages by ID')
@@ -29,8 +27,7 @@ class Message(commands.Cog):
 
     @commands.command('purgemember', brief='Purge member messages')
     async def purge_member_messages(
-        self, ctx, member: discord.Member, amount: int = 1
-    ) -> None:
+        self, ctx, member: discord.Member, amount: int = 1) -> None:
         msgs = []
         async for m in ctx.channel.history():
             if len(msgs) == amount:

@@ -13,7 +13,7 @@ import requests
 API = 'https://discord.com/api/v9'
 
 
-def database(): # -> Shelf[object]:
+def database(): # -> Shelf[object]: # Python 3.9 above
     return shelve.open('Database')
 
 
@@ -21,7 +21,7 @@ def clamp(i: int, *, min_i: int = 1, max_i: int = 100) -> int:
     return min(max(i, min_i), max_i)
 
 
-def randoms() -> str:
+def randoms() -> str: 
     return str(random.random())[2:]
 
 
@@ -30,12 +30,11 @@ def list_attrs(obj: object, attrs: List[str]) -> str:
     return '\n'.join(ls)
 
 
-def subprocess_log(args: List[str], inp: str = None) -> Tuple[str, str]:
+def subprocess_log(args: List[str], inp: str = None) -> Tuple[str, float]:
     with tempfile.TemporaryFile('r+t') as fp:
         t = time.time()
-        subprocess.run(
-            args=args, input=inp, stdout=fp, stderr=subprocess.STDOUT
-        )
+        subprocess.run(args=args, input=inp, stdout=fp, 
+                       stderr=subprocess.STDOUT)
         dt = time.time() - t
         fp.seek(0)
         return fp.read(), dt
@@ -43,24 +42,17 @@ def subprocess_log(args: List[str], inp: str = None) -> Tuple[str, str]:
 
 def wrap(text: str, *, width: int = 4000, code: str = None) -> List[str]:
     ws = textwrap.wrap(text, width, replace_whitespace=False)
-    if not ws:
-        return ['None']
-    elif code is not None:
-        return [f'```{code}\n{w}\n```' for w in ws]
-    else:
-        return ws
+    cs = lambda : [f'```{code}\n{w}\n```' for w in ws]
+    return ['None'] if not ws else (cs() if code else ws)
 
 
-def send_embed(
-    chn_id: int, chunks: List[str], *, width: int = 4000, 
-    token: str = os.getenv('TOKEN'), **kwargs
-) -> None:
+def send_embed(chn_id: int, chunks: List[str], *, width: int = 4000, 
+               token: str = os.getenv('TOKEN'), **kwargs) -> None:
     headers = {'Authorization': f'Bot {token}'}
     json = {'embeds': []}
     for c in chunks:
         embed = {'description': c}
         embed.update(kwargs)
         json['embeds'].append(embed)
-    return requests.post(
-        f'{API}/channels/{chn_id}/messages', headers=headers, json=json
-    )
+    return requests.post(f'{API}/channels/{chn_id}/messages',  
+                         headers=headers, json=json)

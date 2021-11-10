@@ -17,23 +17,17 @@ def exts_list(chn_id: int) -> None:
     with database() as db:
         exts = list(db['Github'])
         chunks = wrap('\n'.join(exts), code='bash')
-        send_embed(
-            chn_id, chunks, title='Github Extensions',
-            color=333333
-        )
+        send_embed(chn_id, chunks, title='Github Extensions', color=333333)
 
 
 def ext_load(bot: commands.Bot, path: str) -> None:
     base, name = basename(path)
     url = 'https://raw.githubusercontent.com/' + path
-    with open(base, 'w') as f:
+    with open(base, 'w') as f: 
         f.write(urlopen(url).read().decode('utf-8'))
-    try:
-        bot.load_extension(name)
-    except commands.ExtensionAlreadyLoaded:
-        bot.reload_extension(name)
-    finally:
-        os.remove(base)
+    try: bot.load_extension(name)
+    except commands.ExtensionAlreadyLoaded: bot.reload_extension(name)
+    finally: os.remove(base)
 
 
 def exts_load(bot) -> List[str]:
@@ -44,8 +38,7 @@ def exts_load(bot) -> List[str]:
             try:
                 ext_load(bot, exts[ext])
                 loaded.append(ext)
-            except Exception as e:
-                print(e)
+            except Exception as e: print(e)
         return loaded
 
 
@@ -56,12 +49,11 @@ class Github(commands.Cog):
             if 'Github' in db:
                 exts = exts_load(self.bot)
                 print(f'{exts} loaded')
-            else:
-                db['Github'] = {}
+            else: db['Github'] = {}
 
     @commands.command(
-        'gload', brief='Load exts. Path: [owner/repo/branch/filepath]'
-    )
+        'gload', 
+        brief='Load exts. Path: [owner/repo/branch/filepath]')
     async def exts_load(self, ctx, *paths: str) -> None:
         with database() as db:
             for path in paths:
@@ -77,7 +69,7 @@ class Github(commands.Cog):
         with database() as db:
             for ext in exts:
                 es = db['Github']
-                if ext in es:
+                if ext in es: 
                     del es[ext]
                 db['Github'] = es
                 self.bot.unload_extension(ext)
@@ -91,10 +83,10 @@ class Github(commands.Cog):
     async def ghExtsReload(self, ctx) -> None:
         exts = exts_load(self.bot)
         chunks = wrap('\n'.join(exts), code='bash')
-        send_embed(
-            ctx.channel.id, chunks, title='Extensions Reloaded', 
-            color=333333
-        )
+        send_embed(ctx.channel.id, 
+                   chunks, 
+                   title='Extensions Reloaded', 
+                   color=333333)
 
 
 def setup(bot):

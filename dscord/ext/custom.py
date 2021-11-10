@@ -27,11 +27,8 @@ class Customize(commands.Cog):
 
     @commands.command(
         'copy', brief='Mimic another member', 
-        aliases=['become','henshin', 'morph', 'mimic', 'steal']
-    )
-    async def copy_member(
-        self, ctx, member: Member = None
-    ) -> None:
+        aliases=['become','henshin', 'morph', 'mimic', 'steal'])
+    async def copy_member(self, ctx, member: Member = None) -> None:
         if member is None:
             member = ctx.author
         name = member.name
@@ -50,23 +47,18 @@ class Customize(commands.Cog):
 
     @commands.command('stream', brief='Streaming __')
     async def set_activity_stream(
-        self, ctx, url: str, *, name: str
-    ) -> None:
+            self, ctx, url: str, *, name: str) -> None:
         stream = Streaming(name=name, url=url)
         await self.bot.change_presence(activity=stream)
 
     @commands.command('listen', brief='Listening __')
     async def set_activity_listen(self, ctx, *, name: str) -> None:
-        listen = Activity(
-            type=ActivityType.listening, name=name
-        )
+        listen = Activity(type=ActivityType.listening, name=name)
         await self.bot.change_presence(activity=listen)
 
     @commands.command('watch', brief='Watching __')
     async def set_activity_watch(self, ctx, *, name: str) -> None:
-        watch = Activity(
-            type=ActivityType.watching, name=name
-        )
+        watch = Activity(type=ActivityType.watching, name=name)
         await self.bot.change_presence(activity=watch)
 
 

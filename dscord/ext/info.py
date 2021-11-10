@@ -7,8 +7,8 @@ from dscord.func import list_attrs, send_embed
 
 
 CHN_ATTR = [
-    'category', 'created_at', 'guild', 'name', 'permissions_synced',
-    'position'
+    'category', 'created_at', 'guild', 'name', 
+    'permissions_synced', 'position'
 ]
 ROLE_ATTR = [
     'color', 'created_at', 'guild', 'hoist', 'id', 'managed',
@@ -28,14 +28,14 @@ MEM_ATTR = [
 class Info(commands.Cog):
     @commands.command('ichn', brief='Get chn info')
     async def get_channel_info(
-        self, ctx, channel: channel.AnyChannel = None
-    ) -> None:
+            self, ctx, channel: channel.AnyChannel = None) -> None:
         text = list_attrs(channel, CHN_ATTR)
         send_embed(text, title='Channel Info')
 
     @commands.command('imem', brief='You stalker')
     async def get_member_info(self, ctx, member: Member = None) -> None:
-        if not member: member = ctx.author
+        if not member: 
+            member = ctx.author
         send_embed(list_attrs(member, MEM_ATTR))
 
     @commands.command('irole', brief='Get role info')

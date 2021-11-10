@@ -9,10 +9,8 @@ from dscord.func import database, send_embed, subprocess_log, wrap
 DEFAULT = {
     'py': {'args': [['python3']], 'file': {}, 'exec': {}},
     'js': {'args': [['node']], 'file': {}, 'exec': {}},
-    'sh': {
-        'args': [[]], 'file': {'head': '#!/bin/bash'}, 
-        'exec': {'chmod': True}
-    }
+    'sh': {'args': [[]], 'file': {'head': '#!/bin/bash'}, 
+           'exec': {'chmod': True}}
 }
 
 
@@ -24,10 +22,8 @@ class LanguageNotFoundError(Exception):
 
 class Code(commands.Cog):
     class File:
-        def __init__(
-            self, suffix: str, script: str, *, head: str = None, 
-            tail: str = None
-        ) -> None:
+        def __init__(self, suffix: str, script: str, *, 
+                     head: str = None, tail: str = None) -> None:
             self.file = f'./foo.{suffix}'
             with open(self.file, 'w') as f:
                 if head is not None:
@@ -36,21 +32,18 @@ class Code(commands.Cog):
                 if tail is not None:
                     f.write(f'\n{tail}')
 
-        def exec(
-            self, args: List[str] = [], *, chmod: bool = False
-        ) -> None:
-            if chmod:
+        def exec(self, args: List[str] = [], *, 
+                 chmod: bool = False) -> None:
+            if chmod: 
                 os.system(f'chmod +x {self.file}')
             self._logs, self._runtime = subprocess_log(args + [self.file])
             os.system(f'rm {self.file}')
         
         @property
-        def logs(self):
-            return self._logs
+        def logs(self): return self._logs
         
         @property
-        def runtime(self):
-            return self._runtime
+        def runtime(self): return self._runtime
 
     def __init__(self):
         with database() as db:
@@ -58,9 +51,8 @@ class Code(commands.Cog):
                 db['Code'] = DEFAULT
 
     @commands.command('langadd', brief='Add language')
-    async def add_language(
-        self, ctx, suffix: str, args: str, *kwargs: str
-    ) -> None:
+    async def add_language(self, ctx, suffix: str, 
+                           args: str, *kwargs: str) -> None:
         prop = {'args': '','exec': {}, 'file': {}}
         prop['args'] = [l.split(',') for l in args.split(';')]
         for i in kwargs:
@@ -75,10 +67,8 @@ class Code(commands.Cog):
             langs = db['Code']
             langs[suffix] = prop
             db['Code'] = langs
-        send_embed(
-            ctx.channel.id, ['Language added'], title='Task'
-        )
-    
+        send_embed(ctx.channel.id, ['Language added'], title='Task')
+        
     @commands.command('langrmv', brief='Remove language')
     async def remove_language(self, ctx, suffix: str) -> None:
         with database() as db:
@@ -86,9 +76,8 @@ class Code(commands.Cog):
             if suffix in langs:
                 del langs[suffix]
                 db['Code'] = langs
-                send_embed(
-                    ctx.channel.id, ['Language removed'], title='Task'
-                )
+                send_embed(ctx.channel.id, ['Language removed'], 
+                           title='Task')
             else:
                 raise LanguageNotFoundError(suffix)
     
@@ -96,7 +85,7 @@ class Code(commands.Cog):
     async def reset_languages(self, ctx):
         with database() as db:
             db['Code'] = DEFAULT
-        send_embed(ctx.channel.id, ['Languages data reset'], title='Task')
+        send_embed(ctx.channel.id, ['Languages reset'], title='Task')
 
     @commands.command('langs', brief='List languages')
     async def list_languages(self, ctx) -> None:
@@ -120,9 +109,7 @@ class Code(commands.Cog):
                 raise LanguageNotFoundError(suffix)
 
     @commands.command('exec', brief='Execute script by language')
-    async def exec_language(
-        self, ctx, suffix: str, *, script: str
-    ) -> None:
+    async def exec_language(self, ctx, suffix: str, *, script: str) -> None:
         with database() as db:
             if suffix in db['Code']:
                 prop = db['Code'][suffix]
