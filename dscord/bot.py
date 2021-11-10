@@ -37,7 +37,8 @@ async def command_ext_load(ctx, module: str) -> None:
 @client.command('exts')
 async def command_ext_list(ctx):
     doc = pydoc.render_doc(ext, 'Help on %s', renderer=pydoc.plaintext)
-    send_embed(doc)
+    chunks = wrap(doc)
+    send_embed(ctx.channel.id, chunks, title='Extensions List')
 
 
 @client.command(aliases=['retard', 'reboot'])
@@ -56,11 +57,8 @@ async def on_ready() -> None:
 
 @client.event
 async def on_command_error(ctx, err) -> None:
-    if (
-        isinstance(err, commands.CommandNotFound) 
-        or isinstance(err, commands.CheckFailure)
-    ):
-        return
+    if (isinstance(err, commands.CommandNotFound) 
+        or isinstance(err, commands.CheckFailure)): return
     print(err)
     log = wrap(str(err), code='bash')
     send_embed(ctx.channel.id, log, title='Error', color=0xe74c3c)
