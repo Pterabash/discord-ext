@@ -1,5 +1,5 @@
 import os
-from dscord import func
+from blurpold import func
 
 
 def test_clamp():

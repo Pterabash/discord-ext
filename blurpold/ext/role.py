@@ -3,7 +3,7 @@ import os
 from discord import Member, Permissions, Role
 from discord.ext import commands
 
-from dscord.func import randoms, error_log
+from blurpold.func import randoms, error_log
 
 
 class Role(commands.Cog):

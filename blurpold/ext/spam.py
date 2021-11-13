@@ -4,8 +4,8 @@ from discord import User
 from discord.channel import CategoryChannel
 from discord.ext import commands
 
-from dscord.ext.channel import AnyChannel
-from dscord.func import clamp, randoms
+from blurpold.ext.channel import AnyChannel
+from blurpold.func import clamp, randoms
 
 
 class Spam(commands.Cog):

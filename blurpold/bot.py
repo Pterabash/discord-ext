@@ -5,8 +5,8 @@ import sys
 
 from discord.ext import commands
 
-from dscord import ext
-from dscord.func import send_embed, wrap
+from blurpold import ext
+from blurpold.func import send_embed, wrap
 
 
 client = commands.Bot(',')

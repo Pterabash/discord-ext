@@ -3,7 +3,7 @@ from typing import List
 
 from discord.ext import commands
 
-from dscord.func import database, send_embed, subprocess_log, wrap
+from blurpold.func import database, send_embed, subprocess_log, wrap
 
 
 DEFAULT = {

@@ -1,9 +1,8 @@
 from discord import Member, Role
 from discord.ext import commands
 
-from dscord.ext import channel
-
-from dscord.func import list_attrs, send_embed
+from blurpold.ext import channel
+from blurpold.func import list_attrs, send_embed
 
 
 CHN_ATTR = [

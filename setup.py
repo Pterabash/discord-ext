@@ -4,8 +4,8 @@ readme = open('README.md').read()
 requirements = open('requirements.txt').read().splitlines()
 
 setuptools.setup(
-        name='Dscord',
-        version='1.8.25',
+        name='7289DA',
+        version='1.8.99',
         author='thisgary',
         author_email='gary.github@gmail.com',
         description='Discord API wrapper\'s wrapper.',
