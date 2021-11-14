@@ -7,13 +7,6 @@ class Customize(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
-    @commands.command('orca')
-    async def set_default(self, ctx) -> None:
-        url = 'https://raw.githubusercontent.com/thisgary/dscord/main/asset/orca.jpg'
-        await self.bot.user.edit(
-            username='Orcinus', avatar=requests.get(url).content
-        )
-
     @commands.command('name', brief='Set bot name')
     async def set_name(self, ctx, *, name: str) -> None:
         await self.bot.user.edit(username=name)
