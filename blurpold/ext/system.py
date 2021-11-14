@@ -2,7 +2,7 @@ import sys
 from typing import List
 
 from discord.ext import commands
-from dscord.func import send_embed, subprocess_log, wrap
+from blurpold.func import send_embed, subprocess_log, wrap
 
 
 class System(commands.Cog):
