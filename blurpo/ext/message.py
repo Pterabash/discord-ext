@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-from blurpold.func import clamp
+from blurpo.func import clamp
 
 
 class Message(commands.Cog):

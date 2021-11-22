@@ -4,7 +4,7 @@ from urllib.request import urlopen
 
 from discord.ext import commands
 
-from blurpold.func import database, send_embed, wrap
+from blurpo.func import database, send_embed, wrap
 
 
 def basename(path: str) -> Tuple[str, str]:

@@ -5,8 +5,8 @@ import sys
 
 from discord.ext import commands
 
-from blurpold import ext
-from blurpold.func import send_embed, wrap
+from blurpo import ext
+from blurpo.func import send_embed, wrap
 
 
 client = commands.Bot(',')
@@ -17,7 +17,7 @@ def prefix(pf: str) -> None:
     client = commands.Bot(pf)
 
 
-def load(name: str, package: str = 'blurpold.ext') -> None:
+def load(name: str, package: str = 'blurpo.ext') -> None:
     if not name.startswith('.') and package != '':
         name = '.' + name
     module = importlib.import_module(name, package)
@@ -30,7 +30,7 @@ def run(token: str) -> None:
 
 @client.command('load')
 async def command_ext_load(ctx, module: str) -> None:
-    load('.'+module, 'blurpold.ext')
+    load('.'+module, 'blurpo.ext')
     await ctx.send(f'`{module}` loaded')
 
 
@@ -45,7 +45,7 @@ async def command_ext_list(ctx):
 async def restart(ctx, flag: str = None) -> None:
     if flag != 'skip': # if  flag == 'u':
         await ctx.send('Updating')
-        os.system('pip3 install git+https://github.com/thisgary/blurpold')
+        os.system('pip3 install git+https://github.com/thisgary/blurpo')
     await ctx.send('Restarting')
     os.execl(sys.executable, sys.executable, *sys.argv)
 

@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-from blurpold.func import database
+from blurpo.func import database
 
 
 async def whitelist_check(ctx) -> bool:

@@ -1,11 +1,11 @@
-# 7289DA
+# Blurple Old
 
 Discord API wrapper's wrapper, ironically.
 
 ## Purpose
 
 Solely for me to learn how to make Discord bot and Python module.
-No longer actively maintained, since [5865F2](https://thisgary.github.io/5865f2) a thing now.
+No longer actively maintained, since [blurple](https://thisgary.github.io/blurple) a thing now.
 
 ## Installation
 
@@ -13,8 +13,8 @@ No longer actively maintained, since [5865F2](https://thisgary.github.io/5865f2)
 
 ## Features
 
-`blurpold` - Provide minimal setup for Discord bot hosting
+`blurpo` - Provide minimal setup for Discord bot hosting
 
-`blurpold.ext` - Collections of pre-made bot command extensions
+`blurpo.ext` - Collections of pre-made bot command extensions
 
 More information can be found on [documentation](https://github.com/thisgary/7289da/wiki/Documentation)

@@ -3,7 +3,7 @@ from typing import Union
 from discord import CategoryChannel, VoiceChannel, StageChannel, TextChannel
 from discord.ext import commands
 
-from blurpold.func import randoms
+from blurpo.func import randoms
 
 
 AnyChannel = Union[CategoryChannel, VoiceChannel, StageChannel, TextChannel]

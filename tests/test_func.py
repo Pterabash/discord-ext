@@ -1,5 +1,5 @@
 import os
-from blurpold import func
+from blurpo import func
 
 
 def test_clamp():
