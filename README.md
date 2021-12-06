@@ -1,4 +1,4 @@
-# Blurple Old
+# Blurple Original
 
 Discord API wrapper's wrapper, ironically.
 
