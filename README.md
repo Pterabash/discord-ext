@@ -9,7 +9,7 @@ No longer actively maintained, since [blurple](https://thisgary.github.io/blurpl
 
 ## Installation
 
-    pip install git+https://github.com/thisgary/7289da
+    pip install git+https://github.com/thisgary/blurple-o
 
 ## Features
 
@@ -17,4 +17,4 @@ No longer actively maintained, since [blurple](https://thisgary.github.io/blurpl
 
 `blurpo.ext` - Collections of pre-made bot command extensions
 
-More information can be found on [documentation](https://github.com/thisgary/7289da/wiki/Documentation)
+More information can be found on [documentation](https://github.com/thisgary/blurple-o/wiki/Documentation)
