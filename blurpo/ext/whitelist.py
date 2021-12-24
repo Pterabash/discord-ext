@@ -10,21 +10,21 @@ async def whitelist_check(ctx) -> bool:
             return ctx.author.id in db['Whitelist']
         else:
             db['Whitelist'] = [ctx.author.id]
-            await ctx.send('You are whitelisted')
+            await ctx.send(f'<@{ctx.author.id}> is now whitelist admin')
             return True
 
 
 class Whitelist(commands.Cog):
     @commands.command('wadd', brief='Add member')
-    async def user_add(self, ctx, member: discord.Member) -> None:
+    async def user_add(self, ctx, *member: discord.Member) -> None:
         with database() as db:
             db['Whitelist'] += [member.id]
         await ctx.send(f'Whitelisted {member.name}')
 
     @commands.command('wrmv', brief='Remove member')
-    async def user_remove(self, ctx, member: discord.Member) -> None:
+    async def user_remove(self, ctx, *member: discord.Member) -> None:
         if ctx.author.id == member.id:
-            await ctx.send('Self removing is prohibited')
+            await ctx.send('Self removal is prohibited')
             return
         with database() as db:
             wl = db['Whitelist']
@@ -39,7 +39,7 @@ class Whitelist(commands.Cog):
                 await ctx.send('Member not whitelisted')
 
     @commands.command('wcheck', brief='Check member')
-    async def user_check(self, ctx, member: discord.Member = None) -> None:
+    async def user_check(self, ctx, *member: discord.Member) -> None:
         with database() as db:
             if member.id in db['Whitelist']:
                 status = 'is whitelisted'
