@@ -13,7 +13,7 @@ def basename(path: str) -> Tuple[str, str]:
     return (base := path.split('/')[-1]), base.split('.')[0]
 
 
-def exts_list(chn_id: int) -> None:
+def ext_list(chn_id: int) -> None:
     with database() as db:
         exts = list(db['Github'])
         chunks = wrap('\n'.join(exts), code='bash')
@@ -62,7 +62,7 @@ class Github(commands.Cog):
                 exts = db['Github']
                 exts[ext] = path
                 db['Github'] = exts
-        exts_list(ctx.channel.id)
+        ext_list(ctx.channel.id)
 
     @commands.command('gunld', brief='Unload exts')
     async def exts_unload(self, ctx, *exts: str) -> None:
@@ -73,11 +73,11 @@ class Github(commands.Cog):
                     del es[ext]
                 db['Github'] = es
                 self.bot.unload_extension(ext)
-        exts_list(ctx.channel.id)
+        ext_list(ctx.channel.id)
 
     @commands.command('gexts', brief='List exts')
     async def exts_list(self, ctx) -> None:
-        exts_list(ctx.channel.id)
+        ext_list(ctx.channel.id)
 
     @commands.command('greld', brief='Reload all exts')
     async def exts_reld(self, ctx) -> None:
