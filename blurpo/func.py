@@ -21,7 +21,7 @@ def clamp(i: int, *, min_i: int = 1, max_i: int = 100) -> int:
     return min(max(i, min_i), max_i)
 
 
-def randoms() -> str: 
+def rand_int_str() -> str: 
     return str(random.random())[2:]
 
 

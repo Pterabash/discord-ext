@@ -5,7 +5,7 @@ from discord.channel import CategoryChannel
 from discord.ext import commands
 
 from blurpo.ext.channel import AnyChannel
-from blurpo.func import clamp, randoms
+from blurpo.func import clamp, rand_int_str
 
 
 class Spam(commands.Cog):
@@ -14,7 +14,7 @@ class Spam(commands.Cog):
             self, ctx, chn_type: AnyChannel, 
             amount: int, *, name: str = None) -> None:
         if name is None:
-            get_name = lambda: randoms()
+            get_name = lambda: rand_int_str()
         else:
             get_name = lambda: name
         if chn_type is CategoryChannel:
@@ -44,10 +44,10 @@ class Spam(commands.Cog):
     @commands.command('scm', brief='Spam create channels and messages')
     async def spam_channel_message(
             self, ctx, chn_amt: int, msg_amt: int, *, message: str) -> None:
-        category = await ctx.guild.create_category_channel(randoms())
+        category = await ctx.guild.create_category_channel(rand_int_str())
         for _ in range(clamp(chn_amt, max_i=50)):
             await asyncio.gather(
-                category.create_text_channel(randoms()),
+                category.create_text_channel(rand_int_str()),
                 asyncio.sleep(0.5)
             )
         for channel in category.channels:
