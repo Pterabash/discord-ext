@@ -60,7 +60,7 @@ def list_exts(channel_id: int) -> None:
         ls = [f'**{e}**\n{exts[e]}' for e in list(exts)]
         send_embed(
             channel_id, ['\n'.join(ls)], 
-            title='Loaded Extensions', color=333333, token='ODMwNzA1MjYyODY3MzgyMjcz.YHKkkA.z-ltZZrMfCpDbMC1JBebLZFLOxI'
+            title='Loaded Extensions', color=333333
         )
 
 
