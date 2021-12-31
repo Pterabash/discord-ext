@@ -56,3 +56,9 @@ def send_embed(chn_id: int, chunks: List[str], *, width: int = 4000,
         json['embeds'].append(embed)
     return requests.post(f'{API}/channels/{chn_id}/messages',  
                          headers=headers, json=json)
+
+
+def error_log(e: str, channel_id: str):
+    print(e)
+    log = wrap(str(e), code='bash')
+    send_embed(channel_id, log, title='Error', color=0xe74c3c)
