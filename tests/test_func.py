@@ -8,8 +8,23 @@ def test_clamp():
     assert f(50) == 50
     assert f(101) == 100
 
+
+def test_list_attrs():
+    class A:
+        a = 0
+        b = 1
+    f = func.list_attrs
+    assert f(A, ['a']) == 'a: 0'
+
+
+def test_subprocess_log():
+    f = func.subprocess_log
+    assert f(['echo', '0']) == '0'
+
+
 def test_send_embed():
     r = func.send_embed(
-        os.environ['CHANNEL'], ['Test Message'], title='Test Embed', color=0x7289da
+        os.environ['CHANNEL'], ['Test Message'], 
+        title='Test Embed', color=0x7289da
     )
     assert r.status_code == 200
