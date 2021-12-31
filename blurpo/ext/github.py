@@ -80,7 +80,7 @@ class Github(commands.Cog):
         exts_list(ctx.channel.id)
 
     @commands.command('greld', brief='Reload all exts')
-    async def ghExtsReload(self, ctx) -> None:
+    async def exts_reld(self, ctx) -> None:
         exts = exts_load(self.bot)
         chunks = wrap('\n'.join(exts), code='bash')
         send_embed(ctx.channel.id, 
