@@ -5,7 +5,7 @@ import subprocess
 import tempfile
 import textwrap
 import time
-from typing import List, Tuple
+from typing import Callable, List, Tuple
 
 import requests
 
@@ -29,7 +29,7 @@ def list_attrs(obj: object, attrs: List[str]) -> str:
     return '\n'.join([f'{a}: {getattr(obj, a)}' for a in attrs])
 
 
-def repo_check(f: function) -> function:
+def repo_check(f: Callable) -> Callable:
     def auf(path: str):
         return f(path.startswith('https://') and path or GH + path)
     return auf
