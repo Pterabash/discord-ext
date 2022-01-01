@@ -29,8 +29,10 @@ def list_attrs(obj: object, attrs: List[str]) -> str:
     return '\n'.join([f'{a}: {getattr(obj, a)}' for a in attrs])
 
 
-def repo_check(path: str) -> str:
-    return path.startswith('https://') and path or GH + path
+def repo_check(f: function) -> function:
+    def auf(path: str):
+        return f(path.startswith('https://') and path or GH + path)
+    return auf
 
 
 def clamp(i: int, *, min_i: int = 1, max_i: int = 100) -> int:
