@@ -11,7 +11,7 @@ setuptools.setup(
         description='Discord API wrapper\'s wrapper.',
         long_description=readme,
         long_description_content_type='text/markdown',
-        packages=['blurpo'],
+        packages=setuptools.find_packages(),
         classifiers=[
             'Programming Language :: Python :: 3',
             'License :: OSI Approved :: MIT Lisence',
