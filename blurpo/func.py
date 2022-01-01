@@ -1,3 +1,4 @@
+import logging
 import os
 import random
 import shelve
@@ -10,7 +11,7 @@ from typing import List, Tuple
 import requests
 
 
-def database():  # -> Shelf[object]: #3.9
+def database(): # -> Shelf[object]: #3.9
     return shelve.open('Database')
 
 
@@ -52,11 +53,11 @@ def send_embed(channel_id: int, token: str,
     )
 
 
-def error_log(e: Exception, channel_id: str, token: str):
-    print(e)
+def error_log(err: Exception, channel_id: str, token: str):
+    logging.exception("message")
     send_embed(
-        channel_id, token, wrap(str(e), lang='bash'),
-        title=type(e).__name__, color=0xe74c3c
+        channel_id, token, wrap(str(err), lang='bash'),
+        title=type(err).__name__, color=0xe74c3c
     )
 
 
