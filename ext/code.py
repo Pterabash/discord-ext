@@ -135,7 +135,7 @@ class Code(commands.Cog):
         #     ctx.channel.id, wrap(f.logs, lang=''), title='Log (py)',
         #     footer={'text': f'Time taken: {f.runtime}s'}
         # )
-        await ctx.invoke(self.bot.get_command('exec'), 'py', script)
+        await ctx.invoke(self.bot.get_command('exec'), 'py', script=script)
 
 
 def setup(bot):
