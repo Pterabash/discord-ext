@@ -10,7 +10,8 @@ from discord.ext.commands import CommandNotFound, CheckFailure
 import requests
 
 from blurpo.func import (
-    basename, database, error_log, repo_check, send_embed, wrap
+    basename, database, error_log, repo_check, 
+    send_embed, subprocess_log, wrap
 )
 
 
@@ -108,11 +109,28 @@ async def on_command_error(ctx, e) -> None:
 
 
 @client.command()
-async def update(ctx) -> None:
-    await ctx.send('Updating')
-    os.system('pip3 install git+https://github.com/thisgary/blurpo')
+async def restart(ctx) -> None:
     await ctx.send('Restarting')
     os.execl(sys.executable, sys.executable, *sys.argv)
+
+
+@client.command()
+async def update(ctx) -> None:
+    await ctx.send('Updating')
+    os.system('pip install git+https://github.com/thisgary/blurpo')
+    await ctx.invoke(client.get_command('restart'))
+
+
+@client.command('pip')
+async def pip_cmd(ctx, mode: str, package: str) -> None:
+    if mode not in ['i', 'u']:
+        raise Exception('Invalid mode. (only "i" or "u")')
+    action = 'install' if mode == 'i' else 'uninstall'
+    log, t = subprocess_log(['pip', action, package])
+    send_embed(
+        ctx.channel.id, wrap(log, code='bash'), title='Output',
+        footer={'text': f'Runtime: {t}s'}
+    )
 
 
 @client.command('exts', brief='List exts')
