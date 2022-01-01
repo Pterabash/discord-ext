@@ -9,7 +9,9 @@ from discord.ext import commands
 from discord.ext.commands import CommandNotFound, CheckFailure
 import requests
 
-from blurpo.func import basename, database, error_log, send_embed, wrap
+from blurpo.func import (
+    basename, database, error_log, repo_check, send_embed, wrap
+)
 
 
 def prefix(d: str) -> None:
@@ -63,6 +65,7 @@ def load_ext(ext: str) -> None:
     add_scope('local', ext)
 
 
+@repo_check
 def load_url(url: str) -> None:
     req = requests.get(url)
     if req.status_code == 200:
@@ -79,6 +82,7 @@ def unld_ext(ext: str) -> None:
             issubclass(obj, commands.Cog) and client.remove_cog(name)
 
 
+@repo_check
 def unld_url(url: str) -> None:
     rmv_scope('remote', url)
     name = basename(url)
