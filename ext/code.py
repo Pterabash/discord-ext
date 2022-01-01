@@ -7,7 +7,7 @@ from blurpo.func import database, send_embed, subprocess_log, wrap
 
 
 DEFAULT = {
-    'py': {'args': [['python3']]},
+    'py': {'args': [['python']]},
     'js': {'args': [['node']]},
     'sh': {'args': [[]], 'tags': ['chmod'],
            'file': {'head': '#!/bin/bash'}}
