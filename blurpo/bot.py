@@ -64,7 +64,7 @@ def list_exts(channel_id: int) -> None:
         )
 
 
-def run(token: str) -> None:
+def run() -> None:
     if not os.path.isdir('ext'):
         os.mkdir('ext')
     with database() as db:
@@ -74,7 +74,7 @@ def run(token: str) -> None:
                 print(f'{", ".join(exts)} loaded')
         else: 
             db['Extensions'] = {}
-    client.run(token)
+    client.run(os.environ['TOKEN'])
 
 
 @client.command('load', brief='Load exts online')
@@ -121,7 +121,7 @@ async def list_exts_cmd(ctx) -> None:
 async def reld_exts_cmd(ctx) -> None:
     exts = reld_exts()
     send_embed(
-        ctx.channel.id, wrap('\n'.join(exts), code='bash'), 
+        ctx.channel.id, wrap('\n'.join(exts), lang='bash'), 
         title='Extensions Reloaded', color=333333,
     )
 
@@ -144,4 +144,4 @@ async def on_command_error(ctx, e) -> None:
     if (isinstance(e, commands.CommandNotFound) 
         or isinstance(e, commands.CheckFailure)): return
     else:
-        error_log(e, ctx.channel.id)
+        error_log(e, ctx.channel.id, os.environ['TOKEN'])
