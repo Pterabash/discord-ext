@@ -66,13 +66,14 @@ def load_ext(ext: str) -> None:
 
 
 @repo_check
-def load_url(url: str) -> None:
+def load_url(url: str) -> int:
     req = requests.get(url)
     if req.status_code == 200:
         name = basename(url)
         open(f'exts/{name}.py', 'w').write(req.text)
         load_ext(f'exts.{name}')
         add_scope('remote', url)
+    return req.status_code
 
 
 def unld_ext(ext: str) -> None:
