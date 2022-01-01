@@ -70,7 +70,7 @@ def send_embed(chn_id: int, chunks: List[str], **fields) -> requests.Response:
 
 
 def error_log(e: Exception, chn_id: str) -> requests.Response:
-    logging.exception("message")
+    print(e)
     return send_embed(
         chn_id, wrap(str(e), lang='bash'),
         title=type(e).__name__, color=0xe74c3c
