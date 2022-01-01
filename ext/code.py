@@ -94,13 +94,13 @@ class Code(commands.Cog):
 
     @commands.command('lang', brief='Lang info')
     async def get_lang(self, ctx, suff: str) -> None:
-        log = 'suffix:' + suff + '\n'
+        log = f'suffix: {suff}\n'
         with database() as db:
             meta = db['Code']
             if suff in meta:
                 prop = meta[suff]
                 for k in prop:
-                    log += k + ': ' + prop[k] + '\n'
+                    log += f'{k}: {prop[k]}\n'
                 send_embed(ctx.channel.id, wrap(log), title='Language')
             else:
                 raise LangNotFoundError(suff)
