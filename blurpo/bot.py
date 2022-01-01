@@ -144,4 +144,4 @@ async def on_command_error(ctx, e) -> None:
     if (isinstance(e, commands.CommandNotFound) 
         or isinstance(e, commands.CheckFailure)): return
     else:
-        error_log(e, ctx.channel.id, os.environ['TOKEN'])
+        error_log(e, ctx.channel.id)

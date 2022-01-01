@@ -115,8 +115,8 @@ class Code(commands.Cog):
             if suffix in db['Code']:
                 prop = db['Code'][suffix]
                 f = Code.File(suffix, script, **prop['file'])
-                for a in prop['args']:
-                    f.exec(args=a, **prop['exec'])
+                for d in prop['args']:
+                    f.exec(args=d, **prop['exec'])
                 send_embed(
                     ctx.channel.id, wrap(f.logs, lang=''), title=f'Log ({suffix})',
                     footer={'text': f'Time taken: {f.runtime}s'}
@@ -127,7 +127,7 @@ class Code(commands.Cog):
     @commands.command('py', brief='Execute python script')
     async def exec_python(self, ctx, *, script: str) -> None:
         f = Code.File('py', script)
-        f.exec(args=['python3'])
+        f.exec(args=['python'])
         send_embed(
             ctx.channel.id, wrap(f.logs, lang=''), title='Log (py)',
             footer={'text': f'Time taken: {f.runtime}s'}
