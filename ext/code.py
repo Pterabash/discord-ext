@@ -49,7 +49,8 @@ class Code(commands.Cog):
         @property
         def runtime(self): return self._runtime
 
-    def __init__(self):
+    def __init__(self, bot):
+        self.bot = bot
         with database() as db:
             if 'Code' not in db:
                 db['Code'] = DEFAULT
@@ -138,4 +139,4 @@ class Code(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Code())
+    bot.add_cog(Code(bot))
