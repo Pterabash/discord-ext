@@ -30,9 +30,7 @@ def list_attrs(obj: object, attrs: List[str]) -> str:
 
 
 def repo_check(f: Callable) -> Callable:
-    def auf(path: str):
-        return f(path.startswith('https://') and path or GH + path)
-    return auf
+    return lambda r : f(r.startswith('https://') and r or GH + r)
 
 
 def clamp(i: int, *, min_i: int = 1, max_i: int = 100) -> int:
