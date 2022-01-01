@@ -421,5 +421,9 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 
-Database*
-foo*
+exts/
+
+Database.*
+foo.*
+
+.env
