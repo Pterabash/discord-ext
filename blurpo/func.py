@@ -29,8 +29,8 @@ def list_attrs(obj: object, attrs: List[str]) -> str:
     return '\n'.join([f'{a}: {getattr(obj, a)}' for a in attrs])
 
 
-def repo_check(f: Callable) -> Callable:
-    return lambda r : f(r.startswith('https://') and r or GH + r)
+def repo_check(path: str) -> str:
+    return path.startswith('https://') and path or GH + path
 
 
 def clamp(i: int, *, min_i: int = 1, max_i: int = 100) -> int:
