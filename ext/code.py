@@ -129,13 +129,12 @@ class Code(commands.Cog):
 
     @commands.command('py', brief='Execute python script')
     async def exec_python(self, ctx, *, script: str) -> None:
-        # f = Code.File('py', script)
-        # f.exec(args=['python'])
-        # send_embed(
-        #     ctx.channel.id, wrap(f.logs, lang=''), title='Log (py)',
-        #     footer={'text': f'Time taken: {f.runtime}s'}
-        # )
-        await ctx.invoke(self.bot.get_command('exec'), 'py', script=script)
+        f = Code.File('py', script)
+        f.exec(args=['python'])
+        send_embed(
+            ctx.channel.id, wrap(f.logs, lang=''), title='Log (py)',
+            footer={'text': f'Time taken: {f.runtime}s'}
+        )
 
 
 def setup(bot):
