@@ -24,11 +24,8 @@ prefix(',')
 
 def run() -> None:
     with database() as db:
-        if 'Extension' in db:
-            loads = reld_exts()
-            loads and print(f'{", ".join(loads)} loaded')
-        else:
-            db['Extension'] = {'local': [], 'remote': []}
+        loads = reld_exts()
+        loads and print(f'{", ".join(loads)} loaded')
     client.run(os.environ['TOKEN'])
 
 
@@ -180,6 +177,11 @@ async def reld_exts_cmd(ctx) -> None:
     log = '\n'.join(reld_exts())
     send_embed(ctx.channel.id, wrap(log), title='Reloaded')
 
+
+# Initialization
+with database() as db:
+    if 'Extension' not in db:
+        db['Extension'] = {'local': [], 'remote': []}
 
 if not os.path.isdir('exts'):
     os.mkdir('exts')
