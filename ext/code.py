@@ -40,8 +40,7 @@ class Code(commands.Cog):
             if chmod:
                 os.system(f'chmod +x {self.file}')
             self._logs, self._runtime = subprocess_log(args + [self.file])
-            rm = 'del' if sys.platform == 'win32' else 'rm'
-            os.system(f'{rm} {self.file}')
+            os.remove(self.file)
 
         @property
         def logs(self): return self._logs
