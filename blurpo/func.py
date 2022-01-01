@@ -1,3 +1,4 @@
+import os
 import random
 import shelve
 import subprocess
@@ -9,7 +10,7 @@ from typing import List, Tuple
 import requests
 
 
-def database():  # -> Shelf[object]: # >=3.9
+def database():  # -> Shelf[object]: #3.9
     return shelve.open('Database')
 
 
@@ -47,13 +48,19 @@ def send_embed(channel_id: int, token: str,
         f'https://discord.com/api/v9/channels/{channel_id}/messages',
         headers={'Authorization': f'Bot {token}'},
         json={'embeds': [{**{'description': c}, **fields} for c in chunks]}
-        # json={'embeds': [{'description': c} | fields for c in chunks]} # >=3.9
+        # json={'embeds': [{'description': c} | fields for c in chunks]} #3.9
     )
 
 
-def error_logs(e: Exception, channel_id: str, token: str):
+def error_log(e: Exception, channel_id: str, token: str):
     print(e)
     send_embed(
         channel_id, token, wrap(str(e), lang='bash'),
         title=type(e).__name__, color=0xe74c3c
     )
+
+
+def load_env() -> None:
+    env_file = open('.env').readlines()
+    env = {(k := l.strip())[:(i := l.index('='))] : k[i+1:] for l in env_file}
+    os.environ.update(env)

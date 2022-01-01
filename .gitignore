@@ -423,3 +423,4 @@ fabric.properties
 
 Database*
 foo*
+.env
