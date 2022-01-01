@@ -32,23 +32,24 @@ def run() -> None:
 # Add, remove or get extension entries from database
 def add_scope(scope: Literal['local', 'remote'], value: str) -> None:
     with database() as db:
-        scopes = db['Extension'][scope]
-        if value not in scopes:
-            scopes.append(value)
-            db['Extension'][scope] = scopes
+        exts = db['Extension']
+        if value not in exts[scope]:
+            exts[scope].append(value)
+            db['Extension'] = exts
 
 
 def rmv_scope(scope: Literal['local', 'remote'], value: str) -> None:
     with database() as db:
-        scopes = db['Extension'][scope]
-        if value in scopes:
-            scopes.remove(value)
-            db['Extension'][scope] = scopes
+        exts = db['Extension']
+        if value in exts[scope]:
+            exts[scope].remove(value)
+            db['Extension'] = exts
 
 
 def get_scope(scope: Literal['local', 'remote'], channel_id: int) -> None:
     with database() as db:
-        scopes = db['Extension'][scope]
+        exts = db['Extension']
+        scopes = exts[scope]
         log = '\n'.join(scopes) or 'None'
         print(log)
         send_embed(channel_id, [log], title=scope.capitalize())
@@ -59,30 +60,24 @@ def load_ext(ext: str) -> None:
     i = ext.rfind('.')
     module = importlib.import_module(ext[i:], ext[:i])
     module.setup(client)
-    add_scope('local', ext)
 
 
-@repo_check
 def load_url(url: str) -> int:
     req = requests.get(url)
     if req.status_code == 200:
         name = basename(url)
         open(f'exts/{name}.py', 'w').write(req.text)
         load_ext(f'exts.{name}')
-        add_scope('remote', url)
     return req.status_code
 
 
 def unld_ext(ext: str) -> None:
-    rmv_scope('local', ext)
     for name, obj in inspect.getmembers(sys.modules[ext]):
         if inspect.isclass(obj): 
             issubclass(obj, commands.Cog) and client.remove_cog(name)
 
 
-@repo_check
 def unld_url(url: str) -> None:
-    rmv_scope('remote', url)
     name = basename(url)
     unld_ext(f'exts.{name}')
     os.remove(f'exts/{name}.py')
@@ -135,41 +130,44 @@ async def load_exts_cmd(ctx, *exts: str) -> None:
     for ext in exts:
         try:
             load_ext(ext)
+            add_scope('local', ext)
         except Exception as e:
             error_log(e, ctx.channel.id)
     get_scope('local', ctx.channel.id)
 
 
 @client.command('loadurl', brief='Load remote exts')
-async def load_exts_cmd(ctx, *urls: str) -> None:
+async def load_urls_cmd(ctx, *urls: str) -> None:
     for url in urls:
         try:
+            url = repo_check(url)
             load_url(url)
+            add_scope('remote', url)
         except Exception as e:
             error_log(e, ctx.channel.id)
     get_scope('remote', ctx.channel.id)
-    get_scope('local', ctx.channel.id)
 
 
-@client.command('unld', brief='Unload exts')
+@client.command('unld', brief='Unload local exts')
 async def unld_exts_cmd(ctx, *exts: str) -> None:
     for ext in exts:
         try:
+            rmv_scope('local', ext)
             unld_ext(ext)
         except Exception as e:
             error_log(e, ctx.channel.id)
     get_scope('local', ctx.channel.id)
 
 
-@client.command('unldurl', brief='Unload exts')
-async def unld_exts_cmd(ctx, *urls: str) -> None:
+@client.command('unldurl', brief='Unload remote exts')
+async def unld_urls_cmd(ctx, *urls: str) -> None:
     for url in urls:
         try:
-            unld_ext(url)
+            rmv_scope('remote', url)
+            unld_url(url)
         except Exception as e:
             error_log(e, ctx.channel.id)
     get_scope('remote', ctx.channel.id)
-    get_scope('local', ctx.channel.id)
 
 
 @client.command('reld', brief='Reload exts')
