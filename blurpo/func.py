@@ -43,11 +43,11 @@ def wrap(text: str, *, width: int = 4000, lang: str = None) -> List[str]:
     return [f'```{lang}\n{s}```' for s in ls] or ['None']
 
 
-def send_embed(channel_id: int, token: str,
-               chunks: List[str], **fields) -> requests.Response:
+def send_embed(channel_id: int, chunks: List[str], 
+               **fields) -> requests.Response:
     return requests.post(
         f'https://discord.com/api/v9/channels/{channel_id}/messages',
-        headers={'Authorization': f'Bot {token}'},
+        headers={'Authorization': f'Bot {os.environ["TOKEN"]}'},
         json={'embeds': [{**{'description': c}, **fields} for c in chunks]}
         # json={'embeds': [{'description': c} | fields for c in chunks]} #3.9
     )
