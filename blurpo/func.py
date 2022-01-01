@@ -11,12 +11,8 @@ from typing import List, Tuple
 import requests
 
 
-def database(): # -> Shelf[object]: #3.9
+def database():  # -> Shelf[object]: #3.9
     return shelve.open('Database')
-
-
-def clamp(i: int, *, min_i: int = 1, max_i: int = 100) -> int:
-    return min(max(i, min_i), max_i)
 
 
 def rand_int_str() -> str:
@@ -27,7 +23,33 @@ def list_attrs(obj: object, attrs: List[str]) -> str:
     return '\n'.join([f'{a}: {getattr(obj, a)}' for a in attrs])
 
 
-#TODO: Better alternative
+def clamp(i: int, *, min_i: int = 1, max_i: int = 100) -> int:
+    return min(max(i, min_i), max_i)
+
+
+def def_url(url: str) -> str:
+    GH = 'https://raw.githubusercontent.com/'
+    return url if url.startswith('https://') else GH + url
+
+
+def load_env(fn: str = '.env') -> None:
+    f = open(fn).readlines()
+    env = {(k := l.strip())[:(i := l.index('='))]: k[i+1:] for l in f}
+    os.environ.update(env)
+
+
+def wrap(text: str, *, width: int = 4000, lang: str = None) -> List[str]:
+    ls = textwrap.wrap(text, width, replace_whitespace=False)
+    return [f'```{lang}\n{s}```' for s in ls] or ['None']
+
+
+def ext_path(url: str) -> Tuple[str, str]:
+    path = 'ext/' + url.split('/')[-1]
+    ext = path.split('.')[0].replace('/', '.')
+    return path, ext
+
+
+# TODO: Better alternative
 def subprocess_log(args: List[str], inp: str = None) -> Tuple[str, float]:
     with tempfile.TemporaryFile('r+t') as fp:
         t = time.time()
@@ -38,30 +60,18 @@ def subprocess_log(args: List[str], inp: str = None) -> Tuple[str, float]:
         return fp.read(), dt
 
 
-def wrap(text: str, *, width: int = 4000, lang: str = None) -> List[str]:
-    ls = textwrap.wrap(text, width, replace_whitespace=False)
-    return [f'```{lang}\n{s}```' for s in ls] or ['None']
-
-
-def send_embed(channel_id: int, chunks: List[str], 
-               **fields) -> requests.Response:
+def send_embed(chn_id: int, chunks: List[str], **fields) -> requests.Response:
     return requests.post(
-        f'https://discord.com/api/v9/channels/{channel_id}/messages',
+        f'https://discord.com/api/v9/channels/{chn_id}/messages',
         headers={'Authorization': f'Bot {os.environ["TOKEN"]}'},
         json={'embeds': [{**{'description': c}, **fields} for c in chunks]}
         # json={'embeds': [{'description': c} | fields for c in chunks]} #3.9
     )
 
 
-def error_log(err: Exception, channel_id: str, token: str):
+def error_log(e: Exception, chn_id: str) -> requests.Response:
     logging.exception("message")
-    send_embed(
-        channel_id, token, wrap(str(err), lang='bash'),
-        title=type(err).__name__, color=0xe74c3c
+    return send_embed(
+        chn_id, wrap(str(e), lang='bash'),
+        title=type(e).__name__, color=0xe74c3c
     )
-
-
-def load_env() -> None:
-    env_file = open('.env').readlines()
-    env = {(k := l.strip())[:(i := l.index('='))] : k[i+1:] for l in env_file}
-    os.environ.update(env)
