@@ -9,17 +9,15 @@ from discord.ext import commands
 from discord.ext.commands import CommandNotFound, CheckFailure
 import requests
 
-from blurpo.func import (
-    database, def_url, error_log, ext_path, send_embed, wrap
-)
+from blurpo.func import basename, database, error_log, send_embed, wrap
 
 
-def set_prefix(d: str) -> None:
+def prefix(d: str) -> None:
     global client
     client = commands.Bot(d)
 
 
-set_prefix(',')
+prefix(',')
 
 
 def run() -> None:
@@ -68,7 +66,7 @@ def load_ext(ext: str) -> None:
 def load_url(url: str) -> None:
     req = requests.get(url)
     if req.status_code == 200:
-        name = url.split('/')[-1].split('.')[0]
+        name = basename(url)
         open(f'exts/{name}.py', 'w').write(req.text)
         load_ext(f'exts.{name}')
         add_scope('remote', url)
@@ -83,7 +81,7 @@ def unld_ext(ext: str) -> None:
 
 def unld_url(url: str) -> None:
     rmv_scope('remote', url)
-    name = url.split('/')[-1].split('.')[0]
+    name = basename(url)
     unld_ext(f'exts.{name}')
     os.remove(f'exts/{name}.py')
 
