@@ -1,4 +1,5 @@
 import os
+import sys
 from typing import List
 
 from discord.ext import commands
@@ -39,7 +40,8 @@ class Code(commands.Cog):
             if chmod:
                 os.system(f'chmod +x {self.file}')
             self._logs, self._runtime = subprocess_log(args + [self.file])
-            os.system(f'rm {self.file}')
+            rm = 'del' if sys.platform == 'win32' else 'rm'
+            os.system(f'{rm} {self.file}')
 
         @property
         def logs(self): return self._logs
@@ -126,12 +128,13 @@ class Code(commands.Cog):
 
     @commands.command('py', brief='Execute python script')
     async def exec_python(self, ctx, *, script: str) -> None:
-        f = Code.File('py', script)
-        f.exec(args=['python'])
-        send_embed(
-            ctx.channel.id, wrap(f.logs, lang=''), title='Log (py)',
-            footer={'text': f'Time taken: {f.runtime}s'}
-        )
+        # f = Code.File('py', script)
+        # f.exec(args=['python'])
+        # send_embed(
+        #     ctx.channel.id, wrap(f.logs, lang=''), title='Log (py)',
+        #     footer={'text': f'Time taken: {f.runtime}s'}
+        # )
+        await ctx.invoke(self.bot.get_command('exec'), 'py', script)
 
 
 def setup(bot):
