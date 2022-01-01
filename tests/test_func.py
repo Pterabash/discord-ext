@@ -19,7 +19,10 @@ def test_list_attrs():
 
 def test_subprocess_log():
     f = func.subprocess_log
-    assert f(['echo', '0']) == '0'
+    t = f(['echo', '0'])
+    assert type(t[0]) is str
+    assert type(t[1]) is float
+    assert t[0] == '0\n'
 
 
 def test_send_embed():
