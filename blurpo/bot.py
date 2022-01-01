@@ -1,6 +1,9 @@
+import importlib
+import inspect
+import logging
 import os
 import sys
-from typing import List
+from typing import List, Literal
 
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound, CheckFailure
@@ -20,58 +23,87 @@ set_prefix(',')
 
 
 def run() -> None:
-    if not os.path.isdir('ext'):
-        os.mkdir('ext')
     with database() as db:
-        if 'Extensions' in db:
-            exts = reld_exts()
-            if exts:
-                print(f'{", ".join(exts)} loaded')
+        if 'Extension' in db:
+            loads = reld_exts()
+            loads and print(f'{", ".join(loads)} loaded')
         else:
-            db['Extensions'] = {}
+            db['Extension'] = {'local': [], 'remote': []}
     client.run(os.environ['TOKEN'])
 
 
-def list_exts(channel_id: int) -> None:
+# Add, remove or get extension entries from database
+def add_scope(scope: Literal['local', 'remote'], value: str) -> None:
     with database() as db:
-        exts = db['Extensions']
-        ls = [exts[e] for e in list(exts)]
-        print(['\n'.join(ls)])
-        send_embed(
-            channel_id, ['\n'.join(ls) or 'None'],
-            title='Extensions', color=333333
-        )
+        scopes = db['Extension'][scope]
+        if value not in scopes:
+            scopes.append(value)
+            db['Extension'][scope] = scopes
 
 
-def load_ext(url: str) -> None:
-    req = requests.get(def_url(url))
-    path, ext = ext_path(url)
+def rmv_scope(scope: Literal['local', 'remote'], value: str) -> None:
+    with database() as db:
+        scopes = db['Extension'][scope]
+        if value in scopes:
+            scopes.remove(value)
+            db['Extension'][scope] = scopes
+
+
+def get_scope(scope: Literal['local', 'remote'], channel_id: int) -> None:
+    with database() as db:
+        scopes = db['Extension'][scope]
+        log = '\n'.join(scopes) or 'None'
+        print(log)
+        send_embed(channel_id, [log], title=scope.capitalize())
+
+
+# Load or unload extension from local or remote
+def load_ext(ext: str) -> None:
+    i = ext.rfind('.')
+    module = importlib.import_module(ext[i:], ext[:i])
+    module.setup(client)
+    add_scope('local', ext)
+
+
+def load_url(url: str) -> None:
+    req = requests.get(url)
     if req.status_code == 200:
-        open(path, 'w').write(req.text)
-        try:
-            client.load_extension(ext)
-        except commands.ExtensionAlreadyLoaded:
-            client.reload_extension(ext)
-    else:
-        raise Exception(f'{url} {req.status_code}')
+        name = url.split('/')[-1].split('.')[0]
+        open(f'exts/{name}.py', 'w').write(req.text)
+        load_ext(f'exts.{name}')
+        add_scope('remote', url)
+
+
+def unld_ext(ext: str) -> None:
+    rmv_scope('local', ext)
+    for name, obj in inspect.getmembers(sys.modules[ext]):
+        if inspect.isclass(obj): 
+            issubclass(obj, commands.Cog) and client.remove_cog(name)
+
+
+def unld_url(url: str) -> None:
+    rmv_scope('remote', url)
+    name = url.split('/')[-1].split('.')[0]
+    unld_ext(f'exts.{name}')
+    os.remove(f'exts/{name}.py')
 
 
 def reld_exts() -> List[str]:
     with database() as db:
-        exts = db['Extensions']
+        exts = db['Extension']['local']
         loads = []
-        for ext in exts.keys():
+        for ext in exts:
             try:
-                load_ext(exts[ext])
+                load_ext(ext)
                 loads.append(ext)
-            except Exception as e:
-                print(e)
-    return exts
+            except:
+                logging.exception('message')
+        return loads
 
 
 @client.event
 async def on_ready() -> None:
-    print('Bot is up!')
+    print('Authorized.')
 
 
 @client.event
@@ -89,49 +121,62 @@ async def update(ctx) -> None:
 
 
 @client.command('exts', brief='List exts')
-async def list_exts_cmd(ctx) -> None:
-    list_exts(ctx.channel.id)
+async def get_exts_cmd(ctx) -> None:
+    get_scope('local', ctx.channel.id)
 
 
-@client.command('load', brief='Load exts from net')
+@client.command('urls', brief='List urls')
+async def get_urls_cmd(ctx) -> None:
+    get_scope('remote', ctx.channel.id)
+
+
+@client.command('load', brief='Load local exts')
+async def load_exts_cmd(ctx, *exts: str) -> None:
+    for ext in exts:
+        try:
+            load_ext(ext)
+        except Exception as e:
+            error_log(e, ctx.channel.id)
+    get_scope('local', ctx.channel.id)
+
+
+@client.command('loadurl', brief='Load remote exts')
 async def load_exts_cmd(ctx, *urls: str) -> None:
-    with database() as db:
-        for u in urls:
-            try:
-                load_ext(u)
-                _, ext = ext_path(u)
-                exts = db['Extensions']
-                exts[ext] = def_url(u)
-                db['Extensions'] = exts
-            except Exception as e:
-                error_log(e, ctx.channel.id)
-    list_exts(ctx.channel.id)
+    for url in urls:
+        try:
+            load_url(url)
+        except Exception as e:
+            error_log(e, ctx.channel.id)
+    get_scope('remote', ctx.channel.id)
+    get_scope('local', ctx.channel.id)
 
 
 @client.command('unld', brief='Unload exts')
-async def unld_exts_cmd(ctx, *names: str) -> None:
-    with database() as db:
-        for n in names:
-            try:
-                if not n.startswith('exts.'):
-                    n = 'exts.' + n
-                exts = db['Extensions']
-                if n in exts:
-                    del exts[n]
-                db['Extensions'] = exts
-            except Exception as e:
-                error_log(e, ctx.channel.id)
-            try:
-                client.unload_extension(n)
-            except Exception as e:
-                error_log(e, ctx.channel.id)
-    list_exts(ctx.channel.id)
+async def unld_exts_cmd(ctx, *exts: str) -> None:
+    for ext in exts:
+        try:
+            unld_ext(ext)
+        except Exception as e:
+            error_log(e, ctx.channel.id)
+    get_scope('local', ctx.channel.id)
+
+
+@client.command('unldurl', brief='Unload exts')
+async def unld_exts_cmd(ctx, *urls: str) -> None:
+    for url in urls:
+        try:
+            unld_ext(url)
+        except Exception as e:
+            error_log(e, ctx.channel.id)
+    get_scope('remote', ctx.channel.id)
+    get_scope('local', ctx.channel.id)
 
 
 @client.command('reld', brief='Reload exts')
 async def reld_exts_cmd(ctx) -> None:
-    exts = reld_exts()
-    send_embed(
-        ctx.channel.id, wrap('\n'.join(exts), lang='bash'),
-        title='Extensions Reloaded', color=333333,
-    )
+    log = '\n'.join(reld_exts())
+    send_embed(ctx.channel.id, wrap(log), title='Reloaded')
+
+
+if not os.path.isdir('exts'):
+    os.mkdir('exts')
