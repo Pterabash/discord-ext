@@ -29,17 +29,17 @@ class Info(commands.Cog):
     async def get_channel_info(
             self, ctx, channel: channel.AnyChannel = None) -> None:
         text = list_attrs(channel, CHN_ATTR)
-        send_embed(text, title='Channel Info')
+        send_embed(ctx.channel.id, text, title='Channel Info')
 
     @commands.command('imem', brief='You stalker')
     async def get_member_info(self, ctx, member: Member = None) -> None:
         if not member: 
             member = ctx.author
-        send_embed(list_attrs(member, MEM_ATTR))
+        send_embed(ctx.channel.id, list_attrs(member, MEM_ATTR))
 
     @commands.command('irole', brief='Get role info')
     async def get_role_info(self, ctx, role: Role) -> None:
-        send_embed(list_attrs(role, ROLE_ATTR))
+        send_embed(ctx.channel.id, list_attrs(role, ROLE_ATTR))
 
 
 def setup(bot):
