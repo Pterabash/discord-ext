@@ -16,17 +16,18 @@ GH = 'https://raw.githubusercontent.com/'
 class EvalFile:
     @staticmethod
     def read(var: str) -> any:
-        return eval(open('.' + var).read())
+        return eval(open(var + '.eval').read())
 
     @staticmethod
     def write(var: str, val: any = None) -> any:
         if type(val) is str:
             raise Exception("Argument 'val' can't be str")
-        open('.' + var, 'w').write(str(val))
+        open(var + '.eval', 'w').write(str(val))
 
-    def __init__(self, var: str = 'eval', *, val: any = None) -> None:
+    def __init__(self, var: str = 'eval', *, 
+                 init: bool = False, val: any = None) -> None:
         self.var = var
-        EvalFile.write(var, val)
+        init and self.set(val)
 
     def get(self) -> any:
         return EvalFile.read(self.var)
