@@ -147,8 +147,8 @@ async def update(ctx) -> None:
 async def pip_cmd(ctx, mode: str, package: str) -> None:
     if mode not in ['i', 'u']:
         raise Exception('Invalid mode. (only "i" or "u")')
-    action = 'install' if mode == 'i' else 'uninstall'
-    log, t = subprocess_log(['pip', action, package])
+    m = 'install' if mode == 'i' else 'uninstall'
+    log, t = subprocess_log(args=['pip', m, package])
     send_embed(
         ctx.channel.id, wrap(log, lang='bash'), title='Output',
         footer={'text': f'Runtime: {t}s'}
