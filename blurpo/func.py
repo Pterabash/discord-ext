@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 import os
 import random
 import shelve
@@ -5,7 +6,7 @@ import subprocess
 import tempfile
 import textwrap
 import time
-from typing import Callable, List, Tuple
+from typing import List, Tuple
 
 import requests
 
@@ -69,10 +70,18 @@ def send_embed(chn_id: int, chunks: List[str], **fields) -> requests.Response:
     )
 
 
-def error_log(e: Exception, chn_id: str) -> requests.Response:
+def error_log(e: Exception, chn_id: int = None) -> requests.Response:
     log = f'{type(e).__name__}: {e}'
     print(log)
-    return send_embed(
+    return chn_id and send_embed(
         chn_id, wrap(log, lang='bash'),
         title='Error', color=0xe74c3c
     )
+
+
+@contextmanager
+def try_log(chn_id: int):
+    try:
+        yield
+    except Exception as e:
+        error_log(e, chn_id)

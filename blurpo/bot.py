@@ -3,15 +3,15 @@ import inspect
 import logging
 import os
 import sys
-from typing import List, Literal
+from typing import List, Literal, Tuple
 
 from discord.ext import commands
-from discord.ext.commands import CommandNotFound, CheckFailure
+from discord.ext.commands import CommandNotFound, CheckFailure, CommandRegistrationError
 import requests
 
 from blurpo.func import (
     basename, database, error_log, repo_check, 
-    send_embed, subprocess_log, wrap
+    send_embed, subprocess_log, try_log, wrap
 )
 
 
@@ -25,8 +25,9 @@ prefix(',')
 
 def run() -> None:
     with database() as db:
-        loads = reld_exts()
-        loads and print(f'{", ".join(loads)} loaded')
+        ls, rs = reld_scope()
+        ls and print(f'{", ".join(ls)} loaded')
+        rs and print(f'{", ".join(rs)} loaded')
     client.run(os.environ['TOKEN'])
 
 
@@ -84,17 +85,19 @@ def unld_url(url: str) -> None:
     os.remove(f'exts/{name}.py')
 
 
-def reld_exts() -> List[str]:
+def reld_scope(chn_id: int = None) -> Tuple[List[str], List[str]]:
     with database() as db:
-        exts = db['Extension']['local']
-        loads = []
-        for ext in exts:
-            try:
+        exts = db['Extension']
+        ls, rs = [], []
+        for ext in exts['local']:
+            with try_log(chn_id):
                 load_ext(ext)
-                loads.append(ext)
-            except:
-                logging.exception('message')
-        return loads
+                ls.append(ext)
+        for url in exts['remote']:
+            with try_log(chn_id):
+                load_url(url)
+                rs.append(url)
+        return ls, rs
 
 
 @client.event
@@ -143,61 +146,45 @@ async def get_urls_cmd(ctx) -> None:
     get_scope('remote', ctx.channel.id)
 
 
+
 @client.command('load', brief='Load local exts')
 async def load_exts_cmd(ctx, *exts: str) -> None:
     for ext in exts:
-        try:
+        with try_log(ctx.channel.id):
             load_ext(ext)
             add_scope('local', ext)
-        except Exception as e:
-            error_log(e, ctx.channel.id)
     get_scope('local', ctx.channel.id)
 
 
 @client.command('loadurl', brief='Load remote exts')
 async def load_urls_cmd(ctx, *urls: str) -> None:
     for url in urls:
-        try:
+        with try_log(ctx.channel.id):
             url = repo_check(url)
             load_url(url)
             add_scope('remote', url)
-        except Exception as e:
-            error_log(e, ctx.channel.id)
     get_scope('remote', ctx.channel.id)
 
 
 @client.command('unld', brief='Unload local exts')
 async def unld_exts_cmd(ctx, *exts: str) -> None:
     for ext in exts:
-        try:
+        with try_log(ctx.channel.id):
             rmv_scope('local', ext)
             unld_ext(ext)
-        except Exception as e:
-            error_log(e, ctx.channel.id)
     get_scope('local', ctx.channel.id)
 
 
 @client.command('unldurl', brief='Unload remote exts')
 async def unld_urls_cmd(ctx, *urls: str) -> None:
     for url in urls:
-        try:
+        with try_log(ctx.channel.id):
             rmv_scope('remote', url)
             unld_url(url)
-        except Exception as e:
-            error_log(e, ctx.channel.id)
     get_scope('remote', ctx.channel.id)
 
 
 @client.command('reld', brief='Reload exts')
-async def reld_exts_cmd(ctx) -> None:
-    log = '\n'.join(reld_exts())
-    send_embed(ctx.channel.id, wrap(log), title='Reloaded')
-
-
-# Initialization
-with database() as db:
-    if 'Extension' not in db:
-        db['Extension'] = {'local': [], 'remote': []}
-
-if not os.path.isdir('exts'):
-    os.mkdir('exts')
+async def reld_scope_cmd(ctx) -> None:
+    log = ['\n'.join(s) for s in reld_scope()]
+    send_embed(ctx.channel.id, log, title='Reloaded')
