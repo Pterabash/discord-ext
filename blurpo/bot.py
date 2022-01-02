@@ -150,7 +150,7 @@ async def pip_cmd(ctx, mode: str, package: str) -> None:
     action = 'install' if mode == 'i' else 'uninstall'
     log, t = subprocess_log(['pip', action, package])
     send_embed(
-        ctx.channel.id, wrap(log, code='bash'), title='Output',
+        ctx.channel.id, wrap(log, lang='bash'), title='Output',
         footer={'text': f'Runtime: {t}s'}
     )
 
