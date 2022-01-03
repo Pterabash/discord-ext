@@ -71,6 +71,10 @@ def clamp(i: int, *, min_i: int = 1, max_i: int = 100) -> int:
     return min(max(i, min_i), max_i)
 
 
+def namespace_exec(name: str, context: str) -> None:
+    exec(f"class {name}: exec('{context}')", globals())
+
+
 def load_env(fn: str = '.env') -> None:
     f = open(fn).readlines()
     env = {(k := l.strip())[:(i := l.index('='))]: k[i+1:] for l in f}
