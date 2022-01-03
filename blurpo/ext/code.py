@@ -1,9 +1,10 @@
 import os
+from pathlib import Path
 from typing import List
 
 from discord.ext import commands
 
-from blurpo.func import database, send_embed, subprocess_log, wrap
+from blurpo.func import EvalFile, send_embed, subprocess_log, wrap
 
 
 DEFAULT = {
@@ -14,6 +15,7 @@ DEFAULT = {
 }
 TAGS = ['x']
 KEYS = ['hd', 'tl']
+lang = EvalFile('code')
 
 
 class LangNotFoundError(Exception):
@@ -47,9 +49,7 @@ class Code(commands.Cog):
                    footer={'text': f'Runtime: {t}s'})
 
     def __init__(self):
-        with database() as db:
-            if 'Code' not in db:
-                db['Code'] = DEFAULT
+        Path('exts.eval').exists() or EvalFile('exts', init=True, val=set())
 
     @commands.command('ladd', brief='Add lang')
     async def add_lang(self, ctx, suff: str, cmds: str, *args: str) -> None:
@@ -61,63 +61,49 @@ class Code(commands.Cog):
             else:
                 k, v = arg.split('=', 1)
                 if k in KEYS:
-                    prop['Code'][k] = v
-        with database() as db:
-            meta = db['Code']
-            meta[suff] = prop
-            db['Code'] = meta
+                    prop['code'][k] = v
+            lang.update({suff: prop})
         send_embed(ctx.channel.id, ['Language added'], title='Task')
 
     @commands.command('lrmv', brief='Remove lang')
     async def rmv_lang(self, ctx, suff: str) -> None:
-        with database() as db:
-            langs = db['Code']
-            if suff in langs:
-                del langs[suff]
-                db['Code'] = langs
-                send_embed(ctx.channel.id, [
-                           suff + ' removed'], title='Language')
-            else:
-                raise LangNotFoundError(suff)
-
+        if suff not in lang.get():
+            raise LangNotFoundError(suff)
+        lang.delete(suff)
+            
     @commands.command('linit', brief='Reset langs')
     async def reset_langs(self, ctx):
-        with database() as db:
-            db['Code'] = DEFAULT
+        lang.set(DEFAULT)
         send_embed(ctx.channel.id, ['Reset'], title='Languages')
 
     @commands.command('langs', brief='List langs')
     async def list_langs(self, ctx) -> None:
-        with database() as db:
-            log = '\n'.join(db['Code'])
-            send_embed(ctx.channel.id, wrap(log), title='Languages')
+        log = '\n'.join(lang.get(list))
+        send_embed(ctx.channel.id, wrap(log), title='Languages')
 
     @commands.command('lang', brief='Lang info')
     async def get_lang(self, ctx, suff: str) -> None:
         log = f'suffix: {suff}\n'
-        with database() as db:
-            meta = db['Code']
-            if suff in meta:
-                prop = meta[suff]
-                for k in prop:
-                    log += f'{k}: {prop[k]}\n'
-                send_embed(ctx.channel.id, wrap(log), title='Language')
-            else:
-                raise LangNotFoundError(suff)
+        l = lang.get()
+        if suff not in l:
+            raise LangNotFoundError(suff)
+        prop = l[suff]
+        for k in prop:
+            log += f'{k}: {prop[k]}\n'
+        send_embed(ctx.channel.id, wrap(log), title='Language')
 
     @commands.command('exec', brief='Exec code by lang')
     async def exec_lang(self, ctx, suff: str, *, code: str) -> None:
         name = 'foo.' + suff
-        with database() as db:
-            meta = db['Code']
-            if suff in meta:
-                prop = meta[suff]
-                Code.write(name, code, **prop['code'])
-                for args in prop['args']:
-                    log, t = Code.exec(name, args, *prop['tags'])
-                Code.output(ctx.channel.id, log, t)
-            else:
-                raise LangNotFoundError(suff)
+        l = lang.get()
+        if suff not in l:
+            raise LangNotFoundError(suff)
+        prop = l[suff]
+        Code.write(name, code, **prop['code'])
+        for args in prop['args']:
+            log, t = Code.exec(name, args, *prop['tags'])
+        Code.output(ctx.channel.id, log, t)
+                
 
     @commands.command('py', brief='Exec python code')
     async def exec_python(self, ctx, *, code: str) -> None:
