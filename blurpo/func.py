@@ -1,4 +1,4 @@
-from contextlib import contextmanager
+import logging
 import os
 import random
 import subprocess
@@ -10,13 +10,11 @@ from typing import List, Tuple
 import requests
 
 
-GH = 'https://raw.githubusercontent.com/'
-
-
 class EvalFile:
     @staticmethod
-    def read(var: str) -> any:
-        return eval(open(var + '.eval').read())
+    def read(var: str, *, f: callable = None) -> any:
+        val = eval(open(var + '.eval').read())
+        return f(val) if f else val
 
     @staticmethod
     def write(var: str, val: any = None) -> any:
@@ -29,8 +27,8 @@ class EvalFile:
         self.var = var
         init and self.set(val)
 
-    def get(self) -> any:
-        return EvalFile.read(self.var)
+    def get(self, *, f: callable = None) -> any:
+        return EvalFile.read(self.var, f=f)
 
     def set(self, val: any) -> any:
         EvalFile.write(self.var, val)
@@ -57,10 +55,6 @@ def basename(path: str) -> str:
 
 def list_attrs(obj: object, attrs: List[str]) -> str:
     return '\n'.join([f'{a}: {getattr(obj, a)}' for a in attrs])
-
-
-def repo_check(path: str) -> str:
-    return path.startswith('https://') and path or GH + path
 
 
 def clamp(i: int, *, min_i: int = 1, max_i: int = 100) -> int:
@@ -99,18 +93,9 @@ def send_embed(chn_id: int, chunks: List[str], **fields) -> requests.Response:
     )
 
 
-def error_log(e: Exception, chn_id: int = None) -> requests.Response:
-    log = f'{type(e).__name__}: {e}'
-    print(log)
+def error_log(err: Exception, chn_id: int) -> requests.Response:
+    logging.exception(err)
     return chn_id and send_embed(
-        chn_id, wrap(log, lang='bash'),
-        title='Error', color=0xe74c3c
+        chn_id, wrap(err, lang='bash'),
+        title=type(err).__name__, color=0xe74c3c
     )
-
-
-@contextmanager
-def try_log(chn_id: int):
-    try:
-        yield
-    except Exception as e:
-        error_log(e, chn_id)
