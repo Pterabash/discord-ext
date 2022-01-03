@@ -43,6 +43,16 @@ class EvalFile:
         _val = self.get()
         _val.discard(val)
         return self.set(_val)
+    
+    def update(self, d: dict) -> dict:
+        _val = self.get()
+        _val.update(d)
+        return self.set(_val)
+    
+    def delete(self, key: str) -> dict:
+        _val = self.get()
+        del _val[key]
+        return self.set(_val)
 
 
 def rand_int_str() -> str:
