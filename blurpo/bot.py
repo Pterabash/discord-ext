@@ -1,18 +1,21 @@
-from contextlib import contextmanager
 import importlib
 import inspect
 import os
 import sys
-from typing import List, Literal, Tuple
 
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound, CheckFailure, CommandRegistrationError
 import requests
 
 from blurpo.func import (
-    basename, database, error_log, repo_check, 
-    send_embed, subprocess_log, try_log, wrap
+    basename, error_log, EvalFile,
+    send_embed, subprocess_log, wrap
 )
+
+
+GH = 'https://raw.githubusercontent.com/'
+client = commands.Bot(',')
+ext = EvalFile('exts')
 
 
 def prefix(d: str) -> None:
@@ -20,103 +23,61 @@ def prefix(d: str) -> None:
     client = commands.Bot(d)
 
 
-prefix(',')
-
-
 def run() -> None:
-    with database() as db:
-        ls, rs = reld_scope()
-        ls and print(f'{", ".join(ls)} loaded')
-        rs and print(f'{", ".join(rs)} loaded')
+    reld_exts()
     client.run(os.environ['TOKEN'])
 
 
-@contextmanager
-def try_unload(chn_id: int) -> None:
-    try:
-        yield
-    except Exception as e:
-        if isinstance(e, KeyError):
-            e = Exception('Ext not found')
-        error_log(e, chn_id)
+def repo_url(url: str) -> str:
+    return url if '.' in url else 'https://raw.githubusercontent.com/' + url
 
-
-# Add, remove or get extension entries from database
-def add_scope(scope: Literal['local', 'remote'], value: str) -> None:
-    with database() as db:
-        scopes = db['Extension']
-        if value not in scopes[scope]:
-            scopes[scope].append(value)
-            scopes[scope].sort()
-            db['Extension'] = scopes
-
-
-def rmv_scope(scope: Literal['local', 'remote'], value: str) -> None:
-    with database() as db:
-        scopes = db['Extension']
-        if value in scopes[scope]:
-            scopes[scope].remove(value)
-            db['Extension'] = scopes
-
-
-def get_scope(scope: Literal['local', 'remote'], channel_id: int) -> None:
-    with database() as db:
-        scopes = db['Extension']
-        scopes = scopes[scope]
-        log = '\n'.join(scopes) or 'None'
-        print(log)
-        send_embed(channel_id, [log], title=scope.capitalize())
-
-
-def lazy_ext(f: callable) -> callable:
-    def auf(x: str) -> None:
-        f('.' in x and x or 'blurpo.ext.' + x)
-    return auf
-
-
-# Load or unload extension from local or remote
-@lazy_ext
+# Load or unload ext
 def load_ext(ext: str) -> None:
+    ext = ext if '.' in ext else 'blurpo.ext.' + ext
     i = ext.rfind('.')
     module = importlib.import_module(ext[i:], ext[:i])
     module.setup(client)
 
 
-@lazy_ext
 def unld_ext(ext: str) -> None:
+    ext = ext if '.' in ext else 'blurpo.ext.' + ext
     for name, obj in inspect.getmembers(sys.modules[ext]):
-        if inspect.isclass(obj): 
+        if inspect.isclass(obj):
             issubclass(obj, commands.Cog) and client.remove_cog(name)
 
 
 def load_url(url: str) -> int:
+    url = url if url.startswith('https://') else GH + url
     req = requests.get(url)
-    if req.status_code == 200:
-        name = basename(url)
-        open(f'exts/{name}.py', 'w').write(req.text)
-        load_ext(name, 'exts')
-    return req.status_code
+    s = req.status_code
+    if s != 200:
+        raise Exception(f'Status code {s}')
+    name = basename(url)
+    open(f'exts/{name}.py', 'w').write(req.text)
+    load_ext(f'exts.{name}')
 
 
 def unld_url(url: str) -> None:
+    url = url if url.startswith('https://') else GH + url
     name = basename(url)
     unld_ext(f'exts.{name}')
     os.remove(f'exts/{name}.py')
 
 
-def reld_scope(chn_id: int = None) -> Tuple[List[str], List[str]]:
-    with database() as db:
-        scopes = db['Extension']
-        ls, rs = [], []
-        for ext in scopes['local']:
-            with try_log(chn_id):
-                load_ext(ext)
-                ls.append(ext)
-        for url in scopes['remote']:
-            with try_log(chn_id):
-                load_url(url)
-                rs.append(url)
-        return ls, rs
+# Get or reload exts
+def get_exts(channel_id: int) -> None:
+    paths = ext.get(f=sorted)
+    log = '\n'.join(paths) or 'None'
+    print(log)
+    send_embed(channel_id, [log], title='Extension')
+
+
+def reld_exts(chn_id: int = None) -> None:
+    for p in ext.get():
+        try:
+            load_url(p) if '/' in p else load_ext(p)
+        except Exception as e:
+            error_log(e, chn_id)
 
 
 @client.event
@@ -130,6 +91,7 @@ async def on_command_error(ctx, e) -> None:
         error_log(e, ctx.channel.id)
 
 
+# System related commands
 @client.command()
 async def restart(ctx) -> None:
     await ctx.send('Restarting')
@@ -139,70 +101,54 @@ async def restart(ctx) -> None:
 @client.command()
 async def update(ctx) -> None:
     await ctx.send('Updating')
-    os.system('pip install git+https://github.com/thisgary/blurpo')
+    os.system('pip install git+https://github.com/thisgary/blurple-o')
     await ctx.invoke(client.get_command('restart'))
 
 
 @client.command('pip')
-async def pip_cmd(ctx, mode: str, package: str) -> None:
-    if mode not in ['i', 'u']:
-        raise Exception('Invalid mode. (only "i" or "u")')
-    m = 'install' if mode == 'i' else 'uninstall'
-    log, t = subprocess_log(args=['pip', m, package])
+async def pip_cmd(ctx, mode: str, pkg: str) -> None:
+    MODE = ['u', 'i']
+    if mode not in MODE:
+        raise Exception('Invalid mode. (i, u)')
+    i = MODE.index(mode) * 2
+    args = ['pip', 'uninstall'[i:], pkg]
+    inp = b'y' if i < 1 else None
+    log, t = subprocess_log(args, inp)
     send_embed(
         ctx.channel.id, wrap(log, lang='bash'), title='Output',
         footer={'text': f'Runtime: {t}s'}
     )
 
 
-@client.command('exts', brief='List exts')
+# Ext related commands
+@client.command('exts', brief='Get exts')
 async def get_exts_cmd(ctx) -> None:
-    get_scope('local', ctx.channel.id)
+    get_exts(ctx.channel.id)
 
 
-@client.command('urls', brief='List urls')
-async def get_urls_cmd(ctx) -> None:
-    get_scope('remote', ctx.channel.id)
+@client.command('load', brief='Load exts')
+async def load_exts_cmd(ctx, *paths: str) -> None:
+    for p in paths:
+        try:
+            load_url(p) if '/' in p else load_ext(p)
+            ext.add(p)
+        except Exception as e:
+            error_log(e, ctx.channel.id)
+    get_exts(ctx.channel.id)
 
 
-@client.command('load', brief='Load local exts')
-async def load_exts_cmd(ctx, *exts: str) -> None:
-    for ext in exts:
-        with try_log(ctx.channel.id):
-            load_ext(ext)
-            add_scope('local', ext)
-    get_scope('local', ctx.channel.id)
-
-
-@client.command('unld', brief='Unload local exts')
-async def unld_exts_cmd(ctx, *exts: str) -> None:
-    for ext in exts:
-        with try_unload(ctx.channel.id):
-            rmv_scope('local', ext)
-            unld_ext(ext)
-    get_scope('local', ctx.channel.id)
-
-
-@client.command('loadurl', brief='Load remote exts')
-async def load_urls_cmd(ctx, *urls: str) -> None:
-    for url in urls:
-        with try_log(ctx.channel.id):
-            url = repo_check(url)
-            load_url(url)
-            add_scope('remote', url)
-    get_scope('remote', ctx.channel.id)
-
-
-@client.command('unldurl', brief='Unload remote exts')
-async def unld_urls_cmd(ctx, *urls: str) -> None:
-    for url in urls:
-        with try_unload(ctx.channel.id):
-            rmv_scope('remote', url)
-            unld_url(url)
-    get_scope('remote', ctx.channel.id)
+@client.command('unld', brief='Unload exts')
+async def unld_exts_cmd(ctx, *paths: str) -> None:
+    for p in paths:
+        try:
+            ext.discard(p)
+            unld_url(p) if '/' in p else unld_ext(p)
+        except Exception as e:
+            error_log(e, ctx.channel.id)
+    get_exts(ctx.channel.id)
 
 
 @client.command('reld', brief='Reload exts')
 async def reld_scope_cmd(ctx) -> None:
-    log = ['\n'.join(s) for s in reld_scope(ctx.channel.id)]
-    send_embed(ctx.channel.id, log, title='Reloaded')
+    reld_exts(ctx.channel.id)
+    get_exts(ctx.channel.id)
