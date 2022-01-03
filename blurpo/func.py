@@ -93,9 +93,9 @@ def send_embed(chn_id: int, chunks: List[str], **fields) -> requests.Response:
     )
 
 
-def error_log(err: Exception, chn_id: int) -> requests.Response:
-    logging.exception(err)
+def error_log(e: Exception, chn_id: int) -> requests.Response:
+    logging.exception(e)
     return chn_id and send_embed(
-        chn_id, wrap(err, lang='bash'),
-        title=type(err).__name__, color=0xe74c3c
+        chn_id, wrap(str(e), lang='bash'),
+        title=type(e).__name__, color=0xe74c3c
     )
