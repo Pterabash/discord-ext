@@ -14,6 +14,7 @@ from blurpo.func import (
 
 
 GH = 'https://raw.githubusercontent.com/'
+
 client = commands.Bot(',')
 ext = EvalFile('exts', val=set())
 
@@ -28,26 +29,20 @@ def run() -> None:
     client.run(os.environ['TOKEN'])
 
 
-def repo_url(url: str) -> str:
-    return url if '.' in url else 'https://raw.githubusercontent.com/' + url
-
 # Load or unload ext
 def load_ext(ext: str) -> None:
-    ext = ext if '.' in ext else 'blurpo.ext.' + ext
     i = ext.rfind('.')
     module = importlib.import_module(ext[i:], ext[:i])
-    module.setup(client)
+    module.setup(client) 
 
 
 def unld_ext(ext: str) -> None:
-    ext = ext if '.' in ext else 'blurpo.ext.' + ext
     for name, obj in inspect.getmembers(sys.modules[ext]):
         if inspect.isclass(obj):
             issubclass(obj, commands.Cog) and client.remove_cog(name)
 
 
-def load_url(url: str) -> int:
-    url = url if url.startswith('https://') else GH + url
+def load_url(url: str) -> None:
     req = requests.get(url)
     s = req.status_code
     if s != 200:
@@ -58,7 +53,6 @@ def load_url(url: str) -> int:
 
 
 def unld_url(url: str) -> None:
-    url = url if url.startswith('https://') else GH + url
     name = basename(url)
     unld_ext(f'exts.{name}')
     os.remove(f'exts/{name}.py')
@@ -130,7 +124,10 @@ async def get_exts_cmd(ctx) -> None:
 async def load_exts_cmd(ctx, *paths: str) -> None:
     for p in paths:
         try:
-            load_url(p) if '/' in p else load_ext(p)
+            if '/' in p:
+                load_url(p if p.startswith('https://') else GH + p) 
+            else:
+                load_ext(p if '.' in p else 'blurpo.ext.' + p)
             ext.add(p)
         except Exception as e:
             error_log(e, ctx.channel.id)
@@ -142,7 +139,10 @@ async def unld_exts_cmd(ctx, *paths: str) -> None:
     for p in paths:
         try:
             ext.discard(p)
-            unld_url(p) if '/' in p else unld_ext(p)
+            if '/' in p:
+                unld_url(p if p.startswith('https://') else GH + p) 
+            else:
+                unld_ext(p if '.' in p else 'blurpo.ext.' + p)
         except Exception as e:
             error_log(e, ctx.channel.id)
     get_exts(ctx.channel.id)
