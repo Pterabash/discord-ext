@@ -1,24 +1,25 @@
+import os
+
 import discord
 from discord.ext import commands
 
-from blurpo.func import database
+from blurpo.func import EvalFile
+
+
+wl = EvalFile('whitelist', val=[])
 
 
 async def whitelist_check(ctx) -> bool:
-    with database() as db:
-        if 'Whitelist' in db: 
-            return ctx.author.id in db['Whitelist']
-        else:
-            db['Whitelist'] = [ctx.author.id]
-            await ctx.send(f'<@{ctx.author.id}> is now whitelist admin')
-            return True
+    users = wl.get()
+    if not users: 
+        users = wl.append(ctx.author.id)
+    return ctx.author.id in users
 
 
 class Whitelist(commands.Cog):
     @commands.command('wadd', brief='Add member')
     async def user_add(self, ctx, *member: discord.Member) -> None:
-        with database() as db:
-            db['Whitelist'] += [member.id]
+        wl.add(member.id)
         await ctx.send(f'Whitelisted {member.name}')
 
     @commands.command('wrmv', brief='Remove member')
@@ -26,26 +27,22 @@ class Whitelist(commands.Cog):
         if ctx.author.id == member.id:
             await ctx.send('Self removal is prohibited')
             return
-        with database() as db:
-            wl = db['Whitelist']
-            if member.id in wl:
-                if wl.index(ctx.author.id) < wl.index(member.id):
-                    wl.remove(member.id)
-                    db ['Whitelist'] = wl
-                    await ctx.send(f'Removed {member.name}')
-                else:
-                    await ctx.send('Skill issue')
+        if member.id in wl.get():
+            if wl.index(ctx.author.id) < wl.index(member.id):
+                wl.remove(member.id)
+                await ctx.send(f'Removed {member.name}')
             else:
-                await ctx.send('Member not whitelisted')
+                await ctx.send('Skill issue')
+        else:
+            await ctx.send('Member not whitelisted')
 
     @commands.command('wcheck', brief='Check member')
     async def user_check(self, ctx, *member: discord.Member) -> None:
-        with database() as db:
-            if member.id in db['Whitelist']:
-                status = 'is whitelisted'
-            else: 
-                status = 'not in whitelist'
-            await ctx.send(f'{member.name} {status}')
+        if member.id in wl.get():
+            status = 'is whitelisted'
+        else: 
+            status = 'not in whitelist'
+        await ctx.send(f'{member.name} {status}')
 
 
 def setup(bot):
