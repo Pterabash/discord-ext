@@ -18,12 +18,12 @@ async def whitelist_check(ctx) -> bool:
 
 class Whitelist(commands.Cog):
     @commands.command('wadd', brief='Add member')
-    async def user_add(self, ctx, *member: discord.Member) -> None:
+    async def user_add(self, ctx, *, member: discord.Member) -> None:
         wl.add(member.id)
         await ctx.send(f'Whitelisted {member.name}')
 
     @commands.command('wrmv', brief='Remove member')
-    async def user_remove(self, ctx, *member: discord.Member) -> None:
+    async def user_remove(self, ctx, *, member: discord.Member) -> None:
         if ctx.author.id == member.id:
             await ctx.send('Self removal is prohibited')
             return
@@ -37,7 +37,7 @@ class Whitelist(commands.Cog):
             await ctx.send('Member not whitelisted')
 
     @commands.command('wcheck', brief='Check member')
-    async def user_check(self, ctx, *member: discord.Member) -> None:
+    async def user_check(self, ctx, *, member: discord.Member) -> None:
         if member.id in wl.get():
             status = 'is whitelisted'
         else: 
