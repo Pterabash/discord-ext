@@ -15,7 +15,7 @@ from blurpo.func import (
 
 GH = 'https://raw.githubusercontent.com/'
 client = commands.Bot(',')
-ext = EvalFile('exts')
+ext = EvalFile('exts', val=set())
 
 
 def prefix(d: str) -> None:
