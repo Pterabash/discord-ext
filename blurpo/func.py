@@ -1,5 +1,6 @@
 import logging
 import os
+from pathlib import Path
 import random
 import subprocess
 import tempfile
@@ -22,10 +23,9 @@ class EvalFile:
             raise Exception("Argument 'val' can't be str")
         open(var + '.eval', 'w').write(str(val))
 
-    def __init__(self, var: str = 'eval', *, 
-                 init: bool = False, val: any = None) -> None:
+    def __init__(self, var: str = 'eval', *, val: any = None) -> None:
         self.var = var
-        init and self.set(val)
+        Path(var + '.eval').exists() or self.set(val)
 
     def get(self, *, f: callable = None) -> any:
         return EvalFile.read(self.var, f=f)
@@ -52,6 +52,11 @@ class EvalFile:
     def delete(self, key: str) -> dict:
         _val = self.get()
         del _val[key]
+        return self.set(_val)
+    
+    def append(self, val: any) -> list:
+        _val = self.get()
+        _val.append(val)
         return self.set(_val)
 
 
