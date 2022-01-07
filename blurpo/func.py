@@ -1,6 +1,5 @@
 import logging
 import os
-from pathlib import Path
 import random
 import subprocess
 import tempfile
@@ -9,55 +8,6 @@ import time
 from typing import List, Tuple
 
 import requests
-
-
-class EvalFile:
-    @staticmethod
-    def read(var: str, *, f: callable = None) -> any:
-        val = eval(open(var + '.eval').read())
-        return f(val) if f else val
-
-    @staticmethod
-    def write(var: str, val: any = None) -> any:
-        if type(val) is str:
-            raise Exception("Argument 'val' can't be str")
-        open(var + '.eval', 'w').write(str(val))
-
-    def __init__(self, var: str = 'eval', *, val: any = None) -> None:
-        self.var = var
-        Path(var + '.eval').exists() or self.set(val)
-
-    def get(self, *, f: callable = None) -> any:
-        return EvalFile.read(self.var, f=f)
-
-    def set(self, val: any) -> any:
-        EvalFile.write(self.var, val)
-        return self.get()
-
-    def add(self, val: any) -> set:
-        _val = self.get()
-        _val.add(val)
-        return self.set(_val)
-    
-    def discard(self, val: any) -> set:
-        _val = self.get()
-        _val.discard(val)
-        return self.set(_val)
-    
-    def update(self, d: dict) -> dict:
-        _val = self.get()
-        _val.update(d)
-        return self.set(_val)
-    
-    def delete(self, key: str) -> dict:
-        _val = self.get()
-        del _val[key]
-        return self.set(_val)
-    
-    def append(self, val: any) -> list:
-        _val = self.get()
-        _val.append(val)
-        return self.set(_val)
 
 
 def rand_int_str() -> str:

@@ -1,9 +1,4 @@
-from pathlib import Path
-
-from .bot import load_ext, load_url, prefix, run
+from .bot import load_local, load_remote, prefix, run
 from .func import load_env
 
-
-__all__ = ['load_ext', 'load_url', 'prefix', 'run', 'load_env']
-
-Path('exts/').mkdir(exist_ok=True)
+__all__ = ['load_local', 'load_remote', 'load_env', 'prefix', 'run']
