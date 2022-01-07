@@ -49,7 +49,7 @@ def subprocess_log(args: List[str], inp: str = None) -> Tuple[str, float]:
         return fp.read(), dt
 
 
-def send_embed(chn_id: int, chunks: List[str], **fields) -> requests.Response:
+def send_embeds(chn_id: int, chunks: List[str], **fields) -> requests.Response:
     return requests.post(
         f'https://discord.com/api/v9/channels/{chn_id}/messages',
         headers={'Authorization': f'Bot {os.environ["TOKEN"]}'},
@@ -60,7 +60,7 @@ def send_embed(chn_id: int, chunks: List[str], **fields) -> requests.Response:
 
 def error_log(e: Exception, chn_id: int) -> requests.Response:
     logging.exception(e)
-    return chn_id and send_embed(
+    return chn_id and send_embeds(
         chn_id, wrap(str(e), lang='bash'),
         title=type(e).__name__, color=0xe74c3c
     )

@@ -9,7 +9,7 @@ from typing import Iterable
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound, CheckFailure, CommandRegistrationError
 
-from blurpo.func import basename, error_log, send_embed, subprocess_log, wrap
+from blurpo.func import basename, error_log, send_embeds, subprocess_log, wrap
 from blurpo.fdict import fdict
 from blurpo.urlimp import import_url
 
@@ -92,7 +92,7 @@ def get_exts(channel_id: int, scope: str) -> None:
     logging.info(f'Extensions: {exts}')
     d = ', ' if scope == 'local' else '/n'
     embed = wrap(d.join(paths) or 'None')
-    send_embed(channel_id, embed, title=scope.capitalize())
+    send_embeds(channel_id, embed, title=scope.capitalize())
 
 
 def reld_exts(chn_id: int = None) -> None:
@@ -134,7 +134,7 @@ async def pip_cmd(ctx, mode: str, pkg: str) -> None:
     args = ['pip', 'uninstall'[i:], pkg]
     inp = b'y' if i < 1 else None
     log, t = subprocess_log(args, inp)
-    send_embed(
+    send_embeds(
         ctx.channel.id, wrap(log, lang='bash'), title='Output',
         footer={'text': f'Runtime: {t}s'}
     )
