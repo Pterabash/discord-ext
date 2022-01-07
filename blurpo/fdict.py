@@ -3,17 +3,21 @@ from pathlib import Path
 
 class fdict(dict):
     def __init__(self, *args, **kwargs):
-        keyword = lambda k, v : (kwargs.pop(k) if k in kwargs else v)
-        path = keyword('_path', '.dict') 
-        init = keyword('_init', False) 
+        def keyword(k, v): return (kwargs.pop(k) if k in kwargs else v)
+        path = keyword('_path', '.dict')
+        init = keyword('_init', False)
         self.__path__ = Path(path)
-        if self.__path__.exists() and not init:
-            kwargs = eval(self.__path__.read_text())
+        if self.__path__.exists():
+            _fdict = eval(self.__path__.read_text())
+            if init:
+                kwargs = _fdict
+            else:
+                kwargs.update(_fdict)
         super(fdict, self).__init__(*args, **kwargs)
         self.write()
 
     @staticmethod
-    def read(path: str = '.dict') -> dict: 
+    def read(path: str = '.dict') -> dict:
         _path = Path(path)
         return _path.exists() and fdict(eval(_path.read_text()), _path=path)
 
