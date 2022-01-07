@@ -428,6 +428,7 @@ fabric.properties
 # Module caches
 .*
 mdl/
+code/
 
 # Extension caches
 foo.*
