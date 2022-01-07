@@ -13,8 +13,11 @@ from blurpo.fdict import fdict
 from blurpo.urlimp import import_url
 
 
+# Constant
 GH = 'https://raw.githubusercontent.com/'
 
+
+# Initialization
 client = commands.Bot(',')
 exts = fdict(local=set(), remote=set())
 
@@ -29,10 +32,14 @@ def run() -> None:
     client.run(os.environ['TOKEN'])
 
 
-def __loads(xs: Iterable[str], f: callable, chn_id: int) -> None:
-    for x in xs:
+# Internal functions
+def __loads(paths: Iterable[str], load_scope: callable, chn_id: int) -> None:
+    for path in paths:
         try:
-            f(x)
+            load_scope(path)
+        except CommandRegistrationError:
+            unld_local(path)
+            load_scope(path)
         except Exception as e:
             error_log(e, chn_id)
 
