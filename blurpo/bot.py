@@ -1,22 +1,22 @@
-import importlib
+from importlib import import_module
 import inspect
 import os
+from pathlib import Path
 import sys
+from typing import Iterable
 
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound, CheckFailure, CommandRegistrationError
-import requests
 
-from blurpo.func import (
-    basename, error_log, EvalFile,
-    send_embed, subprocess_log, wrap
-)
+from blurpo.func import basename, error_log, send_embed, subprocess_log, wrap
+from blurpo.fdict import fdict
+from blurpo.urlimp import import_url
 
 
 GH = 'https://raw.githubusercontent.com/'
 
 client = commands.Bot(',')
-ext = EvalFile('exts', val=set())
+exts = fdict(local=set(), remote=set())
 
 
 def prefix(d: str) -> None:
@@ -29,49 +29,61 @@ def run() -> None:
     client.run(os.environ['TOKEN'])
 
 
+def __loads(xs: Iterable[str], f: callable, chn_id: int) -> None:
+    for x in xs:
+        try:
+            f(x)
+        except Exception as e:
+            error_log(e, chn_id)
+
+
+def __mode(path) -> str:
+    scope = 'local'
+    if '/' in path:
+        if Path(path).exists(): # is local
+            path = path.split('.')[0].replace('/', '.')
+        elif not path.startswith('https://'):
+            path = GH + path
+            scope = 'remote'
+    elif '.' not in path:
+        path = f'blurpo.ext.{path}'
+    return path, scope
+
+
 # Load or unload ext
-def load_ext(ext: str) -> None:
+def load_local(ext: str) -> None:
     i = ext.rfind('.')
-    module = importlib.import_module(ext[i:], ext[:i])
+    module = import_module(ext[i:], ext[:i])
     module.setup(client) 
 
 
-def unld_ext(ext: str) -> None:
+def load_remote(url: str) -> None:
+    module = import_url(url)
+    module.setup(client)
+
+
+def unld_local(ext: str) -> None:
     for name, obj in inspect.getmembers(sys.modules[ext]):
         if inspect.isclass(obj):
             issubclass(obj, commands.Cog) and client.remove_cog(name)
 
 
-def load_url(url: str) -> None:
-    req = requests.get(url)
-    s = req.status_code
-    if s != 200:
-        raise Exception(f'Status code {s}')
+def unld_remote(url: str) -> None:
     name = basename(url)
-    open(f'exts/{name}.py', 'w').write(req.text)
-    load_ext(f'exts.{name}')
-
-
-def unld_url(url: str) -> None:
-    name = basename(url)
-    unld_ext(f'exts.{name}')
-    os.remove(f'exts/{name}.py')
+    unld_local(f'mdl.{name}')
+    os.remove(f'mdl/{name}.py')
 
 
 # Get or reload exts
-def get_exts(channel_id: int) -> None:
-    paths = ext.get(f=sorted)
-    log = '\n'.join(paths) or 'None'
+def get_exts(channel_id: int) -> None:    
+    log = '\n'.join(exts['local']) or 'None'
     print(log)
     send_embed(channel_id, [log], title='Extension')
 
 
 def reld_exts(chn_id: int = None) -> None:
-    for p in ext.get():
-        try:
-            load_url(p) if '/' in p else load_ext(p)
-        except Exception as e:
-            error_log(e, chn_id)
+    __loads(exts['local'], load_local, chn_id)
+    __loads(exts['remote'], load_remote, chn_id)
 
 
 @client.event
@@ -121,32 +133,30 @@ async def get_exts_cmd(ctx) -> None:
 
 
 @client.command('load', brief='Load exts')
-async def load_exts_cmd(ctx, *paths: str) -> None:
-    for p in paths:
+async def load_locals_cmd(ctx, *paths: str) -> None:
+    for path in paths:
         try:
-            if '/' in p:
-                load_url(p if p.startswith('https://') else GH + p) 
-            else:
-                load_ext(p if '.' in p else 'blurpo.ext.' + p)
-            ext.add(p)
+            path, scope = __mode(path)
+            globals()[f'load_{scope}'](path)
+            exts[scope].add(path)
+            exts.write()
         except Exception as e:
             error_log(e, ctx.channel.id)
+    exts.write()
     get_exts(ctx.channel.id)
 
 
 @client.command('unld', brief='Unload exts')
-async def unld_exts_cmd(ctx, *paths: str) -> None:
-    for p in paths:
+async def unld_locals_cmd(ctx, *paths: str) -> None:
+    for path in paths:
         try:
-            ext.discard(p)
-            if '/' in p:
-                unld_url(p if p.startswith('https://') else GH + p) 
-            else:
-                unld_ext(p if '.' in p else 'blurpo.ext.' + p)
+            path, scope = __mode(path)
+            exts[scope].discard(path)
+            globals()[f'unld_{scope}'](path)
         except Exception as e:
             error_log(e, ctx.channel.id)
+    exts.write()
     get_exts(ctx.channel.id)
-
 
 @client.command('reld', brief='Reload exts')
 async def reld_scope_cmd(ctx) -> None:
