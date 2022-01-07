@@ -1,5 +1,6 @@
 from importlib import import_module
 import inspect
+import logging
 import os
 from pathlib import Path
 import sys
@@ -11,10 +12,6 @@ from discord.ext.commands import CommandNotFound, CheckFailure, CommandRegistrat
 from blurpo.func import basename, error_log, send_embed, subprocess_log, wrap
 from blurpo.fdict import fdict
 from blurpo.urlimp import import_url
-
-
-# Constant
-GH = 'https://raw.githubusercontent.com/'
 
 
 # Initialization
@@ -33,7 +30,11 @@ def run() -> None:
 
 
 # Internal functions
-def __loads(paths: Iterable[str], load_scope: callable, chn_id: int) -> None:
+def __reflect(name: str) -> callable:
+    return globals()[name]
+
+
+def __reloads(paths: Iterable[str], load_scope: callable, chn_id: int) -> None:
     for path in paths:
         try:
             load_scope(path)
@@ -44,15 +45,19 @@ def __loads(paths: Iterable[str], load_scope: callable, chn_id: int) -> None:
             error_log(e, chn_id)
 
 
-def __mode(path) -> str:
+def __scope(path: str) -> str:
     scope = 'local'
+    # path like string
     if '/' in path:
-        if Path(path).exists(): # is local
+        # local path
+        if Path(path).exists():
             path = path.split('.')[0].replace('/', '.')
+        # repo path
         elif not path.startswith('https://'):
-            path = GH + path
+            path = f'https://raw.githubusercontent.com/{path}'
             scope = 'remote'
     elif '.' not in path:
+        # default module
         path = f'blurpo.ext.{path}'
     return path, scope
 
@@ -61,7 +66,7 @@ def __mode(path) -> str:
 def load_local(ext: str) -> None:
     i = ext.rfind('.')
     module = import_module(ext[i:], ext[:i])
-    module.setup(client) 
+    module.setup(client)
 
 
 def load_remote(url: str) -> None:
@@ -82,15 +87,17 @@ def unld_remote(url: str) -> None:
 
 
 # Get or reload exts
-def get_exts(channel_id: int) -> None:    
-    log = '\n'.join(exts['local']) or 'None'
-    print(log)
-    send_embed(channel_id, [log], title='Extension')
+def get_exts(channel_id: int, scope: str) -> None:
+    paths = exts[scope]
+    logging.info(f'Extensions: {exts}')
+    d = ', ' if scope == 'local' else '/n'
+    embed = wrap(d.join(paths) or 'None')
+    send_embed(channel_id, embed, title=scope.capitalize())
 
 
 def reld_exts(chn_id: int = None) -> None:
-    __loads(exts['local'], load_local, chn_id)
-    __loads(exts['remote'], load_remote, chn_id)
+    __reloads(exts['local'], load_local, chn_id)
+    __reloads(exts['remote'], load_remote, chn_id)
 
 
 @client.event
@@ -136,34 +143,47 @@ async def pip_cmd(ctx, mode: str, pkg: str) -> None:
 # Ext related commands
 @client.command('exts', brief='Get exts')
 async def get_exts_cmd(ctx) -> None:
-    get_exts(ctx.channel.id)
+    chn_id = ctx.channel.id
+    get_exts(chn_id, 'local')
+    get_exts(chn_id, 'remote')
 
 
 @client.command('load', brief='Load exts')
 async def load_locals_cmd(ctx, *paths: str) -> None:
+    chn_id = ctx.channel.id
     for path in paths:
         try:
-            path, scope = __mode(path)
-            globals()[f'load_{scope}'](path)
+            path, scope = __scope(path)
+            f_load = __reflect(f'load_{scope}')
+            f_load(path)
             exts[scope].add(path)
-            exts.write()
+        except CommandRegistrationError:
+            unld_local(path)
+            f_load(path)
+        except ModuleNotFoundError:
+            raise Exception('Extension not found')
         except Exception as e:
-            error_log(e, ctx.channel.id)
+            error_log(e, chn_id)
     exts.write()
-    get_exts(ctx.channel.id)
+    get_exts(chn_id, scope)
 
 
 @client.command('unld', brief='Unload exts')
 async def unld_locals_cmd(ctx, *paths: str) -> None:
+    chn_id = ctx.channel.id
     for path in paths:
         try:
-            path, scope = __mode(path)
+            path, scope = __scope(path)
             exts[scope].discard(path)
-            globals()[f'unld_{scope}'](path)
+            f_load = __reflect(f'unld_{scope}')
+            f_load(path)
+        except IndexError:
+            raise Exception('Extension not found')
         except Exception as e:
-            error_log(e, ctx.channel.id)
+            error_log(e, chn_id)
     exts.write()
-    get_exts(ctx.channel.id)
+    get_exts(chn_id, scope)
+
 
 @client.command('reld', brief='Reload exts')
 async def reld_scope_cmd(ctx) -> None:
