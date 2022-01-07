@@ -4,32 +4,34 @@ from discord.ext import commands
 from blurpo.fdict import fdict
 
 
-wls = fdict(whitelist=[])['whitelist']
+wls = fdict(whitelist=[])
 
 
 async def whitelist_check(ctx) -> bool:
-    if not wls:
-        users = wls.append(ctx.author.id)
+    if not wls['whitelist']:
+        wls['whitelist'].append(ctx.author.id)
         wls.write()
         await ctx.send(f'Whitelisted {ctx.author.name}')
-    return ctx.author.id in users
+    return ctx.author.id in wls['whitelist']
 
 
 class Whitelist(commands.Cog):
     @commands.command('wadd', brief='Add member')
     async def user_add(self, ctx, *, member: discord.Member) -> None:
         id = member.id
-        if id not in wls:
-            wls.append(member.id)
+        if id not in wls['whitelist']:
+            wls['whitelist'].append(member.id)
+            wls.write()
             await ctx.send(f'Whitelisted {member.name}')
 
     @commands.command('wrmv', brief='Remove member')
     async def user_remove(self, ctx, *, member: discord.Member) -> None:
         if member.id == ctx.author.id:
             return await ctx.send('You ok?')
-        elif member.id in wls:
-            if wls.index(member.id) > wls.index(ctx.author.id):
-                wls.remove(member.id)
+        elif member.id in wls['whitelist']:
+            if wls['whitelist'].index(member.id) > wls['whitelist'].index(ctx.author.id):
+                wls['whitelist'].remove(member.id)
+                wls.write()
                 await ctx.send(f'Removed {member.name}')
             else:
                 await ctx.send('Skill issue')
@@ -38,7 +40,7 @@ class Whitelist(commands.Cog):
 
     @commands.command('wcheck', brief='Check member')
     async def user_check(self, ctx, *, member: discord.Member) -> None:
-        if member.id in wls:
+        if member.id in wls['whitelist']:
             status = 'is whitelisted'
         else:
             status = 'not in whitelist'
