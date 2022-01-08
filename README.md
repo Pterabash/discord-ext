@@ -16,6 +16,6 @@ Ironically it took me months to realise that it simply isn't the fact.
 
 `blurpo` - Experimental Discord.py bot
 
-`ext` - Examples of Discord.py extensions
+`blurpo.ext` - Examples of Discord.py extensions
 
 More information can be found on [documentation](https://github.com/thisgary/blurple-o/wiki/Documentation)
