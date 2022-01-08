@@ -5,8 +5,7 @@ Discord API wrapper's wrapper, ironically.
 ## Purpose
 
 Solely for me to learn how to make Discord bot and Python module.
-~~No longer actively maintained, since [blurple](https://thisgary.github.io/blurple) a thing now.~~
-Ironically it took me months to realise that it simply isn't the fact.
+No longer actively maintained, since [blurple](https://thisgary.github.io/blurple) a thing now.
 
 ## Installation
 
