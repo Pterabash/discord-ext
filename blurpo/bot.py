@@ -4,7 +4,6 @@ import logging
 import os
 from pathlib import Path
 import sys
-from typing import Iterable
 
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound, CheckFailure, CommandRegistrationError
@@ -34,18 +33,7 @@ def __reflect(name: str) -> callable:
     return globals()[name]
 
 
-def __reloads(paths: Iterable[str], load_scope: callable, chn_id: int) -> None:
-    for path in paths:
-        try:
-            load_scope(path)
-        except CommandRegistrationError:
-            unld_local(path)
-            load_scope(path)
-        except Exception as e:
-            error_log(e, chn_id)
-
-
-def __scope(path: str) -> str:
+def __predict(path: str) -> str:
     scope = 'local'
     # path like string
     if '/' in path:
@@ -65,12 +53,8 @@ def __scope(path: str) -> str:
 # Load or unload ext
 def load_local(ext: str) -> None:
     i = ext.rfind('.')
-    module = import_module(ext[i:], ext[:i])
-    module.setup(client)
-
-
-def load_remote(url: str) -> None:
-    module = import_url(url)
+    module = (import_module(ext) if i < 0 else 
+              import_module(ext[i:], ext[:i]))
     module.setup(client)
 
 
@@ -80,24 +64,36 @@ def unld_local(ext: str) -> None:
             issubclass(obj, commands.Cog) and client.remove_cog(name)
 
 
+def load_remote(url: str) -> None:
+    module = import_url(url)
+    module.setup(client)
+
+
 def unld_remote(url: str) -> None:
     name = basename(url)
     unld_local(f'mdl.{name}')
     os.remove(f'mdl/{name}.py')
 
 
-# Get or reload exts
-def get_exts(channel_id: int, scope: str) -> None:
+def get_exts(chn_id: int, scope: str) -> None:
     paths = exts[scope]
     logging.info(f'Extensions: {exts}')
     d = ', ' if scope == 'local' else '/n'
     embed = wrap(d.join(paths) or 'None')
-    send_embeds(channel_id, embed, title=scope.capitalize())
+    send_embeds(chn_id, embed, title=scope.capitalize())
 
 
 def reld_exts(chn_id: int = None) -> None:
-    __reloads(exts['local'], load_local, chn_id)
-    __reloads(exts['remote'], load_remote, chn_id)
+    for scope in ['local', 'remote']:
+        load_scope = __reflect(f'load_{scope}')
+        for path in exts[scope]: 
+            try:
+                load_scope(path)
+            except CommandRegistrationError:
+                unld_local(path)
+                load_scope(path)
+            except Exception as e:
+                error_log(e, chn_id)
 
 
 @client.event
@@ -153,7 +149,7 @@ async def load_locals_cmd(ctx, *paths: str) -> None:
     chn_id = ctx.channel.id
     for path in paths:
         try:
-            path, scope = __scope(path)
+            path, scope = __predict(path)
             f_load = __reflect(f'load_{scope}')
             f_load(path)
             exts[scope].add(path)
@@ -173,7 +169,7 @@ async def unld_locals_cmd(ctx, *paths: str) -> None:
     chn_id = ctx.channel.id
     for path in paths:
         try:
-            path, scope = __scope(path)
+            path, scope = __predict(path)
             exts[scope].discard(path)
             f_load = __reflect(f'unld_{scope}')
             f_load(path)

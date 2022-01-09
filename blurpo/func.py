@@ -9,6 +9,8 @@ from typing import List, Tuple
 
 import requests
 
+from fdict import fdict
+
 
 def rand_int_str() -> str:
     return str(random.random())[2:]
@@ -26,9 +28,8 @@ def clamp(i: int, *, min_i: int = 1, max_i: int = 100) -> int:
     return min(max(i, min_i), max_i)
 
 
-def load_env(fn: str = '.env') -> None:
-    f = open(fn).readlines()
-    env = {(k := l.strip())[:(i := l.index('='))]: k[i+1:] for l in f}
+def load_env(filename: str = '.env') -> None:
+    env = fdict(_path=filename)
     os.environ.update(env)
 
 
