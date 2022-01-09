@@ -9,7 +9,7 @@ from typing import List, Tuple
 
 import requests
 
-from fdict import fdict
+from blurpo.fdict import fdict
 
 
 def rand_int_str() -> str:
