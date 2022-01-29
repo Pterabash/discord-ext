@@ -5,7 +5,7 @@ from typing import List
 from discord.ext import commands
 
 from blurpo.func import send_embeds, subprocess_log, wrap
-from blurpo.fdict import fdict
+from dumpster import fdict
 
 
 # constants

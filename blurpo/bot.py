@@ -7,10 +7,9 @@ import sys
 
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound, CheckFailure, CommandRegistrationError
+from dumpster import fdict, import_url
 
 from blurpo.func import basename, error_log, send_embeds, subprocess_log, wrap
-from blurpo.fdict import fdict
-from blurpo.urlimp import import_url
 
 
 # Initialization

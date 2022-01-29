@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-from blurpo.fdict import fdict
+from dumpster import fdict
 
 
 wls = fdict(whitelist=[])
