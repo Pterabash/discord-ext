@@ -1,4 +1,4 @@
-git+https://github.com/thisgary/pything
+pything @ git+https://github.com/thisgary/pything@main
 discord.py
 requests
 
