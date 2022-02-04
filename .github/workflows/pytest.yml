@@ -3,7 +3,7 @@ name: Pytest
 on:
   push:
     paths:
-      - 'dscord/**'
+      - 'nexity/**'
       - 'tests/**'
     branches: [ main ]
   pull_request:
