@@ -4,8 +4,8 @@ readme = open('README.md').read()
 requirements = open('requirements.txt').read().splitlines()
 
 setuptools.setup(
-        name='blurple-o',
-        version='2.5.8',
+        name='nexity',
+        version='2.5.9',
         author='thisgary',
         author_email='gary.github@gmail.com',
         description='Discord API wrapper\'s wrapper.',
