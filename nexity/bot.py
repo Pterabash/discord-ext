@@ -64,14 +64,14 @@ def unld_local(ext: str) -> None:
 
 
 def load_remote(url: str) -> None:
-    module = import_url(url)
+    module = import_url(url, path='exts')
     module.setup(client)
 
 
 def unld_remote(url: str) -> None:
     name = basename(url)
-    unld_local(f'mdl.{name}')
-    os.remove(f'mdl/{name}.py')
+    unld_local(f'exts.{name}')
+    os.remove(f'exts/{name}.py')
 
 
 def get_exts(chn_id: int, scope: str) -> None:

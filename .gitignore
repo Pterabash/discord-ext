@@ -38,5 +38,6 @@ pip-delete-this-directory.txt
 mdl/
 code/
 
-.*
-foo.*
+.env
+fdict
+

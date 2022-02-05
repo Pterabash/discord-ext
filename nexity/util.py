@@ -29,7 +29,7 @@ def clamp(i: int, *, min_i: int = 1, max_i: int = 100) -> int:
 
 
 def load_env(filename: str = '.env') -> None:
-    env = fdict(_path=filename)
+    env = fdict(path=filename)
     os.environ.update(env)
 
 
