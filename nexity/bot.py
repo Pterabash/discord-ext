@@ -155,9 +155,9 @@ async def load_locals_cmd(ctx, *paths: str) -> None:
         except CommandRegistrationError:
             unld_local(path)
             f_load(path)
-        except ModuleNotFoundError:
-            raise Exception('Extension not found')
         except Exception as e:
+            if isinstance(e, ModuleNotFoundError):
+                e = Exception('Extension not found')
             error_log(e, chn_id)
     exts.write()
     get_exts(chn_id, scope)
@@ -172,9 +172,9 @@ async def unld_locals_cmd(ctx, *paths: str) -> None:
             exts[scope].discard(path)
             f_load = __reflect(f'unld_{scope}')
             f_load(path)
-        except KeyError:
-            raise Exception('Extension not found')
         except Exception as e:
+             if isinstance(e, KeyError):
+                e = Exception('Extension not found')
             error_log(e, chn_id)
     exts.write()
     get_exts(chn_id, scope)

@@ -5,7 +5,7 @@ requirements = open('requirements.txt').read().splitlines()
 
 setuptools.setup(
         name='nexity',
-        version='2.5.13',
+        version='2.5.14',
         author='thisgary',
         author_email='gary.github@gmail.com',
         description='Discord API wrapper\'s wrapper.',
