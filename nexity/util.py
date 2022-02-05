@@ -28,8 +28,8 @@ def clamp(i: int, *, min_i: int = 1, max_i: int = 100) -> int:
     return min(max(i, min_i), max_i)
 
 
-def load_env(filename: str = '.env') -> None:
-    env = fdict(path=filename)
+def load_env(path: str = '.env') -> None:
+    env = fdict(path=path)
     os.environ.update(env)
 
 

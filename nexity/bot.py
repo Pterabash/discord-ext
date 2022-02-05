@@ -173,7 +173,7 @@ async def unld_locals_cmd(ctx, *paths: str) -> None:
             f_load = __reflect(f'unld_{scope}')
             f_load(path)
         except Exception as e:
-             if isinstance(e, KeyError):
+            if isinstance(e, KeyError):
                 e = Exception('Extension not found')
             error_log(e, chn_id)
     exts.write()
