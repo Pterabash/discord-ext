@@ -10,7 +10,7 @@ No longer actively maintained, since
 
 ## Installation
 
-    pip install git+https://github.com/thisgary/blurple-o
+    pip install git+https://github.com/thisgary/nexity
 
 ## Features
 
