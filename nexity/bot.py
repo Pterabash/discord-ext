@@ -22,9 +22,9 @@ def prefix(d: str) -> None:
     client = commands.Bot(d)
 
 
-def run() -> None:
+def run(token: str = None) -> None:
     reld_exts()
-    client.run(os.environ['TOKEN'])
+    client.run(token or os.environ['TOKEN'])
 
 
 # Internal functions
