@@ -17,7 +17,7 @@ setuptools.setup(
             'License :: OSI Approved :: MIT Lisence',
             'Operating System :: OS Independent',
         ],
-        license='MIT',
+        license='Apache License Version 2.0',
         python_requires='>=3.8',
         install_requires=requirements,
         setup_requires=['pytest_runner'],
