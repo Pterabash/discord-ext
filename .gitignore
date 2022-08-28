@@ -38,6 +38,5 @@ pip-delete-this-directory.txt
 exts/
 code/
 
-.env
-fdict
-
+data.json
+creds.json
