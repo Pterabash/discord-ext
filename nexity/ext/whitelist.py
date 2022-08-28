@@ -22,8 +22,7 @@ class Whitelist(commands.Cog):
         id = member.id
         if id not in wls:
             wls.append(member.id)
-            data['whitelist'] = wls
-            save_data(data)
+            save_data(data, whitelist=wls)
             await ctx.send(f'Whitelisted {member.name}')
 
     @commands.command('wrmv', brief='Remove member')
@@ -33,8 +32,7 @@ class Whitelist(commands.Cog):
         elif member.id in wls:
             if wls.index(member.id) > wls.index(ctx.author.id):
                 wls.remove(member.id)
-                data['whitelist'] = wls
-                save_data(data)
+                save_data(data, whitelist=wls)
                 await ctx.send(f'Removed {member.name}')
             else:
                 await ctx.send('Skill issue')
@@ -43,10 +41,7 @@ class Whitelist(commands.Cog):
 
     @commands.command('wcheck', brief='Check member')
     async def user_check(self, ctx, *, member: discord.Member) -> None:
-        if member.id in wls:
-            status = 'is whitelisted'
-        else:
-            status = 'not in whitelist'
+        status = 'is whitelisted' if member.id in wls else 'not in whitelist'
         await ctx.send(f'{member.name} {status}')
 
 
