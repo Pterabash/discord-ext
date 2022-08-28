@@ -64,3 +64,19 @@ def error_log(e: Exception, chn_id: int) -> requests.Response:
         chn_id, wrap(str(e), lang='bash'),
         title=type(e).__name__, color=0xe74c3c
     )
+
+
+def load_data(**update: dict) -> dict:
+    try:
+        data = json.load(open('data.json'))
+        if update:
+            data.update(update)
+            save_data(data)
+    except FileNotFoundError:
+        data = {"local": [], "remote": []}
+        data.update(update)
+        save_data(data)
+    return data
+
+def save_data(data: dict) -> None:
+    json.dump(data, open('data.json', 'w'))
