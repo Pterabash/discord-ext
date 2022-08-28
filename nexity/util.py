@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import random
@@ -8,8 +9,6 @@ import time
 from typing import List, Tuple
 
 import requests
-
-from dumpster import fdict
 
 
 def rand_int_str() -> str:
@@ -28,9 +27,9 @@ def clamp(i: int, *, min_i: int = 1, max_i: int = 100) -> int:
     return min(max(i, min_i), max_i)
 
 
-def load_env(path: str = '.env') -> None:
-    env = fdict(path=path)
-    os.environ.update(env)
+def load_env(path: str = 'creds.json') -> None:
+    envs = json.load(open(path))
+    os.environ.update(envs)
 
 
 def wrap(text: str, *, width: int = 4000, lang: str = None) -> List[str]:
