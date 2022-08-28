@@ -4,23 +4,25 @@ from discord.ext import commands
 from nexity.util import load_data, save_data
 
 
-data = load_data({'whitelist': []})
+data = load_data(whitelist=[])
+wls = data['whitelist']
 
 
 async def whitelist_check(ctx) -> bool:
-    if not data['whitelist']:
-        data['whitelist'].append(ctx.author.id)
+    if not wls:
+        wls.append(ctx.author.id)
         save_data(data)
         await ctx.send(f'Whitelisted {ctx.author.name}')
-    return ctx.author.id in data['whitelist']
+    return ctx.author.id in wls
 
 
 class Whitelist(commands.Cog):
     @commands.command('wadd', brief='Add member')
     async def user_add(self, ctx, *, member: discord.Member) -> None:
         id = member.id
-        if id not in data['whitelist']:
-            data['whitelist'].append(member.id)
+        if id not in wls:
+            wls.append(member.id)
+            data['whitelist'] = wls
             save_data(data)
             await ctx.send(f'Whitelisted {member.name}')
 
@@ -28,9 +30,10 @@ class Whitelist(commands.Cog):
     async def user_remove(self, ctx, *, member: discord.Member) -> None:
         if member.id == ctx.author.id:
             return await ctx.send('You ok?')
-        elif member.id in data['whitelist']:
-            if data['whitelist'].index(member.id) > data['whitelist'].index(ctx.author.id):
-                data['whitelist'].remove(member.id)
+        elif member.id in wls:
+            if wls.index(member.id) > wls.index(ctx.author.id):
+                wls.remove(member.id)
+                data['whitelist'] = wls
                 save_data(data)
                 await ctx.send(f'Removed {member.name}')
             else:
@@ -40,7 +43,7 @@ class Whitelist(commands.Cog):
 
     @commands.command('wcheck', brief='Check member')
     async def user_check(self, ctx, *, member: discord.Member) -> None:
-        if member.id in data['whitelist']:
+        if member.id in wls:
             status = 'is whitelisted'
         else:
             status = 'not in whitelist'
