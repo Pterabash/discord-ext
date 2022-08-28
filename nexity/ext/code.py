@@ -5,7 +5,7 @@ from typing import List
 from discord.ext import commands
 
 from dumpster import fdict
-from nexity.util import send_embeds, subprocess_log, wrap
+from nexity.util import load_data, save_data, send_embeds, subprocess_log, wrap
 
 
 # constants
@@ -18,7 +18,8 @@ TAGS = ['x']
 KEYS = ['hd', 'tl']
 
 # variables
-lang = fdict(languages=DEFAULT)['languages']
+data = load_data(languages=DEFAULT)
+lang = data['languages']
 
 
 class LangNotFoundError(Exception):
@@ -62,6 +63,7 @@ class Code(commands.Cog):
             else:
                 prop['kwargs'][kw] = True
             lang[suffix] = prop
+        save_data(data, languages=lang)
         send_embeds(ctx.channel.id, ['Language added'], title='Language')
 
     @commands.command('lrmv', brief='Remove lang')
@@ -69,10 +71,12 @@ class Code(commands.Cog):
         if suffix not in lang:
             raise LangNotFoundError(suffix)
         del lang[suffix]
+        save_data(data, languages=lang)
             
     @commands.command('linit', brief='Reset langs')
     async def reset_langs(self, ctx):
         lang = DEFAULT
+        save_data(data, languages=lang)
         send_embeds(ctx.channel.id, ['Reset'], title='Languages')
 
     @commands.command('langs', brief='List langs')
