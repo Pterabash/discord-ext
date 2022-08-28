@@ -75,5 +75,6 @@ def load_data(**init) -> dict:
     save_data(init)
     return data
 
-def save_data(data: dict) -> None:
-    json.dump(data, open('data.json', 'w'))
+def save_data(data: dict, **update) -> None:
+    update.update(data)
+    json.dump(update, open('data.json', 'w'))
