@@ -1,20 +1,25 @@
 from importlib import import_module
 import inspect
+import json
 import logging
 import os
 from pathlib import Path
 import sys
+from urllib.request import urlopen
 
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound, CheckFailure, CommandRegistrationError
-from dumpster import fdict, import_url
 
 from nexity.util import basename, error_log, send_embeds, subprocess_log, wrap
 
 
 # Initialization
 client = commands.Bot(',')
-exts = fdict(local=set(), remote=set())
+try:
+    exts = json.load(open('data.json'))
+except FileNotFoundError:
+    exts = {"local": [], "remote": []}
+    json.dump(exts, open('data.json', 'w'))
 
 
 def prefix(d: str) -> None:
@@ -64,7 +69,14 @@ def unld_local(ext: str) -> None:
 
 
 def load_remote(url: str) -> None:
-    module = import_url(url, path='exts')
+    script = str(urlopen(url).read().decode())
+    path = 'exts'
+    _path = Path(path)
+    _path.mkdir(parents=True, exist_ok=True)
+    name = basename(url)
+    _file = _path / (f'{name}.py')
+    _file.write_text(script)
+    module = import_module(f'.{name}', path)
     module.setup(client)
 
 
@@ -151,7 +163,10 @@ async def load_locals_cmd(ctx, *paths: str) -> None:
             path, scope = __predict(path)
             f_load = __reflect(f'load_{scope}')
             f_load(path)
-            exts[scope].add(path)
+            if path in exts[scope]: 
+                raise Exception('Extention already loaded')
+            exts[scope].append(path)
+            exts[scope].sort()
         except CommandRegistrationError:
             unld_local(path)
             f_load(path)
@@ -159,7 +174,7 @@ async def load_locals_cmd(ctx, *paths: str) -> None:
             if isinstance(e, ModuleNotFoundError):
                 e = Exception('Extension not found')
             error_log(e, chn_id)
-    exts.write()
+    json.dump(exts, open('data.json', 'w'))
     get_exts(chn_id, scope)
 
 
@@ -169,14 +184,14 @@ async def unld_locals_cmd(ctx, *paths: str) -> None:
     for path in paths:
         try:
             path, scope = __predict(path)
-            exts[scope].discard(path)
+            exts[scope].remove(path)
             f_load = __reflect(f'unld_{scope}')
             f_load(path)
         except Exception as e:
-            if isinstance(e, KeyError):
+            if isinstance(e, ValueError):
                 e = Exception('Extension not found')
             error_log(e, chn_id)
-    exts.write()
+    json.dump(exts, open('data.json', 'w'))
     get_exts(chn_id, scope)
 
 
