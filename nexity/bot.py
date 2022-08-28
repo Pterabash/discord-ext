@@ -10,16 +10,12 @@ from urllib.request import urlopen
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound, CheckFailure, CommandRegistrationError
 
-from nexity.util import basename, error_log, send_embeds, subprocess_log, wrap
+from nexity.util import basename, error_log, load_data, save_data, send_embeds, subprocess_log, wrap
 
 
 # Initialization
 client = commands.Bot(',')
-try:
-    exts = json.load(open('data.json'))
-except FileNotFoundError:
-    exts = {"local": [], "remote": []}
-    json.dump(exts, open('data.json', 'w'))
+data = load_data()
 
 
 def prefix(d: str) -> None:
@@ -87,8 +83,8 @@ def unld_remote(url: str) -> None:
 
 
 def get_exts(chn_id: int, scope: str) -> None:
-    paths = exts[scope]
-    logging.info(f'Extensions: {exts}')
+    paths = data[scope]
+    logging.info(f'Extensions: {data}')
     d = ', ' if scope == 'local' else '/n'
     embed = wrap(d.join(paths) or 'None')
     send_embeds(chn_id, embed, title=scope.capitalize())
@@ -97,7 +93,7 @@ def get_exts(chn_id: int, scope: str) -> None:
 def reld_exts(chn_id: int = None) -> None:
     for scope in ['local', 'remote']:
         load_scope = __reflect(f'load_{scope}')
-        for path in exts[scope]: 
+        for path in data[scope]: 
             try:
                 load_scope(path)
             except CommandRegistrationError:
@@ -163,10 +159,10 @@ async def load_locals_cmd(ctx, *paths: str) -> None:
             path, scope = __predict(path)
             f_load = __reflect(f'load_{scope}')
             f_load(path)
-            if path in exts[scope]: 
+            if path in data[scope]: 
                 raise Exception('Extention already loaded')
-            exts[scope].append(path)
-            exts[scope].sort()
+            data[scope].append(path)
+            data[scope].sort()
         except CommandRegistrationError:
             unld_local(path)
             f_load(path)
@@ -174,7 +170,7 @@ async def load_locals_cmd(ctx, *paths: str) -> None:
             if isinstance(e, ModuleNotFoundError):
                 e = Exception('Extension not found')
             error_log(e, chn_id)
-    json.dump(exts, open('data.json', 'w'))
+    save_data(data)
     get_exts(chn_id, scope)
 
 
@@ -184,14 +180,14 @@ async def unld_locals_cmd(ctx, *paths: str) -> None:
     for path in paths:
         try:
             path, scope = __predict(path)
-            exts[scope].remove(path)
+            data[scope].remove(path)
             f_load = __reflect(f'unld_{scope}')
             f_load(path)
         except Exception as e:
             if isinstance(e, ValueError):
                 e = Exception('Extension not found')
             error_log(e, chn_id)
-    json.dump(exts, open('data.json', 'w'))
+    save_data(data)
     get_exts(chn_id, scope)
 
 
