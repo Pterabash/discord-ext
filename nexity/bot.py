@@ -15,7 +15,7 @@ from nexity.util import basename, error_log, load_data, save_data, send_embeds, 
 
 # Initialization
 client = commands.Bot(',')
-data = load_data()
+data = load_data(local=[], remote=[])
 
 
 def prefix(d: str) -> None:
