@@ -4,11 +4,11 @@ readme = open('README.md').read()
 requirements = open('requirements.txt').read().splitlines()
 
 setuptools.setup(
-        name='nexity',
-        version='2.5.32',
+        name='thisgary-discord',
+        version='2.5.33',
         author='thisgary',
         author_email='gary.github@gmail.com',
-        description='Discord API wrapper\'s wrapper.',
+        description='Everything Discord.',
         long_description=readme,
         long_description_content_type='text/markdown',
         packages=setuptools.find_packages(),

@@ -1,22 +1,22 @@
-# Nexity
+# Discord
 
-Discord API wrapper's wrapper, ironically.
+Everything Discord.
 
-## Purpose
+## About
 
-Solely for me to learn how to make Discord bot and Python module.
-No longer actively maintained, since 
-[blurple](https://thisgary.github.io/blurple) a thing now.
+I started learning Python by making a Discord bot.
 
 ## Installation
 
-    pip install git+https://github.com/thisgary/nexity
+    pip install git+https://github.com/thisgary/discord
 
-## Features
+## Modules
 
 `nexity` - Extensible Discord.py bot
 
 `nexity.ext` - Examples of Discord.py extensions
 
+`itzbenz` - Discord API wrapper, probably abandoned
+
 More information can be found on 
-[documentation](https://github.com/thisgary/nexity/wiki/Documentation)
+[documentation](https://github.com/thisgary/discord/wiki/Documentation)
