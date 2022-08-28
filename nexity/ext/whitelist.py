@@ -1,37 +1,37 @@
 import discord
 from discord.ext import commands
 
-from dumpster import fdict
+from nexity.util import load_data, save_data
 
 
-wls = fdict(whitelist=[])
+data = load_data({'whitelist': []})
 
 
 async def whitelist_check(ctx) -> bool:
-    if not wls['whitelist']:
-        wls['whitelist'].append(ctx.author.id)
-        wls.write()
+    if not data['whitelist']:
+        data['whitelist'].append(ctx.author.id)
+        save_data(data)
         await ctx.send(f'Whitelisted {ctx.author.name}')
-    return ctx.author.id in wls['whitelist']
+    return ctx.author.id in data['whitelist']
 
 
 class Whitelist(commands.Cog):
     @commands.command('wadd', brief='Add member')
     async def user_add(self, ctx, *, member: discord.Member) -> None:
         id = member.id
-        if id not in wls['whitelist']:
-            wls['whitelist'].append(member.id)
-            wls.write()
+        if id not in data['whitelist']:
+            data['whitelist'].append(member.id)
+            save_data(data)
             await ctx.send(f'Whitelisted {member.name}')
 
     @commands.command('wrmv', brief='Remove member')
     async def user_remove(self, ctx, *, member: discord.Member) -> None:
         if member.id == ctx.author.id:
             return await ctx.send('You ok?')
-        elif member.id in wls['whitelist']:
-            if wls['whitelist'].index(member.id) > wls['whitelist'].index(ctx.author.id):
-                wls['whitelist'].remove(member.id)
-                wls.write()
+        elif member.id in data['whitelist']:
+            if data['whitelist'].index(member.id) > data['whitelist'].index(ctx.author.id):
+                data['whitelist'].remove(member.id)
+                save_data(data)
                 await ctx.send(f'Removed {member.name}')
             else:
                 await ctx.send('Skill issue')
@@ -40,7 +40,7 @@ class Whitelist(commands.Cog):
 
     @commands.command('wcheck', brief='Check member')
     async def user_check(self, ctx, *, member: discord.Member) -> None:
-        if member.id in wls['whitelist']:
+        if member.id in data['whitelist']:
             status = 'is whitelisted'
         else:
             status = 'not in whitelist'
