@@ -5,7 +5,7 @@ requirements = open('requirements.txt').read().splitlines()
 
 setuptools.setup(
         name='thisgary-discord',
-        version='2.5.33',
+        version='2.6',
         author='thisgary',
         author_email='gary.github@gmail.com',
         description='Everything Discord.',
