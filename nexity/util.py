@@ -66,16 +66,13 @@ def error_log(e: Exception, chn_id: int) -> requests.Response:
     )
 
 
-def load_data(**update: dict) -> dict:
+def load_data(**init) -> dict:
     try:
         data = json.load(open('data.json'))
-        if update:
-            data.update(update)
-            save_data(data)
     except FileNotFoundError:
-        data = {"local": [], "remote": []}
-        data.update(update)
-        save_data(data)
+        data = {}
+    init.update(data)
+    save_data(init)
     return data
 
 def save_data(data: dict) -> None:
