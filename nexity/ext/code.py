@@ -4,7 +4,6 @@ from typing import List
 
 from discord.ext import commands
 
-from dumpster import fdict
 from nexity.util import load_data, save_data, send_embeds, subprocess_log, wrap
 
 
