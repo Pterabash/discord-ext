@@ -1,8 +1,10 @@
-Everything Discord.
+Discord related
 
 ## About
 
-I started learning Python by making a Discord bot.
+Yeah, this is how I stated to learn programming
+ on a smartphone when my PC was broken
+ with Discord bot, despite Replit exists.
 
 ## Installation
 
