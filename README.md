@@ -2,9 +2,9 @@ Discord related
 
 ## About
 
-Yeah, this is how I stated to learn programming
+Yeah, this is how I started to learn programming
+ with Discord bot despite Replit exists,
  on a smartphone when my PC was broken
- with Discord bot, despite Replit exists.
 
 ## Installation
 
