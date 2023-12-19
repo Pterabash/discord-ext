@@ -1,3 +1,4 @@
+import asyncio
 from importlib import import_module
 import inspect
 import json
@@ -25,7 +26,7 @@ def prefix(d: str) -> None:
 
 
 def run(token: str = None) -> None:
-    reld_exts()
+    asyncio.run(reld_exts)
     client.run(token or os.environ['TOKEN'])
 
 
@@ -59,13 +60,13 @@ async def load_local(ext: str) -> None:
     await module.setup(client)
 
 
-def unld_local(ext: str) -> None:
+async def unld_local(ext: str) -> None:
     for name, obj in inspect.getmembers(sys.modules[ext]):
         if inspect.isclass(obj):
-            issubclass(obj, commands.Cog) and client.remove_cog(name)
+            issubclass(obj, commands.Cog) and await client.remove_cog(name)
 
 
-def load_remote(url: str) -> None:
+async def load_remote(url: str) -> None:
     script = str(urlopen(url).read().decode())
     path = 'exts'
     _path = Path(path)
@@ -74,12 +75,12 @@ def load_remote(url: str) -> None:
     _file = _path / (f'{name}.py')
     _file.write_text(script)
     module = import_module(f'.{name}', path)
-    module.setup(client)
+    await module.setup(client)
 
 
-def unld_remote(url: str) -> None:
+async def unld_remote(url: str) -> None:
     name = basename(url)
-    unld_local(f'exts.{name}')
+    await unld_local(f'exts.{name}')
     os.remove(f'exts/{name}.py')
 
 
@@ -91,15 +92,15 @@ def get_exts(chn_id: int, scope: str) -> None:
     send_embeds(chn_id, embed, title=scope.capitalize())
 
 
-def reld_exts(chn_id: int = None) -> None:
+async def reld_exts(chn_id: int = None) -> None:
     for scope in ['local', 'remote']:
         load_scope = __reflect(f'load_{scope}')
         for path in data[scope]: 
             try:
-                load_scope(path)
+                await load_scope(path)
             except CommandRegistrationError:
-                unld_local(path)
-                load_scope(path)
+                await unld_local(path)
+                await load_scope(path)
             except Exception as e:
                 error_log(e, chn_id)
 
@@ -194,5 +195,5 @@ async def unld_locals_cmd(ctx, *paths: str) -> None:
 
 @client.command('reld', brief='Reload exts')
 async def reld_scope_cmd(ctx) -> None:
-    reld_exts(ctx.channel.id)
+    await reld_exts(ctx.channel.id)
     get_exts(ctx.channel.id)
