@@ -76,7 +76,7 @@ def load_data(**init) -> dict:
         data = {}
     init.update(data)
     save_data(init)
-    return data
+    return init
 
 
 def save_data(data: dict, **update) -> None:
