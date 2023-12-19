@@ -1,3 +1,4 @@
+import asyncio
 import discord
 from discord.ext import commands
 
@@ -45,6 +46,8 @@ class Whitelist(commands.Cog):
         await ctx.send(f'{member.name} {status}')
 
 
-async def setup(bot):
+def setup(bot):
     bot.add_check(whitelist_check)
-    await bot.add_cog(Whitelist())
+    async def cog(): 
+        await bot.add_cog(Whitelist())
+    asyncio.run(cog)
