@@ -4,9 +4,9 @@ readme = open('README.md').read()
 requirements = open('requirements.txt').read().splitlines()
 
 setuptools.setup(
-        name='thisgary-discord',
-        version='2.6',
-        author='thisgary',
+        name='glkz-discord',
+        version='2.7',
+        author='garylkz',
         author_email='gary.github@gmail.com',
         description='Everything Discord.',
         long_description=readme,
