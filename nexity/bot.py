@@ -196,4 +196,4 @@ async def unld_locals_cmd(ctx, *paths: str) -> None:
 @client.command('reld', brief='Reload exts')
 async def reld_scope_cmd(ctx) -> None:
     await reld_exts(ctx.channel.id)
-    get_exts_cmd(ctx)
+    await get_exts_cmd(ctx)
