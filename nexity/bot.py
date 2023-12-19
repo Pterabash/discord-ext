@@ -9,7 +9,6 @@ import sys
 from urllib.request import urlopen
 
 from discord import Intents
-from discord.errors import ClientExeption
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound, CheckFailure
 
@@ -166,7 +165,7 @@ async def load_locals_cmd(ctx, *paths: str) -> None:
                 raise Exception('Extention already loaded')
             data[scope].append(path)
             data[scope].sort()
-        except CommandRegistrationError:
+        except discord.errors.ClientException:
             unld_local(path)
             f_load(path)
         except Exception as e:
