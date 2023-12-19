@@ -65,5 +65,5 @@ class Info(commands.Cog):
         send_embeds(ctx.channel.id, wrap(text), title='Member Info')
 
 
-def setup(bot):
-    bot.add_cog(Info())
+async def setup(bot):
+    await bot.add_cog(Info())

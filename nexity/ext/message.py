@@ -37,5 +37,5 @@ class Message(commands.Cog):
         await ctx.channel.delete_messages(msgs)
 
 
-def setup(bot):
-    bot.add_cog(Message())
+async def setup(bot):
+    await bot.add_cog(Message())

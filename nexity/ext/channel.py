@@ -42,5 +42,5 @@ class Channel(commands.Cog):
             await channel.delete()
 
 
-def setup(bot): 
-    bot.add_cog(Channel())
+async def setup(bot): 
+    await bot.add_cog(Channel())

@@ -40,5 +40,5 @@ class Role(commands.Cog):
         await role.edit(position=bot.roles[-1].position - 1)
 
 
-def setup(bot):
-    bot.add_cog(Role(bot))
+async def setup(bot):
+    await bot.add_cog(Role(bot))

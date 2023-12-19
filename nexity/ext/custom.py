@@ -55,5 +55,5 @@ class Customize(commands.Cog):
         await self.bot.change_presence(activity=watch)
 
 
-def setup(bot):
-    bot.add_cog(Customize(bot))
+async def setup(bot):
+    await bot.add_cog(Customize(bot))
