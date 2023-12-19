@@ -45,6 +45,6 @@ class Whitelist(commands.Cog):
         await ctx.send(f'{member.name} {status}')
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_check(whitelist_check)
-    bot.add_cog(Whitelist())
+    await bot.add_cog(Whitelist())
