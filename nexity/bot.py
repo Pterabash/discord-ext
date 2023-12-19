@@ -15,7 +15,7 @@ from nexity.util import basename, error_log, load_data, save_data, send_embeds, 
 
 
 # Initialization
-client = commands.Bot(',', intents = Intents.default())
+client = commands.Bot(',', intents = Intents(messages=True, guilds=True))
 data = load_data(local=[], remote=[])
 
 
