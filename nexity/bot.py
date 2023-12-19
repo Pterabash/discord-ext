@@ -52,11 +52,11 @@ def __predict(path: str) -> str:
 
 
 # Load or unload ext
-def load_local(ext: str) -> None:
+async def load_local(ext: str) -> None:
     i = ext.rfind('.')
     module = (import_module(ext) if i < 0 else 
               import_module(ext[i:], ext[:i]))
-    module.setup(client)
+    await module.setup(client)
 
 
 def unld_local(ext: str) -> None:
