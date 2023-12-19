@@ -97,10 +97,10 @@ async def reld_exts(chn_id: int = None) -> None:
         load_scope = __reflect(f'load_{scope}')
         for path in data[scope]: 
             try:
-                await load_scope(path)
+                load_scope(path)
             except CommandRegistrationError:
                 await unld_local(path)
-                await load_scope(path)
+                load_scope(path)
             except Exception as e:
                 error_log(e, chn_id)
 
