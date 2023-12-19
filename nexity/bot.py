@@ -26,7 +26,7 @@ def prefix(d: str) -> None:
 
 
 def run(token: str = None) -> None:
-    asyncio.run(reld_exts)
+    asyncio.run(reld_exts())
     client.run(token or os.environ['TOKEN'])
 
 
