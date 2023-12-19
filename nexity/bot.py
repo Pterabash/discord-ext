@@ -7,6 +7,7 @@ from pathlib import Path
 import sys
 from urllib.request import urlopen
 
+from discord import Intents
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound, CheckFailure, CommandRegistrationError
 
@@ -14,7 +15,7 @@ from nexity.util import basename, error_log, load_data, save_data, send_embeds, 
 
 
 # Initialization
-client = commands.Bot(',', intents = discord.Intents.default())
+client = commands.Bot(',', intents = Intents.default())
 data = load_data(local=[], remote=[])
 
 
