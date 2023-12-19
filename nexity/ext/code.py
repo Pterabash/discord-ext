@@ -108,6 +108,6 @@ class Code(commands.Cog):
         code.exec(ctx.channel.id, prop['args'])
 
 
-def setup(bot):
+async def setup(bot):
     Path('code').mkdir(exist_ok=True)
-    bot.add_cog(Code())
+    await bot.add_cog(Code())
