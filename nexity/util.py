@@ -1,12 +1,15 @@
+from importlib import import_module
 import json
 import logging
 import os
+from pathlib import Path
 import random
 import subprocess
 import tempfile
 import textwrap
 import time
 from typing import List, Tuple
+from urllib.request import urlopen
 
 import requests
 
@@ -75,6 +78,18 @@ def load_data(**init) -> dict:
     save_data(init)
     return data
 
+
 def save_data(data: dict, **update) -> None:
     update.update(data)
     json.dump(update, open('data.json', 'w'))
+
+
+def import_url(url: str, *, path: str = 'modules', name: str = None):
+    script = str(urlopen(url).read().decode())
+    _path = Path(path)
+    _path.mkdir(parents=True, exist_ok=True)
+    name = name or basename(url)
+    _file = _path / (f'{name}.py')
+    _file.write_text(script)
+    package = path.replace('/', '.')
+    return import_module(f'.{name}', package)
