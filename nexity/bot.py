@@ -9,8 +9,9 @@ import sys
 from urllib.request import urlopen
 
 from discord import Intents
+from discord.errors import ClientExeption
 from discord.ext import commands
-from discord.ext.commands import CommandNotFound, CheckFailure, CommandRegistrationError
+from discord.ext.commands import CommandNotFound, CheckFailure
 
 from nexity.util import basename, error_log, load_data, save_data, send_embeds, subprocess_log, wrap
 
@@ -98,7 +99,7 @@ async def reld_exts(chn_id: int = None) -> None:
         for path in data[scope]: 
             try:
                 await load_scope(path)
-            except CommandRegistrationError:
+            except ClientException:
                 await unld_local(path)
                 await load_scope(path)
             except Exception as e:
@@ -196,4 +197,4 @@ async def unld_locals_cmd(ctx, *paths: str) -> None:
 @client.command('reld', brief='Reload exts')
 async def reld_scope_cmd(ctx) -> None:
     await reld_exts(ctx.channel.id)
-    get_exts(ctx.channel.id)
+    get_exts_cmd(ctx)
