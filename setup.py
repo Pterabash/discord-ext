@@ -5,7 +5,7 @@ requirements = open('requirements.txt').read().splitlines()
 
 setuptools.setup(
         name='glkz-discord',
-        version='2.7',
+        version='2.7.1',
         author='garylkz',
         author_email='gary.github@gmail.com',
         description='Everything Discord.',
