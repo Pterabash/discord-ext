@@ -14,7 +14,7 @@ from nexity.util import basename, error_log, load_data, save_data, send_embeds, 
 
 
 # Initialization
-client = commands.Bot(',')
+client = commands.Bot(',', intents = discord.Intents.default())
 data = load_data(local=[], remote=[])
 
 
